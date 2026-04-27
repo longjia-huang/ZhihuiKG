@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程/教材资源引用 - 智慧教学知识图谱平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        }
+
+        :root {
+            --primary-color: #2D5BFF;
+            --secondary-color: #425A8C;
+            --light-color: #F5F7FA;
+            --dark-color: #1D2129;
+            --gray-color: #86909C;
+            --border-radius: 12px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: var(--dark-color);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 8px 0;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 40px 0;
+            min-height: calc(100vh - 130px);
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+        }
+
+        .page-desc {
+            color: var(--gray-color);
+            font-size: 15px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            opacity: 0.8;
+        }
+
+        .resource-tabs {
+            display: flex;
+            gap: 24px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .tab-item {
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .tab-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .search-box {
+            background: white;
+            padding: 20px 24px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #E5E6EB;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .search-btn {
+            padding: 10px 24px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            align-self: flex-end;
+        }
+
+        .search-btn:hover {
+            opacity: 0.9;
+        }
+
+        .resource-list {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .list-header {
+            padding: 16px 24px;
+            background: #FAFAFA;
+            border-bottom: 1px solid #E5E6EB;
+            font-weight: 500;
+            display: grid;
+            grid-template-columns: 1fr 180px 120px 120px;
+            gap: 16px;
+        }
+
+        .resource-item {
+            padding: 18px 24px;
+            border-bottom: 1px solid #F2F3F5;
+            display: grid;
+            grid-template-columns: 1fr 180px 120px 120px;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .resource-item:hover {
+            background: #F9FAFC;
+        }
+
+        .resource-name {
+            font-weight: 500;
+        }
+
+        .resource-school {
+            color: var(--gray-color);
+            font-size: 14px;
+        }
+
+        .chapter-list {
+            margin-left: 20px;
+            padding: 12px;
+            background: #F7F8FA;
+            border-radius: 8px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .chapter-item {
+            padding: 6px 0;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-primary:hover, .btn-outline:hover {
+            opacity: 0.9;
+        }
+
+        .expand-btn {
+            color: var(--primary-color);
+            font-size: 13px;
+            cursor: pointer;
+            margin-top: 4px;
+            display: inline-block;
+        }
+
+        .footer {
+            background: white;
+            padding: 24px 0;
+            text-center: center;
+            color: var(--gray-color);
+            font-size: 14px;
+            border-top: 1px solid #E5E6EB;
+        }
+
+        @media (max-width: 768px) {
+            .list-header, .resource-item {
+                grid-template-columns: 1fr;
+            }
+            
+            .resource-tabs {
+                gap: 12px;
+                padding: 12px;
+            }
+            
+            .search-form {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="#" class="logo">智慧教学知识图谱平台</a>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="index.html" class="nav-link">首页</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link active">资源管理</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">知识图谱</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">能力目标</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">AI辅助</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <a href="index.html" class="back-btn">← 返回首页</a>
+            
+            <div class="page-header">
+                <h1 class="page-title">课程/教材资源引用</h1>
+                <p class="page-desc">支持整门课程或按章节引用课程资源、教材资源添加至知识图谱</p>
+            </div>
+
+            <div class="resource-tabs">
+                <div class="tab-item active" onclick="switchTab(1)">课程资源</div>
+                <div class="tab-item" onclick="switchTab(2)">教材资源</div>
+            </div>
+
+            <div class="search-box">
+                <form class="search-form">
+                    <div class="form-group">
+                        <label class="form-label">课程名称</label>
+                        <input type="text" class="form-input" placeholder="请输入课程名称">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">所属学校</label>
+                        <input type="text" class="form-input" placeholder="请输入学校名称">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">学科分类</label>
+                        <input type="text" class="form-input" placeholder="请选择学科">
+                    </div>
+                    <button type="button" class="search-btn" onclick="searchResource()">搜索资源</button>
+                </form>
+            </div>
+
+            <div class="resource-list">
+                <div class="list-header">
+                    <div>资源名称</div>
+                    <div>所属学校</div>
+                    <div>引用方式</div>
+                    <div>操作</div>
+                </div>
+
+                <div class="resource-item">
+                    <div>
+                        <div class="resource-name">计算机组成原理</div>
+                        <div class="expand-btn" onclick="toggleChapter(this)">展开章节 ↓</div>
+                        <div class="chapter-list">
+                            <div class="chapter-item">
+                                <span>第1章 计算机系统概述</span>
+                                <button class="action-btn btn-outline" onclick="quoteChapter('计算机组成原理','第1章 计算机系统概述')">引用章节</button>
+                            </div>
+                            <div class="chapter-item">
+                                <span>第2章 运算方法和运算器</span>
+                                <button class="action-btn btn-outline" onclick="quoteChapter('计算机组成原理','第2章 运算方法和运算器')">引用章节</button>
+                            </div>
+                            <div class="chapter-item">
+                                <span>第3章 存储系统</span>
+                                <button class="action-btn btn-outline" onclick="quoteChapter('计算机组成原理','第3章 存储系统')">引用章节</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="resource-school">清华大学</div>
+                    <div>整门/章节</div>
+                    <div>
+                        <button class="action-btn btn-primary" onclick="quoteCourse('计算机组成原理','清华大学')">整门引用</button>
+                    </div>
+                </div>
+
+                <div class="resource-item">
+                    <div>
+                        <div class="resource-name">数据结构与算法</div>
+                        <div class="expand-btn" onclick="toggleChapter(this)">展开章节 ↓</div>
+                        <div class="chapter-list">
+                            <div class="chapter-item">
+                                <span>第1章 算法基础</span>
+                                <button class="action-btn btn-outline" onclick="quoteChapter('数据结构与算法','第1章 算法基础')">引用章节</button>
+                            </div>
+                            <div class="chapter-item">
+                                <span>第2章 线性表</span>
+                                <button class="action-btn btn-outline" onclick="quoteChapter('数据结构与算法','第2章 线性表')">引用章节</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="resource-school">北京大学</div>
+                    <div>整门/章节</div>
+                    <div>
+                        <button class="action-btn btn-primary" onclick="quoteCourse('数据结构与算法','北京大学')">整门引用</button>
+                    </div>
+                </div>
+
+                <div class="resource-item">
+                    <div class="resource-name">高等数学（上册）</div>
+                    <div class="resource-school">复旦大学</div>
+                    <div>整门引用</div>
+                    <div>
+                        <button class="action-btn btn-primary" onclick="quoteCourse('高等数学（上册）','复旦大学')">整门引用</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 智慧教学知识图谱平台 - 高等教育智慧教学解决方案</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleChapter(el) {
+            const chapterList = el.nextElementSibling;
+            if (chapterList.style.display === 'block') {
+                chapterList.style.display = 'none';
+                el.textContent = '展开章节 ↓';
+            } else {
+                chapterList.style.display = 'block';
+                el.textContent = '收起章节 ↑';
+            }
+        }
+
+        function switchTab(type) {
+            const tabs = document.querySelectorAll('.tab-item');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabs[type-1].classList.add('active');
+            
+            if(type === 1) {
+                alert('切换至：课程资源页面');
+            } else {
+                alert('切换至：教材资源页面');
+            }
+        }
+
+        function searchResource() {
+            alert('执行：资源搜索操作');
+        }
+
+        function quoteCourse(courseName, school) {
+            alert(`成功引用整门课程：\n课程名称：${courseName}\n所属学校：${school}\n\n已添加至知识图谱！`);
+        }
+
+        function quoteChapter(courseName, chapterName) {
+            alert(`成功引用章节：\n课程：${courseName}\n章节：${chapterName}\n\n已添加至知识图谱！`);
+        }
+    </script>
+</body>
+</html>

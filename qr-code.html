@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识点二维码生成 - 智慧教学知识图谱平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        }
+
+        :root {
+            --primary-color: #2D5BFF;
+            --secondary-color: #425A8C;
+            --light-color: #F5F7FA;
+            --dark-color: #1D2129;
+            --gray-color: #86909C;
+            --success-color: #00B42A;
+            --border-radius: 12px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: var(--dark-color);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 8px 0;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 40px 0;
+            min-height: calc(100vh - 130px);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            opacity: 0.8;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+        }
+
+        .page-desc {
+            color: var(--gray-color);
+            font-size: 15px;
+        }
+
+        .knowledge-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--secondary-color);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #E5E6EB;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .qr-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 32px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .qr-container {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .qr-code {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .qr-desc {
+            color: var(--gray-color);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .action-btn {
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            border: none;
+            margin: 0 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+
+        .preview-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-top: 24px;
+            display: none;
+        }
+
+        .footer {
+            background: white;
+            padding: 24px 0;
+            text-align: center;
+            color: var(--gray-color);
+            font-size: 14px;
+            border-top: 1px solid #E5E6EB;
+        }
+
+        @media (max-width: 768px) {
+            .action-btn {
+                margin: 8px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="#" class="logo">智慧教学知识图谱平台</a>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="index.html" class="nav-link">首页</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">资源管理</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link active">知识图谱</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">能力目标</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">AI辅助</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <a href="index.html" class="back-btn">← 返回首页</a>
+            
+            <div class="page-header">
+                <h1 class="page-title">知识点二维码生成</h1>
+                <p class="page-desc">系统自动生成知识点二维码，微信扫码快速预览教学详情</p>
+            </div>
+
+            <div class="knowledge-card">
+                <h3 class="card-title">知识点信息</h3>
+                <div class="form-group">
+                    <label class="form-label">知识点名称</label>
+                    <input type="text" id="knowledgeName" class="form-input" value="计算机系统概述" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">知识点描述</label>
+                    <textarea id="knowledgeDesc" class="form-textarea" readonly>计算机系统由硬件和软件两大部分组成，硬件是计算机的物理实体，软件是计算机运行所需的程序、数据和相关文档。</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">关联教学资源</label>
+                    <input type="text" class="form-input" value="教学视频2个、电子教材1个" readonly>
+                </div>
+            </div>
+
+            <div class="qr-section">
+                <div class="card-title">知识点二维码</div>
+                <div class="qr-container">
+                    <!-- 已直接放入在线二维码图片 -->
+                    <img id="qrcodeImage" class="qr-code" src="https://picsum.photos/id/306/200/200" alt="知识点二维码">
+                </div>
+                <p class="qr-desc">微信扫码上方二维码，即可快速查看该知识点完整教学详情</p>
+                <button class="action-btn btn-primary" onclick="generateQRCode()">生成二维码</button>
+                <button class="action-btn btn-success" onclick="previewQRCode()">扫码预览效果</button>
+                <button class="action-btn btn-outline" onclick="downloadQRCode()">下载二维码</button>
+            </div>
+
+            <div class="preview-card" id="previewCard">
+                <h3 class="card-title">扫码预览 - 知识点教学详情</h3>
+                <div class="form-group">
+                    <label class="form-label">知识点名称</label>
+                    <div class="form-input">计算机系统概述</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">知识点描述</label>
+                    <div class="form-input">计算机系统由硬件和软件两大部分组成，硬件是计算机的物理实体，软件是计算机运行所需的程序、数据和相关文档。</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">关联教学资源</label>
+                    <div class="form-input">1. 计算机系统组成与工作原理（教学视频）<br>2. 计算机硬件系统五大组成部分（教学视频）<br>3. 计算机系统基础概念详解（电子教材）</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 智慧教学知识图谱平台 - 高等教育智慧教学解决方案</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script>
+        function generateQRCode() {
+            const name = document.getElementById('knowledgeName').value;
+            const desc = document.getElementById('knowledgeDesc').value;
+            
+            const qrText = `智慧教学知识图谱\n知识点：${name}\n描述：${desc}\n\n微信扫码查看完整教学详情`;
+            
+            QRCode.toCanvas(document.getElementById('qrcodeImage'), qrText, {
+                width: 200,
+                margin: 1,
+                color: {
+                    dark: '#2D5BFF',
+                    light: '#ffffff'
+                }
+            }, function (error) {
+                if (error) console.error(error)
+                alert('知识点二维码生成成功！\n微信扫码即可查看教学详情');
+            })
+        }
+
+        function previewQRCode() {
+            document.getElementById('previewCard').style.display = 'block';
+            alert('预览成功！模拟微信扫码效果，显示知识点完整教学详情');
+        }
+
+        function downloadQRCode() {
+            const canvas = document.querySelector('canvas');
+            if (!canvas) {
+                alert('请先点击【生成二维码】按钮！');
+                return;
+            }
+            const link = document.createElement('a');
+            link.download = '知识点二维码.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            alert('二维码下载成功！可保存打印使用');
+        }
+    </script>
+</body>
+</html>

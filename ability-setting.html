@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程能力目标设置 - 智慧教学知识图谱平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        :root {
+            --primary-color: #2D5BFF;
+            --secondary-color: #425A8C;
+            --light-color: #F5F7FA;
+            --dark-color: #1D2129;
+            --gray-color: #86909C;
+            --success-color: #00B42A;
+            --warning-color: #FF7D00;
+            --danger-color: #F53F3F;
+            --border-radius: 12px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+
+        .nav-link {
+            color: var(--dark-color);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 40px 0;
+            min-height: calc(100vh - 130px);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .page-desc {
+            color: var(--gray-color);
+            font-size: 15px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #E5E6EB;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 8px 18px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            background: white;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        /* 目标列表 */
+        .goal-item {
+            background: #F9FAFC;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .goal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .goal-title {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .goal-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+            color: var(--gray-color);
+            margin-bottom: 10px;
+        }
+
+        .sub-goal {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid #E5E6EB;
+        }
+
+        .sub-title {
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 8px;
+            background: #EEF2FF;
+            color: var(--primary-color);
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+
+        .stats-bar {
+            height: 6px;
+            background: #E5E6EB;
+            border-radius: 3px;
+            margin: 6px 0;
+            overflow: hidden;
+        }
+
+        .stats-inner {
+            height: 100%;
+            background: var(--success-color);
+        }
+
+        .footer {
+            background: white;
+            padding: 24px 0;
+            text-align: center;
+            color: var(--gray-color);
+            font-size: 14px;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="#" class="logo">智慧教学知识图谱平台</a>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">首页</a></li>
+                    <li><a href="#" class="nav-link">资源管理</a></li>
+                    <li><a href="#" class="nav-link active">知识图谱</a></li>
+                    <li><a href="#" class="nav-link">能力目标</a></li>
+                    <li><a href="#" class="nav-link">AI辅助</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <a href="index.html" class="back-btn">← 返回首页</a>
+            <h1 class="page-title">课程能力目标设置</h1>
+            <p class="page-desc">支持无限添加主能力/子能力，自动统计知识点覆盖率</p>
+
+            <!-- 课程基本信息 -->
+            <div class="card">
+                <h3 class="card-title">📘 课程基本信息</h3>
+                <div class="form-group">
+                    <label class="form-label">课程名称</label>
+                    <input type="text" class="form-input" value="计算机组成原理" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">所属学校</label>
+                    <input type="text" class="form-input" value="清华大学" readonly>
+                </div>
+            </div>
+
+            <!-- 1. 课程目标描述 -->
+            <div class="card">
+                <h3 class="card-title">📝 课程目标描述</h3>
+                <div class="form-group">
+                    <label class="form-label">目标总体描述</label>
+                    <textarea class="form-textarea" readonly>通过本课程学习，使学生掌握计算机系统的基本组成、工作原理与核心设计方法，培养系统分析、硬件设计、逻辑运算与工程实践能力，为后续专业课程学习奠定坚实基础。</textarea>
+                </div>
+                <button class="btn btn-primary" onclick="editDesc()">编辑描述</button>
+            </div>
+
+            <!-- 2. 课程目标拆解（核心功能） -->
+            <div class="card">
+                <h3 class="card-title">🎯 课程目标拆解（主能力 + 子能力）</h3>
+                
+                <button class="btn btn-success" onclick="addMainGoal()" style="margin-bottom:16px;">➕ 添加主能力目标（无上限）</button>
+
+                <!-- 主能力目标 1 -->
+                <div class="goal-item">
+                    <div class="goal-header">
+                        <div class="goal-title">主能力目标：理论认知能力</div>
+                        <button class="btn btn-outline" onclick="addSubGoal()">添加子能力</button>
+                    </div>
+                    <div class="goal-stats">
+                        <span>知识点覆盖率：92%</span>
+                        <span>关联知识点：18 个</span>
+                        <span>覆盖问题：42 题</span>
+                    </div>
+                    <div class="stats-bar"><div class="stats-inner" style="width:92%"></div></div>
+
+                    <!-- 子能力 1 -->
+                    <div class="sub-goal">
+                        <div class="sub-title">子能力：掌握计算机系统组成概念</div>
+                        <div class="form-label">关联知识点：</div>
+                        <span class="tag">系统概述</span>
+                        <span class="tag">硬件组成</span>
+                        <span class="tag">软件分类</span>
+
+                        <div class="form-label" style="margin-top:8px;">覆盖问题：</div>
+                        <span class="tag">选择题</span>
+                        <span class="tag">判断题</span>
+                        <span class="tag">简答题</span>
+                    </div>
+
+                    <!-- 子能力 2 -->
+                    <div class="sub-goal">
+                        <div class="sub-title">子能力：理解工作原理与数据流程</div>
+                        <div class="form-label">关联知识点：</div>
+                        <span class="tag">指令执行</span>
+                        <span class="tag">数据通路</span>
+                        <span class="tag">控制信号</span>
+                    </div>
+                </div>
+
+                <!-- 主能力目标 2 -->
+                <div class="goal-item">
+                    <div class="goal-header">
+                        <div class="goal-title">主能力目标：实践操作能力</div>
+                        <button class="btn btn-outline" onclick="addSubGoal()">添加子能力</button>
+                    </div>
+                    <div class="goal-stats">
+                        <span>知识点覆盖率：88%</span>
+                        <span>关联知识点：15 个</span>
+                        <span>覆盖问题：36 题</span>
+                    </div>
+                    <div class="stats-bar"><div class="stats-inner" style="width:88%"></div></div>
+
+                    <div class="sub-goal">
+                        <div class="sub-title">子能力：虚拟仿真实验操作</div>
+                        <div class="form-label">关联实验：</div>
+                        <span class="tag">运算器实验</span>
+                        <span class="tag">存储器实验</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. 课程目标详情 -->
+            <div class="card">
+                <h3 class="card-title">📊 课程目标详情 & 统计</h3>
+                <div class="form-group">
+                    <label class="form-label">目标详情总览</label>
+                    <textarea class="form-textarea" readonly>本课程共设置 4 项主能力目标，12 项子能力目标，关联 47 个知识点，覆盖 136 道题目。系统已自动完成所有能力目标的知识点覆盖率、问题覆盖度统计，形成完整能力知识体系。
+
+支持随时新增、编辑、删除主能力与子能力，数量无上限。</textarea>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="saveGoals()">保存所有目标</button>
+                    <button class="btn btn-success" onclick="viewGoalDetail()">查看完整目标图谱</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 智慧教学知识图谱平台 - 高等教育智慧教学解决方案</p>
+        </div>
+    </footer>
+
+    <script>
+        // 编辑描述
+        function editDesc() {
+            alert('已进入编辑模式，可修改课程目标总体描述');
+        }
+
+        // 添加主能力（无上限）
+        function addMainGoal() {
+            alert('成功添加【主能力目标】\n可继续设置子能力、关联知识点、覆盖问题');
+        }
+
+        // 添加子能力
+        function addSubGoal() {
+            alert('成功添加【子能力目标】\n支持关联任意知识点与问题');
+        }
+
+        // 保存目标
+        function saveGoals() {
+            alert('课程能力目标保存成功！\n系统已自动更新知识点覆盖率统计');
+        }
+
+        // 查看目标详情
+        function viewGoalDetail() {
+            alert('打开完整能力目标图谱页面\n展示所有主目标、子目标、关联关系、统计数据');
+        }
+    </script>
+</body>
+</html>

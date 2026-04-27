@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI自动构建知识点教案 - 智慧教学知识图谱平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        }
+
+        :root {
+            --primary-color: #2D5BFF;
+            --secondary-color: #425A8C;
+            --light-color: #F5F7FA;
+            --dark-color: #1D2129;
+            --gray-color: #86909C;
+            --success-color: #00B42A;
+            --border-radius: 12px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: var(--dark-color);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 8px 0;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 40px 0;
+            min-height: calc(100vh - 130px);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            opacity: 0.8;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+        }
+
+        .page-desc {
+            color: var(--gray-color);
+            font-size: 15px;
+        }
+
+        .knowledge-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--secondary-color);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #E5E6EB;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .ai-build-btn {
+            padding: 12px 32px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            font-size: 15px;
+        }
+
+        .ai-build-btn:hover {
+            opacity: 0.9;
+        }
+
+        .lesson-plan-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-top: 24px;
+            display: none;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #E5E6EB;
+        }
+
+        .lesson-plan-item {
+            margin-bottom: 24px;
+        }
+
+        .lesson-plan-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lesson-plan-content {
+            background: #F9FAFC;
+            border-radius: 8px;
+            padding: 16px;
+            line-height: 1.8;
+        }
+
+        .lesson-plan-content ol {
+            padding-left: 20px;
+        }
+
+        .lesson-plan-content li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .action-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .footer {
+            background: white;
+            padding: 24px 0;
+            text-align: center;
+            color: var(--gray-color);
+            font-size: 14px;
+            border-top: 1px solid #E5E6EB;
+        }
+
+        @media (max-width: 768px) {
+            .action-group {
+                flex-direction: column;
+            }
+            .action-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="#" class="logo">智慧教学知识图谱平台</a>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="index.html" class="nav-link">首页</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">资源管理</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link active">知识图谱</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">能力目标</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">AI辅助</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <a href="index.html" class="back-btn">← 返回首页</a>
+            
+            <div class="page-header">
+                <h1 class="page-title">AI自动构建知识点教案</h1>
+                <p class="page-desc">AI一键自动生成教学目标、重难点、教学内容、案例、测评等完整教案</p>
+            </div>
+
+            <div class="knowledge-card">
+                <h3 class="card-title">知识点基础信息</h3>
+                <div class="form-group">
+                    <label class="form-label">知识点名称</label>
+                    <input type="text" id="knowledgeName" class="form-input" value="计算机系统概述" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">知识点描述</label>
+                    <textarea id="knowledgeDesc" class="form-textarea" readonly>计算机系统由硬件和软件两大部分组成，硬件是计算机的物理实体，软件是计算机运行所需的程序、数据和相关文档。</textarea>
+                </div>
+                <button class="ai-build-btn" onclick="buildLessonPlan()">AI一键自动构建教案</button>
+            </div>
+
+            <div class="lesson-plan-section" id="lessonPlanSection">
+                <h3 class="section-title">AI自动生成知识点教案</h3>
+                
+                <div class="lesson-plan-item">
+                    <div class="lesson-plan-label">🎯 教学目标（不少于3条）</div>
+                    <div class="lesson-plan-content" id="teachingObjective">
+                        <ol>
+                            <li>理解计算机系统的基本组成结构，区分硬件系统与软件系统的核心差异</li>
+                            <li>掌握计算机硬件五大核心组成部分的功能与协同工作原理</li>
+                            <li>能够举例说明系统软件与应用软件在实际生活中的应用场景</li>
+                            <li>建立计算机系统的整体认知，为后续专业课程学习奠定基础</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="lesson-plan-item">
+                    <div class="lesson-plan-label">⚠️ 教学重点难点</div>
+                    <div class="lesson-plan-content" id="keyPoints">
+                        <ol>
+                            <li>重点：计算机系统硬件组成与软件分类的核心概念</li>
+                            <li>重点：硬件与软件之间的依赖关系与协同工作逻辑</li>
+                            <li>难点：抽象理解计算机系统的工作流程与数据处理机制</li>
+                            <li>难点：区分系统软件与应用软件的功能边界与应用场景</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="lesson-plan-item">
+                    <div class="lesson-plan-label">📚 教学内容</div>
+                    <div class="lesson-plan-content" id="teachingContent">
+                        <ol>
+                            <li>计算机系统的定义与发展历程，现代计算机系统的核心特征</li>
+                            <li>硬件系统：运算器、控制器、存储器、输入设备、输出设备详解</li>
+                            <li>软件系统：系统软件（操作系统、驱动程序）与应用软件分类讲解</li>
+                            <li>硬件与软件的协同工作流程，数据处理的完整生命周期</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="lesson-plan-item">
+                    <div class="lesson-plan-label">💡 教学方法</div>
+                    <div class="lesson-plan-content" id="teachingMethod">
+                        <ol>
+                            <li>理论讲授法：系统讲解计算机系统组成的核心概念与基础理论</li>
+                            <li>案例演示法：通过实物展示与软件操作演示硬件软件协同工作</li>
+                            <li>互动讨论法：组织学生讨论生活中的计算机系统应用案例</li>
+                            <li>实践观察法：引导学生观察电脑、手机等设备的系统组成结构</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="lesson-plan-item">
+                    <div class="lesson-plan-label">📖 案例引入</div>
+                    <div class="lesson-plan-content" id="caseIntro">
+                        <ol>
+                            <li>个人电脑案例：主机、显示器、键盘等硬件与Windows系统软件协同工作</li>
+                            <li>智能手机案例：手机硬件设备与Android/iOS系统及各类APP应用</li>
+                            <li>智能家电案例：智能家居设备的硬件组成与嵌入式系统软件</li>
+                            <li>工业控制案例：工业计算机的硬件系统与专用控制软件</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="lesson-plan-item">
+                    <div class="lesson-plan-label">🔍 扩展阅读</div>
+                    <div class="lesson-plan-content" id="extendReading">
+                        <ol>
+                            <li>《计算机组成原理》：计算机系统基础理论与硬件架构详解</li>
+                            <li>《操作系统导论》：系统软件核心功能与工作原理深度解析</li>
+                            <li>计算机发展史：从ENIAC到现代智能设备的系统演进历程</li>
+                            <li>人工智能时代的计算机系统发展趋势与技术创新方向</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="lesson-plan-item">
+                    <div class="lesson-plan-label">📝 知识点测评</div>
+                    <div class="lesson-plan-content" id="knowledgeTest">
+                        <ol>
+                            <li>简答题：简述计算机系统的两大组成部分及其核心功能</li>
+                            <li>选择题：下列属于计算机硬件设备的是？（A.操作系统 B.Word C.键盘 D.微信）</li>
+                            <li>分析题：举例说明硬件与软件如何协同完成一项计算机任务</li>
+                            <li>实践题：观察你身边的计算机设备，列出其硬件组成与安装的软件</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="action-group">
+                    <button class="action-btn btn-success" onclick="saveLessonPlan()">保存教案</button>
+                    <button class="action-btn btn-outline" onclick="exportLessonPlan()">导出教案文档</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 智慧教学知识图谱平台 - 高等教育智慧教学解决方案</p>
+        </div>
+    </footer>
+
+    <script>
+        function buildLessonPlan() {
+            const knowledgeName = document.getElementById('knowledgeName').value;
+            document.getElementById('lessonPlanSection').style.display = 'block';
+            
+            alert(`AI教案构建成功！\n已为【${knowledgeName}】自动生成完整教案内容\n包含：教学目标、重难点、教学内容、教学方法、案例引入、扩展阅读、知识点测评`);
+        }
+
+        function saveLessonPlan() {
+            alert('教案保存成功！\n已将AI生成的知识点教案保存至系统数据库');
+        }
+
+        function exportLessonPlan() {
+            alert('教案导出成功！\n已生成Word文档，可下载编辑打印');
+        }
+    </script>
+</body>
+</html>

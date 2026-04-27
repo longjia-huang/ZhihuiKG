@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>海量课程资源库 - 智慧教学知识图谱平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        }
+
+        :root {
+            --primary-color: #2D5BFF;
+            --secondary-color: #425A8C;
+            --light-color: #F5F7FA;
+            --dark-color: #1D2129;
+            --gray-color: #86909C;
+            --success-color: #00B42A;
+            --border-radius: 12px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: var(--dark-color);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 8px 0;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 40px 0;
+            min-height: calc(100vh - 130px);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            opacity: 0.8;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+        }
+
+        .page-desc {
+            color: var(--gray-color);
+            font-size: 15px;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--gray-color);
+        }
+
+        .resource-tabs {
+            display: flex;
+            gap: 24px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .tab-item {
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .tab-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .search-box {
+            background: white;
+            padding: 24px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .form-input, .form-select {
+            padding: 10px 14px;
+            border: 1px solid #E5E6EB;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .search-btn {
+            padding: 10px 24px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .search-btn:hover {
+            opacity: 0.9;
+        }
+
+        .resource-table {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 1fr 180px 160px 140px 120px;
+            padding: 16px 24px;
+            background: #FAFAFA;
+            border-bottom: 1px solid #E5E6EB;
+            font-weight: 500;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 1fr 180px 160px 140px 120px;
+            padding: 18px 24px;
+            border-bottom: 1px solid #F2F3F5;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .table-row:hover {
+            background: #F9FAFC;
+        }
+
+        .course-name {
+            font-weight: 500;
+        }
+
+        .course-desc {
+            font-size: 13px;
+            color: var(--gray-color);
+            margin-top: 4px;
+        }
+
+        .action-btn {
+            padding: 6px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 13px;
+            font-weight: 500;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-primary:hover, .btn-outline:hover {
+            opacity: 0.9;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 24px;
+        }
+
+        .page-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 1px solid #E5E6EB;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .page-item.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .footer {
+            background: white;
+            padding: 24px 0;
+            text-align: center;
+            color: var(--gray-color);
+            font-size: 14px;
+            border-top: 1px solid #E5E6EB;
+        }
+
+        @media (max-width: 768px) {
+            .stats-card {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .table-header, .table-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .resource-tabs {
+                gap: 12px;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="#" class="logo">智慧教学知识图谱平台</a>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="index.html" class="nav-link">首页</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link active">资源管理</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">知识图谱</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">能力目标</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">AI辅助</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <a href="index.html" class="back-btn">← 返回首页</a>
+            
+            <div class="page-header">
+                <h1 class="page-title">海量课程资源库</h1>
+                <p class="page-desc">覆盖100+学科、10000+门课程、20000+本电子书的教学资源引用中心</p>
+            </div>
+
+            <div class="stats-card">
+                <div class="stat-item">
+                    <div class="stat-number">126</div>
+                    <div class="stat-label">学科资源类型</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">16850</div>
+                    <div class="stat-label">课程资源总数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24690</div>
+                    <div class="stat-label">电子书资源总数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">985</div>
+                    <div class="stat-label">合作高校</div>
+                </div>
+            </div>
+
+            <div class="resource-tabs">
+                <div class="tab-item active" onclick="switchTab(1)">课程资源</div>
+                <div class="tab-item" onclick="switchTab(2)">电子书资源</div>
+            </div>
+
+            <div class="search-box">
+                <div class="search-form">
+                    <div class="form-group">
+                        <label class="form-label">课程名称</label>
+                        <input type="text" class="form-input" placeholder="请输入课程名称">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">所属学校</label>
+                        <input type="text" class="form-input" placeholder="请输入学校名称">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">学科分类</label>
+                        <select class="form-select">
+                            <option>全部学科</option>
+                            <option>计算机科学</option>
+                            <option>工学</option>
+                            <option>理学</option>
+                            <option>文学</option>
+                            <option>管理学</option>
+                            <option>经济学</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">资源类型</label>
+                        <select class="form-select">
+                            <option>全部类型</option>
+                            <option>国家级精品课</option>
+                            <option>省级精品课</option>
+                            <option>在线开放课</option>
+                        </select>
+                    </div>
+                    <button class="search-btn" onclick="searchResource()">搜索资源</button>
+                </div>
+            </div>
+
+            <div class="resource-table">
+                <div class="table-header">
+                    <div>课程名称 / 资源信息</div>
+                    <div>所属学校</div>
+                    <div>学科分类</div>
+                    <div>资源类型</div>
+                    <div>操作</div>
+                </div>
+
+                <div class="table-row">
+                    <div>
+                        <div class="course-name">计算机组成原理</div>
+                        <div class="course-desc">国家级精品在线开放课程</div>
+                    </div>
+                    <div>清华大学</div>
+                    <div>计算机科学</div>
+                    <div>精品课程</div>
+                    <div>
+                        <button class="action-btn btn-primary" onclick="quoteResource('计算机组成原理','清华大学')">引用课程</button>
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div>
+                        <div class="course-name">数据结构与算法</div>
+                        <div class="course-desc">国家级一流本科课程</div>
+                    </div>
+                    <div>北京大学</div>
+                    <div>计算机科学</div>
+                    <div>一流课程</div>
+                    <div>
+                        <button class="action-btn btn-primary" onclick="quoteResource('数据结构与算法','北京大学')">引用课程</button>
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div>
+                        <div class="course-name">高等数学（上册）</div>
+                        <div class="course-desc">大学公共基础课程</div>
+                    </div>
+                    <div>复旦大学</div>
+                    <div>数学</div>
+                    <div>基础课程</div>
+                    <div>
+                        <button class="action-btn btn-primary" onclick="quoteResource('高等数学（上册）','复旦大学')">引用课程</button>
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div>
+                        <div class="course-name">大学物理</div>
+                        <div class="course-desc">省级精品课程</div>
+                    </div>
+                    <div>浙江大学</div>
+                    <div>物理学</div>
+                    <div>精品课程</div>
+                    <div>
+                        <button class="action-btn btn-primary" onclick="quoteResource('大学物理','浙江大学')">引用课程</button>
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div>
+                        <div class="course-name">Python程序设计</div>
+                        <div class="course-desc">在线开放课程</div>
+                    </div>
+                    <div>上海交通大学</div>
+                    <div>计算机科学</div>
+                    <div>在线课程</div>
+                    <div>
+                        <button class="action-btn btn-primary" onclick="quoteResource('Python程序设计','上海交通大学')">引用课程</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pagination">
+                <div class="page-item">上</div>
+                <div class="page-item active">1</div>
+                <div class="page-item">2</div>
+                <div class="page-item">3</div>
+                <div class="page-item">4</div>
+                <div class="page-item">5</div>
+                <div class="page-item">下</div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 智慧教学知识图谱平台 - 高等教育智慧教学解决方案</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchTab(type) {
+            const tabs = document.querySelectorAll('.tab-item');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabs[type-1].classList.add('active');
+            
+            if(type === 1) {
+                alert('切换至：课程资源列表（总计：16850门课程）');
+            } else {
+                alert('切换至：电子书资源列表（总计：24690本电子书）');
+            }
+        }
+
+        function searchResource() {
+            alert('资源搜索成功！\n根据筛选条件匹配相关课程/教材资源');
+        }
+
+        function quoteResource(courseName, school) {
+            alert(`课程资源引用成功！\n课程名称：${courseName}\n所属学校：${school}\n\n已成功添加至知识图谱资源库`);
+        }
+    </script>
+</body>
+</html>
