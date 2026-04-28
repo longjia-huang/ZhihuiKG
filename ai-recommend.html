@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI教学资源智能推荐 - 智慧教学知识图谱平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        }
+
+        :root {
+            --primary-color: #2D5BFF;
+            --secondary-color: #425A8C;
+            --light-color: #F5F7FA;
+            --dark-color: #1D2129;
+            --gray-color: #86909C;
+            --success-color: #00B42A;
+            --warning-color: #FF7D00;
+            --border-radius: 12px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: var(--dark-color);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 8px 0;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 40px 0;
+            min-height: calc(100vh - 130px);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            opacity: 0.8;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+        }
+
+        .page-desc {
+            color: var(--gray-color);
+            font-size: 15px;
+        }
+
+        .knowledge-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .knowledge-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--secondary-color);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #E5E6EB;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .ai-recommend-btn {
+            padding: 10px 24px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .ai-recommend-btn:hover {
+            opacity: 0.9;
+        }
+
+        .recommend-section {
+            margin-top: 32px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .resource-tabs {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .resource-tab {
+            padding: 10px 20px;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            box-shadow: var(--shadow);
+        }
+
+        .resource-tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .resource-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .resource-item {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .resource-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .resource-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .resource-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--dark-color);
+        }
+
+        .resource-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: #E6FFEA;
+            color: var(--success-color);
+        }
+
+        .badge-warning {
+            background: #FFF7E6;
+            color: var(--warning-color);
+        }
+
+        .resource-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .info-item {
+            color: var(--gray-color);
+        }
+
+        .info-item strong {
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+
+        .resource-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #E5E6EB;
+            color: var(--dark-color);
+        }
+
+        .btn-danger {
+            background: transparent;
+            border: 1px solid #F53F3F;
+            color: #F53F3F;
+        }
+
+        .btn-primary:hover, .btn-outline:hover, .btn-danger:hover {
+            opacity: 0.9;
+        }
+
+        .footer {
+            background: white;
+            padding: 24px 0;
+            text-align: center;
+            color: var(--gray-color);
+            font-size: 14px;
+            border-top: 1px solid #E5E6EB;
+        }
+
+        @media (max-width: 768px) {
+            .resource-header {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .resource-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="#" class="logo">智慧教学知识图谱平台</a>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="index.html" class="nav-link">首页</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">资源管理</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link active">知识图谱</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">能力目标</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">AI辅助</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <a href="index.html" class="back-btn">← 返回首页</a>
+            
+            <div class="page-header">
+                <h1 class="page-title">AI教学资源智能推荐</h1>
+                <p class="page-desc">编辑知识点教学资源，AI智能推荐相关教学视频、电子教材片段</p>
+            </div>
+
+            <div class="knowledge-card">
+                <h3 class="knowledge-title">知识点编辑</h3>
+                <div class="form-group">
+                    <label class="form-label">知识点名称</label>
+                    <input type="text" class="form-input" value="计算机系统概述" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">知识点描述</label>
+                    <textarea class="form-textarea">计算机系统由硬件和软件两大部分组成，硬件是计算机的物理实体，软件是计算机运行所需的程序、数据和相关文档。</textarea>
+                </div>
+                <button class="ai-recommend-btn" onclick="aiRecommendResource()">AI智能推荐资源</button>
+            </div>
+
+            <div class="recommend-section">
+                <h3 class="section-title">AI推荐资源</h3>
+                
+                <div class="resource-tabs">
+                    <div class="resource-tab active" onclick="switchResourceTab(1)">教学视频片段</div>
+                    <div class="resource-tab" onclick="switchResourceTab(2)">电子教材片段</div>
+                </div>
+
+                <div class="resource-list" id="videoTab">
+                    <div class="resource-item">
+                        <div class="resource-header">
+                            <div class="resource-name">计算机系统组成与工作原理</div>
+                            <span class="resource-badge badge-success">已引用</span>
+                        </div>
+                        <div class="resource-info">
+                            <div class="info-item"><strong>所属课程：</strong>计算机组成原理</div>
+                            <div class="info-item"><strong>所属学校：</strong>清华大学</div>
+                            <div class="info-item"><strong>授课教师：</strong>张教授</div>
+                            <div class="info-item"><strong>章节信息：</strong>第1章 第1节</div>
+                            <div class="info-item"><strong>视频时长：</strong>12:35</div>
+                            <div class="info-item"><strong>资源类型：</strong>教学视频</div>
+                        </div>
+                        <div class="resource-actions">
+                            <button class="action-btn btn-primary" onclick="quoteResource('计算机系统组成与工作原理','教学视频')">立即引用</button>
+                            <button class="action-btn btn-danger" onclick="blockResource('计算机系统组成与工作原理')">不再推荐</button>
+                        </div>
+                    </div>
+
+                    <div class="resource-item">
+                        <div class="resource-header">
+                            <div class="resource-name">计算机硬件系统五大组成部分</div>
+                            <span class="resource-badge badge-warning">未引用</span>
+                        </div>
+                        <div class="resource-info">
+                            <div class="info-item"><strong>所属课程：</strong>计算机组成原理</div>
+                            <div class="info-item"><strong>所属学校：</strong>北京大学</div>
+                            <div class="info-item"><strong>授课教师：</strong>李教授</div>
+                            <div class="info-item"><strong>章节信息：</strong>第1章 第2节</div>
+                            <div class="info-item"><strong>视频时长：</strong>08:42</div>
+                            <div class="info-item"><strong>资源类型：</strong>教学视频</div>
+                        </div>
+                        <div class="resource-actions">
+                            <button class="action-btn btn-primary" onclick="quoteResource('计算机硬件系统五大组成部分','教学视频')">立即引用</button>
+                            <button class="action-btn btn-danger" onclick="blockResource('计算机硬件系统五大组成部分')">不再推荐</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resource-list" id="bookTab" style="display: none;">
+                    <div class="resource-item">
+                        <div class="resource-header">
+                            <div class="resource-name">计算机系统基础概念详解</div>
+                            <span class="resource-badge badge-warning">未引用</span>
+                        </div>
+                        <div class="resource-info">
+                            <div class="info-item"><strong>教材名称：</strong>计算机组成原理教程</div>
+                            <div class="info-item"><strong>所属学校：</strong>复旦大学</div>
+                            <div class="info-item"><strong>编著作者：</strong>王教授</div>
+                            <div class="info-item"><strong>章节信息：</strong>第1章 第1小节</div>
+                            <div class="info-item"><strong>页码范围：</strong>P5-P12</div>
+                            <div class="info-item"><strong>资源类型：</strong>电子教材</div>
+                        </div>
+                        <div class="resource-actions">
+                            <button class="action-btn btn-primary" onclick="quoteResource('计算机系统基础概念详解','电子教材')">立即引用</button>
+                            <button class="action-btn btn-danger" onclick="blockResource('计算机系统基础概念详解')">不再推荐</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 智慧教学知识图谱平台 - 高等教育智慧教学解决方案</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchResourceTab(type) {
+            const tabs = document.querySelectorAll('.resource-tab');
+            const videoTab = document.getElementById('videoTab');
+            const bookTab = document.getElementById('bookTab');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabs[type - 1].classList.add('active');
+            
+            if (type === 1) {
+                videoTab.style.display = 'flex';
+                bookTab.style.display = 'none';
+                alert('切换显示：AI推荐教学视频片段');
+            } else {
+                videoTab.style.display = 'none';
+                bookTab.style.display = 'flex';
+                alert('切换显示：AI推荐电子教材片段');
+            }
+        }
+
+        function aiRecommendResource() {
+            alert('AI核心算法运行中...\n正在为当前知识点智能推荐相关教学资源！');
+        }
+
+        function quoteResource(resourceName, type) {
+            alert(`资源引用成功！\n资源名称：${resourceName}\n资源类型：${type}\n已添加至当前知识点教学资源中！`);
+        }
+
+        function blockResource(resourceName) {
+            if (confirm(`确定要设置【${resourceName}】不再推荐吗？\n设置后AI将不会再为您推荐该资源！`)) {
+                alert(`设置成功！\n【${resourceName}】已加入黑名单，AI将不再推荐此资源`);
+            }
+        }
+    </script>
+</body>
+</html>
