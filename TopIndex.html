@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>网站集合导航</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+    body{background:#f7f8fa;padding:40px 20px}
+    .container{max-width:1000px;margin:0 auto}
+    .title{text-align:center;margin-bottom:40px;font-size:28px;color:#222}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill(),minmax(260px,1fr));gap:20px}
+    .card{background:white;border-radius:12px;padding:30px;box-shadow:0 4px 12px rgba(0,0,0,0.08);text-decoration:none;color:#333;transition:0.3s}
+    .card:hover{transform:translateY(-5px);box-shadow:0 8px 20px rgba(0,0,0,0.1)}
+    .card h3{font-size:20px;margin-bottom:10px;color:#2f54eb}
+    .card p{font-size:14px;color:#666;line-height:1.5}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">网站集合导航</h1>
+    <div class="grid">
+
+      <a href="./website-demo/" class="card">
+        <h3>智慧知识图谱演示站</h3>
+        <p>原演示项目，包含能力图谱、AI课程、虚拟实验等</p>
+      </a>
+
+      <a href="./website-1/" class="card">
+        <h3>网站 1</h3>
+        <p>第一个独立完整网站</p>
+      </a>
+
+      <a href="./website-2/" class="card">
+        <h3>网站 2</h3>
+        <p>第二个独立完整网站</p>
+      </a>
+
+      <a href="./website-3/" class="card">
+        <h3>网站 3</h3>
+        <p>第三个独立完整网站</p>
+      </a>
+
+    </div>
+  </div>
+</body>
+</html>
