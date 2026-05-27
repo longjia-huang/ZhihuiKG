@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学生端 - 学科探索模块</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Microsoft YaHei", sans-serif;
+}
+body {
+    background: #f5f5f5;
+    color: #333;
+}
+.header {
+    background: #E53E3E;
+    color: #fff;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.header h1 {
+    font-size: 18px;
+}
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.avatar {
+    width: 32px;
+    height: 32px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #E53E3E;
+    font-weight: bold;
+}
+.main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    padding: 18px;
+    margin-bottom: 20px;
+}
+.card-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #E53E3E;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.search-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+.search-bar input {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+}
+.search-bar button {
+    background: #E53E3E;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0 14px;
+    cursor: pointer;
+}
+.filter-tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.filter-tab {
+    padding: 6px 12px;
+    border-radius: 4px;
+    background: #f2f2f2;
+    font-size: 13px;
+    cursor: pointer;
+}
+.filter-tab.active {
+    background: #F59E0B;
+    color: #fff;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+.resource-item {
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 14px;
+    font-size: 14px;
+}
+.resource-item .title {
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+.resource-item .info {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+}
+.resource-item .tag {
+    display: inline-block;
+    padding: 2px 6px;
+    background: #fff1f0;
+    color: #E53E3E;
+    font-size: 12px;
+    border-radius: 3px;
+}
+.graph-box {
+    width: 100%;
+    height: 280px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    background: #fafafa;
+    position: relative;
+}
+canvas {
+    width: 100%;
+    height: 100%;
+}
+.ai-assistant {
+    background: #fff9f9;
+    border-left: 4px solid #E53E3E;
+    padding: 12px 14px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+.ai-title {
+    color: #E53E3E;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>学生端 · 学科探索中心</h1>
+    <div class="user-info">
+        <div class="avatar">生</div>
+        <span>学生账号</span>
+    </div>
+</div>
+
+<div class="main">
+
+    <!-- AI 助手个性化推荐 -->
+    <div class="ai-assistant">
+        <div class="ai-title">🎓 学科AI助手 · 个性化推荐</div>
+        <div>基于你的学习画像，已为你推荐匹配的学术文献、导师资源、研究方向，支持筛选与检索～</div>
+    </div>
+
+    <!-- 搜索 + 筛选 -->
+    <div class="card">
+        <div class="card-title">
+            <span>资源探索</span>
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="输入关键词检索文献/导师/方向">
+            <button>搜索</button>
+        </div>
+        <div class="filter-tabs">
+            <div class="filter-tab active">全部推荐</div>
+            <div class="filter-tab">学术文献</div>
+            <div class="filter-tab">校内导师</div>
+            <div class="filter-tab">校外导师</div>
+            <div class="filter-tab">研究方向</div>
+        </div>
+    </div>
+
+    <!-- 导师图谱 + 研究方向图谱 -->
+    <div class="grid" style="grid-template-columns: 1fr 1fr;">
+        <div class="card">
+            <div class="card-title">导师知识图谱</div>
+            <div class="graph-box">
+                <canvas id="tutorCanvas"></canvas>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title">研究方向知识图谱</div>
+            <div class="graph-box">
+                <canvas id="directionCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI 推荐资源 -->
+    <div class="card">
+        <div class="card-title">
+            <span>AI 个性化推荐资源</span>
+        </div>
+        <div class="grid">
+            <div class="resource-item">
+                <div class="title">机器学习在医疗中的应用</div>
+                <div class="info">学术文献 | 高相关</div>
+                <div class="tag">推荐</div>
+            </div>
+            <div class="resource-item">
+                <div class="title">张教授 - 人工智能与数据挖掘</div>
+                <div class="info">校内导师 | 博士生导师</div>
+                <div class="tag">匹配</div>
+            </div>
+            <div class="resource-item">
+                <div class="title">李教授 - 智慧医疗与护理工程</div>
+                <div class="info">校外导师 | 企业研究院</div>
+                <div class="tag">匹配</div>
+            </div>
+            <div class="resource-item">
+                <div class="title">知识图谱构建技术综述</div>
+                <div class="info">学术文献 | 核心期刊</div>
+                <div class="tag">推荐</div>
+            </div>
+            <div class="resource-item">
+                <div class="title">深度学习基础与实战</div>
+                <div class="info">学术文献 | 学习资料</div>
+                <div class="tag">推荐</div>
+            </div>
+            <div class="resource-item">
+                <div class="title">医学大数据分析研究方向</div>
+                <div class="info">研究方向 | 热门</div>
+                <div class="tag">推荐</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// 绘制导师图谱
+function drawTutorGraph() {
+    const canvas = document.getElementById('tutorCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = canvas.parentElement.offsetWidth;
+    canvas.height = canvas.parentElement.offsetHeight;
+
+    const nodes = [
+        {x:260,y:60,text:'学科导师',color:'#E53E3E'},
+        {x:130,y:150,text:'校内导师',color:'#F59E0B'},
+        {x:390,y:150,text:'校外导师',color:'#F59E0B'},
+        {x:80,y:230,text:'张教授',color:'#666'},
+        {x:180,y:230,text:'王教授',color:'#666'},
+        {x:340,y:230,text:'李教授',color:'#666'},
+        {x:440,y:230,text:'赵研究员',color:'#666'},
+    ];
+    const edges = [[0,1],[0,2],[1,3],[1,4],[2,5],[2,6]];
+
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#ddd';
+    edges.forEach(([a,b])=>{
+        ctx.beginPath();
+        ctx.moveTo(nodes[a].x,nodes[a].y);
+        ctx.lineTo(nodes[b].x,nodes[b].y);
+        ctx.stroke();
+    });
+
+    nodes.forEach(n=>{
+        ctx.fillStyle = n.color;
+        ctx.beginPath();
+        ctx.arc(n.x,n.y,32,0,Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle='#fff';
+        ctx.font='12px sans-serif';
+        ctx.textAlign='center';
+        ctx.textBaseline='middle';
+        ctx.fillText(n.text,n.x,n.y);
+    });
+}
+
+// 绘制研究方向图谱
+function drawDirectionGraph() {
+    const canvas = document.getElementById('directionCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = canvas.parentElement.offsetWidth;
+    canvas.height = canvas.parentElement.offsetHeight;
+
+    const nodes = [
+        {x:260,y:60,text:'研究方向',color:'#E53E3E'},
+        {x:130,y:150,text:'AI应用',color:'#F59E0B'},
+        {x:390,y:150,text:'医学信息',color:'#F59E0B'},
+        {x:80,y:230,text:'机器学习',color:'#666'},
+        {x:180,y:230,text:'知识图谱',color:'#666'},
+        {x:340,y:230,text:'大数据',color:'#666'},
+        {x:440,y:230,text:'智慧医疗',color:'#666'},
+    ];
+    const edges = [[0,1],[0,2],[1,3],[1,4],[2,5],[2,6]];
+
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#ddd';
+    edges.forEach(([a,b])=>{
+        ctx.beginPath();
+        ctx.moveTo(nodes[a].x,nodes[a].y);
+        ctx.lineTo(nodes[b].x,nodes[b].y);
+        ctx.stroke();
+    });
+
+    nodes.forEach(n=>{
+        ctx.fillStyle = n.color;
+        ctx.beginPath();
+        ctx.arc(n.x,n.y,32,0,Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle='#fff';
+        ctx.font='12px sans-serif';
+        ctx.textAlign='center';
+        ctx.textBaseline='middle';
+        ctx.fillText(n.text,n.x,n.y);
+    });
+}
+
+window.onload = function() {
+    drawTutorGraph();
+    drawDirectionGraph();
+}
+</script>
+
+</body>
+</html>

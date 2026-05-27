@@ -28,6 +28,41 @@
             line-height: 1.6;
             overflow-x: hidden;
         }
+        /* ==================== 响应式适配 ==================== */
+        @media (max-width: 768px) {
+            /* 移动端导航栏高度缩小 */
+            .navbar {
+                height: 60px;
+                padding: 0 15px;
+            }
+            /* 移动端LOGO缩小 */
+            .logo-img {
+                height: 40px;
+            }
+            .logo span {
+                font-size: 16px;
+            }
+            /* 移动端导航间距缩小 + 文字变小 */
+            .nav-links {
+                gap: 10px;
+            }
+            .nav-links a {
+                font-size: 14px;
+            }
+            /* banner 顶部距离适配 */
+            .banner {
+                padding-top: 60px;
+            }
+            .banner h1 {
+                font-size: 32px;
+            }
+            .section-title {
+                font-size: 26px;
+            }
+            .carousel-container {
+                height: 240px;
+            }
+        }
 
         /* ========== 导航栏永久显示（取消半隐藏） ========== */
         .navbar {

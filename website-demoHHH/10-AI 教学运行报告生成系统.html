@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 教学运行报告生成系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#D92B3B',
+                        success: '#10B981',
+                        warning: '#F59E0B',
+                        danger: '#EF4444',
+                        info: '#3B82F6',
+                        graybg: '#F9FAFB'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .mask { background: rgba(0,0,0,0.5); }
+        .fade-anim { animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .scroll-hide::-webkit-scrollbar { display: none; }
+        .report-section { scroll-margin-top: 20px; }
+    </style>
+</head>
+<body class="bg-graybg text-gray-800 min-h-screen">
+    <!-- 顶部导航 -->
+    <header class="bg-primary text-white px-6 py-4 shadow-md sticky top-0 z-40">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold">AI 教学运行报告生成系统</h1>
+                <p class="text-sm opacity-90 mt-1">自动生成图文结合完整版教学运行分析报告（≥5000字）</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="openGenerateModal()" class="bg-white text-primary px-4 py-2 rounded text-sm hover:bg-gray-50">
+                    <i class="fa fa-magic mr-1"></i> AI 生成报告
+                </button>
+                <button onclick="openExportModal()" class="bg-white text-primary px-4 py-2 rounded text-sm hover:bg-gray-50">
+                    <i class="fa fa-download mr-1"></i> 导出报告
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="p-6 max-w-7xl mx-auto">
+        <!-- 报告基础信息 -->
+        <div class="bg-white rounded-lg shadow p-5 mb-6">
+            <div class="flex flex-wrap justify-between items-center gap-4">
+                <div>
+                    <h2 class="text-lg font-bold">XX职业技术学院 - 2025-2026学年第二学期教学运行报告</h2>
+                    <p class="text-sm text-gray-500 mt-1">生成时间：2026-05-28 15:30 | 报告字数：6820字 | 报告状态：已完成</p>
+                </div>
+                <div class="flex gap-2">
+                    <button class="text-primary border border-primary px-3 py-1.5 rounded text-sm" onclick="refreshReport()">
+                        <i class="fa fa-refresh mr-1"></i> 重新生成
+                    </button>
+                    <button class="text-info border border-info px-3 py-1.5 rounded text-sm" onclick="openPreviewModal()">
+                        <i class="fa fa-eye mr-1"></i> 全屏预览
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 报告目录导航 -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6 sticky top-20 z-30">
+            <div class="flex gap-2 overflow-x-auto scroll-hide pb-1">
+                <a href="#part1" class="px-3 py-1.5 whitespace-nowrap text-sm bg-primary/10 text-primary rounded">数据总览</a>
+                <a href="#part2" class="px-3 py-1.5 whitespace-nowrap text-sm hover:bg-gray-100 rounded">班级运行报告</a>
+                <a href="#part3" class="px-3 py-1.5 whitespace-nowrap text-sm hover:bg-gray-100 rounded">运行数据概况</a>
+                <a href="#part4" class="px-3 py-1.5 whitespace-nowrap text-sm hover:bg-gray-100 rounded">知识点掌握度</a>
+                <a href="#part5" class="px-3 py-1.5 whitespace-nowrap text-sm hover:bg-gray-100 rounded">课程考核统计</a>
+                <a href="#part6" class="px-3 py-1.5 whitespace-nowrap text-sm hover:bg-gray-100 rounded">能力达成度</a>
+                <a href="#part7" class="px-3 py-1.5 whitespace-nowrap text-sm hover:bg-gray-100 rounded">AI工具使用</a>
+            </div>
+        </div>
+
+        <!-- 报告正文区域 -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6 text-sm leading-relaxed">
+            <!-- 1. 教学运行数据总览 -->
+            <section id="part1" class="report-section mb-8">
+                <h3 class="text-lg font-bold border-l-4 border-primary pl-3 mb-4">一、教学运行数据总览</h3>
+                <p class="mb-2">本报告基于XX职业技术学院全专业、全班级本学期教学全流程数据进行AI智能分析，覆盖在校学生3268人、任课教师186人、开设课程243门、知识点总数1865个，累计课堂教学时长12.6万分钟，任务发布总数2876次，AI工具使用次数4.2万次。整体教学运行稳定有序，教学数据完整可追溯，教学质量稳步提升。</p>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 my-4">
+                    <div class="border rounded p-3 text-center">
+                        <p class="text-gray-500 text-xs">整体教学完成率</p>
+                        <p class="text-xl font-bold text-success">96.8%</p>
+                    </div>
+                    <div class="border rounded p-3 text-center">
+                        <p class="text-gray-500 text-xs">知识点平均掌握度</p>
+                        <p class="text-xl font-bold text-info">82.3%</p>
+                    </div>
+                    <div class="border rounded p-3 text-center">
+                        <p class="text-gray-500 text-xs">任务平均完成率</p>
+                        <p class="text-xl font-bold text-warning">89.5%</p>
+                    </div>
+                    <div class="border rounded p-3 text-center">
+                        <p class="text-gray-500 text-xs">AI工具使用率</p>
+                        <p class="text-xl font-bold text-primary">78.6%</p>
+                    </div>
+                </div>
+                <div class="h-64 my-4">
+                    <canvas id="chartTotal"></canvas>
+                </div>
+            </section>
+
+            <!-- 2. 班级运行数据报告 -->
+            <section id="part2" class="report-section mb-8">
+                <h3 class="text-lg font-bold border-l-4 border-primary pl-3 mb-4">二、班级运行数据报告</h3>
+                <h4 class="font-semibold mb-2">2.1 班级建设情况总览</h4>
+                <p class="mb-2">全校86个教学班级均完成本学期班级建设目标，班级管理制度完善、学习氛围良好、课堂出勤率稳定。优秀班级占比32%，良好班级占比56%，合格班级占比12%，无不合格班级。班级学习小组建设完成率100%，课堂互动参与率平均85%以上。</p>
+                
+                <h4 class="font-semibold mb-2 mt-4">2.2 教学班级学习情况排名</h4>
+                <div class="overflow-x-auto my-4">
+                    <table class="w-full border text-xs">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="border px-2 py-1">排名</th>
+                                <th class="border px-2 py-1">班级</th>
+                                <th class="border px-2 py-1">综合得分</th>
+                                <th class="border px-2 py-1">完成率</th>
+                                <th class="border px-2 py-1">掌握度</th>
+                                <th class="border px-2 py-1">评级</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border px-2 py-1">1</td>
+                                <td class="border px-2 py-1">24临床1班</td>
+                                <td class="border px-2 py-1">96.2</td>
+                                <td class="border px-2 py-1">99%</td>
+                                <td class="border px-2 py-1">91%</td>
+                                <td class="border px-2 py-1 text-success">优秀</td>
+                            </tr>
+                            <tr>
+                                <td class="border px-2 py-1">2</td>
+                                <td class="border px-2 py-1">24护理2班</td>
+                                <td class="border px-2 py-1">94.5</td>
+                                <td class="border px-2 py-1">98%</td>
+                                <td class="border px-2 py-1">88%</td>
+                                <td class="border px-2 py-1 text-success">优秀</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="h-52 my-4">
+                    <canvas id="chartClass"></canvas>
+                </div>
+            </section>
+
+            <!-- 3. 教学运行数据概况 -->
+            <section id="part3" class="report-section mb-8">
+                <h3 class="text-lg font-bold border-l-4 border-primary pl-3 mb-4">三、教学运行数据概况</h3>
+                <h4 class="font-semibold mb-2">3.1 知识点学习情况汇总</h4>
+                <p class="mb-2">全校课程知识点总计1865个，已完成学习1782个，学习完成率95.5%。高掌握度知识点（≥85分）1026个，中等掌握度知识点（60-84分）683个，待提升知识点（＜60分）156个。整体知识点学习覆盖完整，难度梯度合理。</p>
+                
+                <h4 class="font-semibold mb-2 mt-4">3.2 课堂教学情况汇总</h4>
+                <p class="mb-2">本学期课堂教学总时长12.6万分钟，平均课堂出勤率97.2%，课堂互动率86.7%，课堂任务完成率92.3%。多媒体教学、AI辅助教学、情景化教学模式全面覆盖，课堂教学质量较上一学期提升7.6个百分点，学生课堂满意度94.6%。</p>
+                <div class="h-52 my-4">
+                    <canvas id="chartTeach"></canvas>
+                </div>
+            </section>
+
+            <!-- 4. 知识点掌握度详情分析 -->
+            <section id="part4" class="report-section mb-8">
+                <h3 class="text-lg font-bold border-l-4 border-primary pl-3 mb-4">四、知识点掌握度详情分析</h3>
+                <h4 class="font-semibold mb-2">4.1 知识点学习情况概况</h4>
+                <p class="mb-2">知识点学习覆盖理论基础、实操技能、思政融合、拓展延伸四大维度，各维度学习完成率均超过93%。其中实操类知识点掌握度最高（87.2%），理论类知识点掌握度83.5%，思政类知识点掌握度85.1%，拓展类知识点掌握度79.4%。</p>
+                
+                <h4 class="font-semibold mb-2 mt-4">4.2 知识点学习情况总览</h4>
+                <div class="h-52 my-4">
+                    <canvas id="chartPointTotal"></canvas>
+                </div>
+                
+                <h4 class="font-semibold mb-2 mt-4">4.3 班级下知识点学习情况详情</h4>
+                <p class="mb-2">各班级知识点掌握度呈现分层特征，重点专业班级掌握度普遍高于普通班级。低掌握度知识点集中在高阶实操与综合应用类内容，需在下一学期强化实训教学与AI辅助练习。</p>
+                <div class="border rounded p-3 bg-gray-50 my-4">
+                    <p class="text-xs text-gray-500">AI分析建议：针对156个低掌握度知识点，增加AI出题练习、智能体对话实训、可视化教学内容，提升学习趣味性与理解深度。</p>
+                </div>
+            </section>
+
+            <!-- 5. 课程考核情况统计 -->
+            <section id="part5" class="report-section mb-8">
+                <h3 class="text-lg font-bold border-l-4 border-primary pl-3 mb-4">五、课程考核情况统计</h3>
+                <h4 class="font-semibold mb-2">5.1 班级发布任务情况统计</h4>
+                <p class="mb-2">全校累计发布各类任务2876次，其中作业任务1243次，测试任务865次，考试任务328次，实训任务440次。任务发布频次合理，覆盖全部课程与知识点，考核体系完整。</p>
+                
+                <h4 class="font-semibold mb-2 mt-4">5.2-5.4 任务完成情况与总成绩统计</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+                    <div class="h-44"><canvas id="chartTask1"></canvas></div>
+                    <div class="h-44"><canvas id="chartTask2"></canvas></div>
+                </div>
+                <p class="mb-2">班级作业完成率平均91.2%，测试完成率88.7%，考试完成率96.5%。课程总成绩平均分78.6分，优秀率（≥90）16.8%，良好率（80-89）34.2%，合格率（60-79）40.5%，不合格率8.5%。整体考核结果符合正态分布，考核标准科学有效。</p>
+            </section>
+
+            <!-- 6. 能力达成度分析 -->
+            <section id="part6" class="report-section mb-8">
+                <h3 class="text-lg font-bold border-l-4 border-primary pl-3 mb-4">六、能力达成度分析</h3>
+                <p class="mb-2">基于岗位能力模型与人才培养方案，从专业基础能力、实操应用能力、综合素养能力、创新拓展能力四大维度进行达成度分析。整体能力达成度均值83.1%，较上一学期提升6.3个百分点。</p>
+                <div class="h-52 my-4">
+                    <canvas id="chartAbility"></canvas>
+                </div>
+                <p class="mb-2">专业基础能力达成度86.2%，实操应用能力达成度84.7%，综合素养能力达成度81.3%，创新拓展能力达成度77.5%。创新拓展能力为主要提升方向，建议增加项目式实训、AI创新应用、跨学科综合任务。</p>
+            </section>
+
+            <!-- 7. AI工具使用情况分析 -->
+            <section id="part7" class="report-section mb-8">
+                <h3 class="text-lg font-bold border-l-4 border-primary pl-3 mb-4">七、AI工具使用情况分析</h3>
+                <p class="mb-2">本学期AI教学工具累计使用4.2万次，其中AI智能出题1.2万次、AI智能体对话1.8万次、AI测评任务0.6万次、AI报告生成0.3万次、AI辅助学习0.3万次。教师使用率92.5%，学生使用率74.8%。</p>
+                <div class="h-52 my-4">
+                    <canvas id="chartAI"></canvas>
+                </div>
+                <p class="mb-2">AI工具显著提升教学效率与学习效果，使用频次高的班级教学质量、知识点掌握度、任务完成率均显著高于低使用率班级。AI教学模式已成为本校常态化、高质量教学的核心支撑。</p>
+                
+                <div class="border-t pt-4 mt-4 text-gray-500 text-xs text-center">
+                    报告总字数：6820字 | 本报告由AI全自动生成，数据真实有效，图文结合完整，符合学校教学运行分析要求
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 弹窗：AI生成报告 -->
+    <div id="generateModal" class="fixed inset-0 mask hidden items-center justify-center fade-anim z-50">
+        <div class="bg-white rounded-lg w-[440px] p-5 shadow-xl text-center">
+            <div class="mb-4">
+                <i class="fa fa-cog fa-spin text-3xl text-primary"></i>
+            </div>
+            <h3 class="font-semibold mb-2">AI 正在生成教学运行报告</h3>
+            <p class="text-sm text-gray-500 mb-1">生成模式：图文结合完整版 | 报告字数：≥5000字</p>
+            <p class="text-sm text-gray-500 mb-4">正在分析全校教学数据并生成图表……</p>
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                <div class="bg-primary h-2 rounded-full w-[75%]"></div>
+            </div>
+            <button onclick="closeModal('generateModal')" class="bg-primary text-white px-4 py-2 rounded text-sm">取消生成</button>
+        </div>
+    </div>
+
+    <!-- 弹窗：导出报告 -->
+    <div id="exportModal" class="fixed inset-0 mask hidden items-center justify-center fade-anim z-50">
+        <div class="bg-white rounded-lg w-[400px] p-5 shadow-xl">
+            <h3 class="font-semibold mb-4">导出教学运行报告</h3>
+            <div class="space-y-3 mb-4">
+                <label class="flex items-center text-sm"><input type="radio" checked class="mr-2"> 导出 Word 文档（可编辑）</label>
+                <label class="flex items-center text-sm"><input type="radio" class="mr-2"> 导出 PDF 文件（正式版）</label>
+                <label class="flex items-center text-sm"><input type="radio" class="mr-2"> 导出图片+文字版</label>
+            </div>
+            <div class="flex justify-end gap-3">
+                <button onclick="closeModal('exportModal')" class="border px-4 py-1.5 rounded text-sm">取消</button>
+                <button onclick="closeModal('exportModal');alert('报告导出成功（6820字 图文结合）')" class="bg-primary text-white px-4 py-1.5 rounded text-sm">确认导出</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 弹窗：全屏预览 -->
+    <div id="previewModal" class="fixed inset-0 mask hidden items-center justify-center fade-anim z-50">
+        <div class="bg-white rounded-lg w-[90%] h-[90vh] overflow-y-auto p-6 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold">报告全屏预览</h3>
+                <button onclick="closeModal('previewModal')" class="text-xl">&times;</button>
+            </div>
+            <div class="text-sm leading-relaxed">
+                <p class="mb-2">（全屏展示完整报告内容，与正文一致，包含全部图表、文字、分析内容）</p>
+                <p class="text-gray-500">报告字数：6820字 | 图文结合 | 全维度分析</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 弹窗控制
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.getElementById(id).classList.remove('flex');
+        }
+        function openGenerateModal() {
+            document.getElementById('generateModal').classList.remove('hidden');
+            document.getElementById('generateModal').classList.add('flex');
+        }
+        function openExportModal() {
+            document.getElementById('exportModal').classList.remove('hidden');
+            document.getElementById('exportModal').classList.add('flex');
+        }
+        function openPreviewModal() {
+            document.getElementById('previewModal').classList.remove('hidden');
+            document.getElementById('previewModal').classList.add('flex');
+        }
+        function refreshReport() {
+            alert('已触发AI重新生成，将生成全新图文教学运行报告（≥5000字）');
+        }
+
+        // 图表初始化
+        const charts = ['chartTotal','chartClass','chartTeach','chartPointTotal','chartTask1','chartTask2','chartAbility','chartAI'];
+        charts.forEach(id => {
+            const ctx = document.getElementById(id).getContext('2d');
+            new Chart(ctx, {
+                type: id.includes('Task') ? 'doughnut' : 'bar',
+                data: {
+                    labels: ['完成率','掌握度','使用率','得分'],
+                    datasets: [{ data: [96,82,89,78], backgroundColor: '#D92B3B' }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        });
+    </script>
+</body>
+</html>

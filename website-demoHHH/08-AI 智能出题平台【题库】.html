@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI智能出题系统 - 题库管理</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#D92B3B',
+                        success: '#10B981',
+                        warning: '#F59E0B',
+                        danger: '#EF4444',
+                        info: '#3B82F6',
+                        purple: '#8B5CF6',
+                        grayText: '#4B5563'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .fade { animation: fadeIn 0.2s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .mask { background: rgba(0,0,0,0.55); }
+        .scroll-auto::-webkit-scrollbar { width: 4px; }
+        .scroll-auto::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+        .question-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen text-gray-700">
+<!-- 顶部导航栏 -->
+<header class="bg-primary text-white shadow-md">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <div>
+            <h1 class="text-xl font-bold">AI 智能出题平台</h1>
+            <p class="text-sm opacity-90 mt-1">多出题模式 | 题目编辑 | 题库入库 | 批量导出</p>
+        </div>
+        <div class="flex gap-3">
+            <button id="btn-export-all" class="bg-white text-primary px-4 py-2 rounded text-sm hover:bg-gray-50">
+                <i class="fa fa-download mr-1"></i> 一键导出全部题目
+            </button>
+            <button class="bg-white text-primary px-4 py-2 rounded text-sm hover:bg-gray-50">
+                <i class="fa fa-book mr-1"></i> 进入题库管理
+            </button>
+        </div>
+    </div>
+</header>
+
+<main class="container mx-auto px-6 py-6">
+    <!-- 出题模式选择 -->
+    <section class="bg-white rounded-lg shadow p-4 mb-6">
+        <h3 class="text-sm font-medium mb-3">选择出题模式</h3>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+            <button class="mode-btn bg-primary text-white py-2 rounded text-sm" data-mode="knowledge">根据知识点出题</button>
+            <button class="mode-btn bg-gray-100 hover:bg-gray-200 py-2 rounded text-sm" data-mode="content">根据参考内容出题</button>
+            <button class="mode-btn bg-gray-100 hover:bg-gray-200 py-2 rounded text-sm" data-mode="code">编程题出题</button>
+            <button class="mode-btn bg-gray-100 hover:bg-gray-200 py-2 rounded text-sm" data-mode="medical">医学A1-A4题型</button>
+            <button class="mode-btn bg-gray-100 hover:bg-gray-200 py-2 rounded text-sm" data-mode="mix">混合题型出题</button>
+        </div>
+    </section>
+
+    <!-- 全局操作按钮 -->
+    <div class="bg-white rounded-lg shadow p-3 mb-6 flex flex-wrap gap-3">
+        <button id="btn-refresh-all" class="border border-primary text-primary px-4 py-2 rounded text-sm">
+            <i class="fa fa-refresh mr-1"></i> 全部题目重新生成
+        </button>
+        <button id="btn-add-all" class="bg-primary text-white px-4 py-2 rounded text-sm">
+            <i class="fa fa-plus mr-1"></i> 批量加入题库
+        </button>
+        <span class="flex-1"></span>
+        <span class="text-sm text-gray-500 self-center">说明：支持单题重生成、单题入库编辑、二次编辑题目</span>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- 左侧：出题参数配置区 -->
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-lg shadow p-5 sticky top-4">
+                <h2 class="font-semibold text-base mb-4">出题参数配置</h2>
+
+                <!-- 知识点出题面板 -->
+                <div id="panel-knowledge" class="config-panel space-y-4 fade">
+                    <div>
+                        <label class="text-sm block mb-1">课程图谱 - 选择知识点（≥3个）</label>
+                        <div class="border rounded p-3 h-36 overflow-y-auto scroll-auto text-sm space-y-2">
+                            <label class="flex items-center cursor-pointer"><input type="checkbox" checked class="mr-2"> 基础理论概述</label>
+                            <label class="flex items-center cursor-pointer"><input type="checkbox" checked class="mr-2"> 核心原理解析</label>
+                            <label class="flex items-center cursor-pointer"><input type="checkbox" checked class="mr-2"> 实操流程规范</label>
+                            <label class="flex items-center cursor-pointer"><input type="checkbox" class="mr-2"> 常见问题排查</label>
+                            <label class="flex items-center cursor-pointer"><input type="checkbox" class="mr-2"> 拓展应用场景</label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm block mb-1">出题引擎模式</label>
+                        <div class="flex gap-4 text-sm">
+                            <label class="flex items-center cursor-pointer"><input type="radio" name="engine" checked class="mr-1"> 普通模式</label>
+                            <label class="flex items-center cursor-pointer"><input type="radio" name="engine" class="mr-1"> 知识库模式</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 参考内容出题面板 -->
+                <div id="panel-content" class="config-panel hidden space-y-4 fade">
+                    <div>
+                        <label class="text-sm block mb-1">自定义参考文本</label>
+                        <textarea class="w-full border rounded p-2 text-sm h-24 resize-none" placeholder="粘贴讲义、知识点文本等内容"></textarea>
+                    </div>
+                    <div>
+                        <label class="text-sm block mb-1">上传参考资料</label>
+                        <div class="border-2 border-dashed rounded p-4 text-center text-gray-500 text-sm">
+                            <i class="fa fa-cloud-upload text-xl"></i>
+                            <p class="mt-1">点击/拖拽文件上传</p>
+                            <p class="text-xs mt-1">支持 PDF / Word / TXT</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 编程题面板 -->
+                <div id="panel-code" class="config-panel hidden space-y-4 fade">
+                    <div>
+                        <label class="text-sm block mb-1">编程语言</label>
+                        <select class="w-full border rounded p-2 text-sm">
+                            <option>Python</option>
+                            <option>Java</option>
+                            <option>C/C++</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-sm block mb-1">题目难度</label>
+                        <div class="flex gap-3 text-sm">
+                            <label class="flex items-center"><input type="radio" name="codeLevel" checked class="mr-1"> 基础</label>
+                            <label class="flex items-center"><input type="radio" name="codeLevel" class="mr-1"> 进阶</label>
+                            <label class="flex items-center"><input type="radio" name="codeLevel" class="mr-1"> 高阶</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 医学题型面板 -->
+                <div id="panel-medical" class="config-panel hidden space-y-4 fade">
+                    <div>
+                        <label class="text-sm block mb-1">医学题型</label>
+                        <div class="grid grid-cols-2 gap-2 text-sm">
+                            <label class="flex items-center"><input type="checkbox" checked class="mr-1"> A1 单句型</label>
+                            <label class="flex items-center"><input type="checkbox" checked class="mr-1"> A2 案例题</label>
+                            <label class="flex items-center"><input type="checkbox" class="mr-1"> A3 组题</label>
+                            <label class="flex items-center"><input type="checkbox" class="mr-1"> A4 长案例</label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm block mb-1">医学方向</label>
+                        <select class="w-full border rounded p-2 text-sm">
+                            <option>基础医学</option>
+                            <option>临床医学</option>
+                            <option>护理学</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 公共配置 -->
+                <div class="mt-5 pt-4 border-t space-y-4">
+                    <div>
+                        <label class="text-sm block mb-2">选择题型</label>
+                        <div class="flex flex-wrap gap-2 text-sm">
+                            <label class="border rounded px-2 py-1 cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" checked class="mr-1"> 单选题
+                            </label>
+                            <label class="border rounded px-2 py-1 cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" checked class="mr-1"> 多选题
+                            </label>
+                            <label class="border rounded px-2 py-1 cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" class="mr-1"> 判断题
+                            </label>
+                            <label class="border rounded px-2 py-1 cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" class="mr-1"> 填空题
+                            </label>
+                            <label class="border rounded px-2 py-1 cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" class="mr-1"> 混合题型
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm block mb-1">生成题目数量</label>
+                        <input type="number" value="6" min="1" max="30" class="w-full border rounded p-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="text-sm block mb-1">答案选项数量(≥5)</label>
+                        <input type="number" value="5" min="5" max="8" class="w-full border rounded p-2 text-sm">
+                    </div>
+                </div>
+
+                <!-- 生成按钮 -->
+                <div class="mt-6">
+                    <button id="btn-generate" class="w-full bg-primary text-white py-2 rounded text-sm hover:bg-primary/90">
+                        <i class="fa fa-magic mr-1"></i> 生成题目
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧：题目预览 & 单题操作区 -->
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-lg shadow p-5">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-semibold text-base">AI 题目预览列表</h2>
+                    <span class="text-xs text-gray-500">每题选项 ≥ 5 个 | 支持单题操作、二次编辑</span>
+                </div>
+
+                <div id="question-list" class="space-y-5 max-h-[700px] overflow-y-auto scroll-auto">
+                    <!-- 题目1 -->
+                    <div class="question-card border rounded p-4 transition-all" data-qid="1">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm font-medium text-info">第1题 · 单选题</span>
+                            <div class="flex gap-2">
+                                <button onclick="singleRefresh(1)" class="text-xs border px-2 py-0.5 rounded hover:bg-gray-50">单题重生成</button>
+                                <button onclick="openEditModal(1)" class="text-xs border px-2 py-0.5 rounded hover:bg-gray-50">编辑/入库</button>
+                                <button onclick="secondEdit(1)" class="text-xs border px-2 py-0.5 rounded hover:bg-gray-50">二次编辑</button>
+                            </div>
+                        </div>
+                        <p class="text-sm mb-3">结合基础理论概述，下列关于课程核心定义描述正确的是？</p>
+                        <div class="space-y-2 text-sm pl-2">
+                            <div>A. 仅侧重理论记忆，无需结合实操</div>
+                            <div>B. 理论与实操相辅相成，缺一不可</div>
+                            <div>C. 理论内容可直接跳过，重点练习操作</div>
+                            <div>D. 理论标准可根据个人习惯随意更改</div>
+                            <div>E. 理论知识仅用于考试，无实际价值</div>
+                        </div>
+                        <p class="mt-3 text-xs text-success font-medium">正确答案：B</p>
+                    </div>
+
+                    <!-- 题目2 -->
+                    <div class="question-card border rounded p-4 transition-all" data-qid="2">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm font-medium text-warning">第2题 · 多选题</span>
+                            <div class="flex gap-2">
+                                <button onclick="singleRefresh(2)" class="text-xs border px-2 py-0.5 rounded hover:bg-gray-50">单题重生成</button>
+                                <button onclick="openEditModal(2)" class="text-xs border px-2 py-0.5 rounded hover:bg-gray-50">编辑/入库</button>
+                                <button onclick="secondEdit(2)" class="text-xs border px-2 py-0.5 rounded hover:bg-gray-50">二次编辑</button>
+                            </div>
+                        </div>
+                        <p class="text-sm mb-3">根据核心原理解析，属于系统运行必要条件的有哪些？</p>
+                        <div class="space-y-2 text-sm pl-2">
+                            <div>A. 环境参数达标</div>
+                            <div>B. 硬件设备正常</div>
+                            <div>C. 权限配置完整</div>
+                            <div>D. 无关程序同步运行</div>
+                            <div>E. 基础数据初始化完成</div>
+                        </div>
+                        <p class="mt-3 text-xs text-success font-medium">正确答案：A B C E</p>
+                    </div>
+
+                    <!-- 题目3 -->
+                    <div class="question-card border rounded p-4 transition-all" data-qid="3">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm font-medium">第3题 · 判断题</span>
+                            <div class="flex gap-2">
+                                <button onclick="singleRefresh(3)" class="text-xs border px-2 py-0.5 rounded hover:bg-gray-50">单题重生成</button>
+                                <button onclick="openEditModal(3)" class="text-xs border px-2 py-0.5 rounded hover:bg-gray-50">编辑/入库</button>
+                                <button onclick="secondEdit(3)" class="text-xs border px-2 py-0.5 rounded hover:bg-gray-50">二次编辑</button>
+                            </div>
+                        </div>
+                        <p class="text-sm mb-3">按照实操流程规范，操作步骤可以打乱顺序随意执行。</p>
+                        <div class="space-y-2 text-sm pl-2">
+                            <div>A. 正确</div>
+                            <div>B. 错误</div>
+                            <div>C. 视情况而定</div>
+                            <div>D. 部分正确</div>
+                            <div>E. 无法判断</div>
+                        </div>
+                        <p class="mt-3 text-xs text-success font-medium">正确答案：B</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- 弹窗：题目编辑 & 加入题库（核心弹窗） -->
+<div id="editModal" class="fixed inset-0 mask hidden items-center justify-center fade z-50">
+    <div class="bg-white rounded-lg w-[720px] max-h-[90vh] overflow-y-auto scroll-auto shadow-xl p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-semibold text-lg">题目编辑 & 加入题库</h3>
+            <button onclick="closeModal('editModal')" class="text-gray-400 text-xl">&times;</button>
+        </div>
+
+        <div class="space-y-4">
+            <!-- 题干编辑 -->
+            <div>
+                <label class="text-sm text-grayText block mb-1">题干</label>
+                <textarea class="w-full border rounded p-2 text-sm h-20 resize-none">结合基础理论概述，下列关于课程核心定义描述正确的是？</textarea>
+            </div>
+            <!-- 答案编辑 -->
+            <div>
+                <label class="text-sm text-grayText block mb-1">正确答案</label>
+                <input type="text" value="B" class="w-full border rounded p-2 text-sm">
+            </div>
+            <!-- 解析编辑 -->
+            <div>
+                <label class="text-sm text-grayText block mb-1">题目解析</label>
+                <textarea class="w-full border rounded p-2 text-sm h-16 resize-none">理论知识与实际操作相辅相成，只有二者结合才能完整掌握课程内容。</textarea>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <!-- 题型 -->
+                <div>
+                    <label class="text-sm text-grayText block mb-1">题目类型</label>
+                    <select class="w-full border rounded p-2 text-sm">
+                        <option>单选题</option>
+                        <option>多选题</option>
+                        <option>判断题</option>
+                        <option>填空题</option>
+                    </select>
+                </div>
+                <!-- 难度 -->
+                <div>
+                    <label class="text-sm text-grayText block mb-1">题目难度</label>
+                    <select class="w-full border rounded p-2 text-sm">
+                        <option>简单</option>
+                        <option selected>中等</option>
+                        <option>困难</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 关联知识点 -->
+            <div>
+                <label class="text-sm text-grayText block mb-1">相关知识点</label>
+                <input type="text" value="基础理论概述,核心原理解析" class="w-full border rounded p-2 text-sm" placeholder="多个知识点用逗号分隔">
+            </div>
+            <!-- 标签 -->
+            <div>
+                <label class="text-sm text-grayText block mb-1">题目标签</label>
+                <input type="text" value="课堂练习,基础题" class="w-full border rounded p-2 text-sm" placeholder="自定义标签，逗号分隔">
+            </div>
+        </div>
+
+        <!-- 底部操作按钮：三种操作 + 跳过 -->
+        <div class="flex justify-between mt-6 pt-4 border-t">
+            <button onclick="closeModal('editModal')" class="border border-gray-300 px-4 py-2 rounded text-sm">
+                跳过此题
+            </button>
+            <div class="flex gap-3">
+                <button onclick="saveExit()" class="bg-gray-200 px-4 py-2 rounded text-sm hover:bg-gray-300">
+                    保存并退出
+                </button>
+                <button onclick="saveNext()" class="bg-primary text-white px-4 py-2 rounded text-sm hover:bg-primary/90">
+                    保存并添加下一题
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 关闭弹窗
+    function closeModal(id) {
+        const el = document.getElementById(id);
+        el.classList.add('hidden');
+        el.classList.remove('flex');
+    }
+    // 打开编辑弹窗
+    function openEditModal(qid) {
+        document.getElementById('editModal').classList.remove('hidden');
+        document.getElementById('editModal').classList.add('flex');
+    }
+
+    // 单题重新生成
+    function singleRefresh(qid) {
+        alert(`第${qid}题已重新生成全新题目`);
+    }
+    // 全部题目重新生成
+    document.getElementById('btn-refresh-all').addEventListener('click', () => {
+        alert('所有题目已批量重新生成');
+    });
+    // 批量加入题库
+    document.getElementById('btn-add-all').addEventListener('click', () => {
+        openEditModal();
+    });
+    // 一键导出全部题目
+    document.getElementById('btn-export-all').addEventListener('click', () => {
+        alert('全部题目已一键导出，支持Excel/Word格式');
+    });
+    // 二次编辑
+    function secondEdit(qid) {
+        alert(`第${qid}题进入二次编辑模式，可再次修改题干、答案、解析等内容`);
+    }
+
+    // 保存并退出
+    function saveExit() {
+        alert('题目已保存至题库，退出编辑');
+        closeModal('editModal');
+    }
+    // 保存并添加下一题
+    function saveNext() {
+        alert('当前题目已保存，自动加载下一题进行编辑入库');
+    }
+
+    // 出题模式切换
+    const modeBtns = document.querySelectorAll('.mode-btn');
+    const panels = document.querySelectorAll('.config-panel');
+    modeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            modeBtns.forEach(b => {
+                b.classList.remove('bg-primary','text-white');
+                b.classList.add('bg-gray-100');
+            });
+            btn.classList.remove('bg-gray-100');
+            btn.classList.add('bg-primary','text-white');
+            panels.forEach(p => p.classList.add('hidden'));
+            const mode = btn.dataset.mode;
+            if(mode === 'knowledge') document.getElementById('panel-knowledge').classList.remove('hidden');
+            if(mode === 'content') document.getElementById('panel-content').classList.remove('hidden');
+            if(mode === 'code') document.getElementById('panel-code').classList.remove('hidden');
+            if(mode === 'medical') document.getElementById('panel-medical').classList.remove('hidden');
+            if(mode === 'mix') document.getElementById('panel-knowledge').classList.remove('hidden');
+        });
+    });
+
+    // 生成题目
+    document.getElementById('btn-generate').addEventListener('click', () => {
+        alert('AI 已根据配置生成对应题目');
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI知识库资源解析与智能问答系统</title>
+    <!-- 官方CDN 样式必生效 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#E53E3E',   // 红
+                        secondary: '#4B5563',// 灰
+                        warning: '#F59E0B',  // 黄
+                        light: '#F9FAFB'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .mask { background: rgba(0,0,0,0.55); }
+        .fade { animation: fade 0.3s ease-in-out; }
+        @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .jump-point { cursor: pointer; }
+    </style>
+</head>
+<body class="bg-gray-100 text-secondary">
+
+<!-- 头部 -->
+<header class="bg-primary text-white sticky top-0 z-50 shadow">
+    <div class="px-6 py-4 flex justify-between items-center">
+        <div>
+            <h1 class="text-xl font-bold">AI 知识库资源解析与智能问答</h1>
+            <p class="text-sm opacity-80">多模态解析 | 多问答模型 | 精准溯源 | 关联知识点跳转</p>
+        </div>
+        <button onclick="openModal('parseModal')" class="bg-white text-primary px-4 py-2 rounded text-sm">
+            <i class="fa fa-file-text-o mr-1"></i>AI 解析知识库
+        </button>
+    </div>
+</header>
+
+<main class="max-w-6xl mx-auto p-6">
+
+    <!-- 问答交互区 -->
+    <div class="bg-white rounded shadow p-5 mb-6">
+        <h2 class="font-bold text-lg mb-4">AI 智能问答（答案来源于课程知识库）</h2>
+
+        <!-- 问答模型选择（≥3种） -->
+        <div class="mb-4">
+            <label class="text-sm font-medium block mb-2">选择问答模型（≥3种）</label>
+            <div class="flex gap-3 flex-wrap">
+                <label class="border px-3 py-1.5 rounded text-sm bg-primary text-white cursor-pointer">
+                    <input type="radio" name="model" class="hidden" checked> 精准溯源模型
+                </label>
+                <label class="border px-3 py-1.5 rounded text-sm hover:bg-gray-100 cursor-pointer">
+                    <input type="radio" name="model" class="hidden"> 知识点深度模型
+                </label>
+                <label class="border px-3 py-1.5 rounded text-sm hover:bg-gray-100 cursor-pointer">
+                    <input type="radio" name="model" class="hidden"> 学习路径推荐模型
+                </label>
+            </div>
+        </div>
+
+        <!-- 提问输入框 -->
+        <div class="flex gap-2 mb-6">
+            <input type="text" placeholder="请输入你的问题……" class="flex-1 border rounded px-3 py-2 text-sm">
+            <button class="bg-primary text-white px-4 py-2 rounded text-sm">发送提问</button>
+        </div>
+
+        <!-- AI 回答内容 -->
+        <div class="border rounded p-4 bg-light space-y-4">
+            <div class="text-sm font-medium text-primary">问题：什么是无菌技术操作原则？</div>
+            <div class="text-sm leading-relaxed">
+                <div class="bg-red-50 text-red-600 text-xs px-2 py-1 rounded inline-block mb-2">
+                    <i class="fa fa-info-circle mr-1"></i>回复答案来源于课程知识库
+                </div>
+                <div class="font-medium mb-1">【AI 文字回复】</div>
+                <p>无菌技术操作原则包括：① 明确无菌区与非无菌区；② 操作者身体应与无菌区保持一定距离；③ 无菌物品必须存放于无菌容器；④ 操作时禁止跨越无菌区；⑤ 一份无菌物品仅供一位患者使用。</p>
+            </div>
+
+            <!-- 参考来源 -->
+            <div class="text-sm">
+                <div class="font-medium text-warning">参考来源（课程知识库）</div>
+                <p class="text-xs">《基础护理学》第五章 无菌技术（课程内部教材资源 ID：KC-2406-008）</p>
+            </div>
+
+            <!-- 关联知识点（可跳转） -->
+            <div class="text-sm">
+                <div class="font-medium text-warning">关联知识点（点击跳转知识点画像）</div>
+                <div class="flex flex-wrap gap-2 mt-1">
+                    <span onclick="openPointModal()" class="jump-point bg-primary/10 text-primary px-2 py-1 rounded text-xs">无菌技术</span>
+                    <span onclick="openPointModal()" class="jump-point bg-primary/10 text-primary px-2 py-1 rounded text-xs">医院感染控制</span>
+                    <span onclick="openPointModal()" class="jump-point bg-primary/10 text-primary px-2 py-1 rounded text-xs">护理安全操作</span>
+                </div>
+            </div>
+
+            <!-- 教材定位 -->
+            <div class="text-sm">
+                <div class="font-medium text-warning">参考教材片段</div>
+                <p class="text-xs">教材定位：《基础护理学》P32-P34，第三节 无菌技术操作规范</p>
+            </div>
+
+            <!-- 相关学习资源 -->
+            <div class="text-sm">
+                <div class="font-medium text-warning">相关学习资源</div>
+                <div class="text-xs space-y-1 mt-1">
+                    <p>📺 视频：无菌技术操作演示（资源ID：SP-2405-102）</p>
+                    <p>📊 PPT：无菌技术与医院感染（资源ID：PPT-2405-09）</p>
+                    <p>📄 文档：操作流程与考核标准（资源ID：DOC-2405-44）</p>
+                </div>
+            </div>
+
+            <!-- 推荐学习路径 -->
+            <div class="text-sm">
+                <div class="font-medium text-warning">推荐学习路径</div>
+                <p class="text-xs">无菌技术 → 洗手与手消毒 → 隔离技术 → 职业防护 → 综合实训</p>
+            </div>
+
+            <!-- 感兴趣问题 -->
+            <div class="text-sm">
+                <div class="font-medium text-warning">其他感兴趣的问题</div>
+                <div class="text-xs mt-1 space-y-1">
+                    <p>• 无菌物品有效期是多久？</p>
+                    <p>• 无菌操作中手套破损如何处理？</p>
+                    <p>• 如何区分清洁区、半污染区、污染区？</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 多模态资源解析区 -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-white rounded shadow p-4">
+            <div class="flex items-center gap-2 mb-2">
+                <i class="fa fa-file-text text-primary text-lg"></i>
+                <h3 class="font-medium">文字资源解析</h3>
+            </div>
+            <p class="text-xs text-gray-500">解析教材、文档、习题、知识点文本</p>
+            <div class="text-xs text-green-600 mt-1">已解析：286 份</div>
+        </div>
+        <div class="bg-white rounded shadow p-4">
+            <div class="flex items-center gap-2 mb-2">
+                <i class="fa fa-sitemap text-primary text-lg"></i>
+                <h3 class="font-medium">知识图谱解析</h3>
+            </div>
+            <p class="text-xs text-gray-500">解析知识点关系、层级、关联结构</p>
+            <div class="text-xs text-green-600 mt-1">已解析：1865 节点</div>
+        </div>
+        <div class="bg-white rounded shadow p-4">
+            <div class="flex items-center gap-2 mb-2">
+                <i class="fa fa-play-circle text-primary text-lg"></i>
+                <h3 class="font-medium">视频资源解析</h3>
+            </div>
+            <p class="text-xs text-gray-500">解析字幕、画面、关键帧、知识点标签</p>
+            <div class="text-xs text-green-600 mt-1">已解析：428 个</div>
+        </div>
+    </div>
+
+    <!-- 知识库资源列表 -->
+    <div class="bg-white rounded shadow p-5">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-bold">课程知识库资源列表（已解析可被AI调用）</h3>
+            <button class="text-primary text-sm" onclick="openModal('parseModal')">立即解析</button>
+        </div>
+        <div class="overflow-x-auto text-sm">
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-3 py-2 text-left">资源名称</th>
+                        <th class="px-3 py-2 text-left">类型</th>
+                        <th class="px-3 py-2 text-left">解析状态</th>
+                        <th class="px-3 py-2 text-left">关联知识点</th>
+                        <th class="px-3 py-2 text-left">AI可用</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-t">
+                        <td class="px-3 py-2">无菌技术操作规范</td>
+                        <td class="px-3 py-2">教材</td>
+                        <td class="px-3 py-2 text-green-600">已解析</td>
+                        <td class="px-3 py-2">3个</td>
+                        <td class="px-3 py-2 text-green-600">是</td>
+                    </tr>
+                    <tr class="border-t">
+                        <td class="px-3 py-2">护理操作视频合集</td>
+                        <td class="px-3 py-2">视频</td>
+                        <td class="px-3 py-2 text-green-600">已解析</td>
+                        <td class="px-3 py-2">8个</td>
+                        <td class="px-3 py-2 text-green-600">是</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<!-- 弹窗1：AI多模态资源解析 -->
+<div id="parseModal" class="mask fade hidden fixed inset-0 z-50 items-center justify-center">
+    <div class="bg-white rounded-lg w-[450px] p-5 shadow-xl">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="font-bold">AI 多模态知识库解析</h3>
+            <button onclick="closeModal('parseModal')" class="text-lg">×</button>
+        </div>
+        <div class="space-y-3 text-sm mb-4">
+            <div>
+                <label class="block text-xs mb-1">选择资源类型</label>
+                <select class="w-full border rounded px-3 py-2 text-sm">
+                    <option>文字/教材/文档</option>
+                    <option>知识图谱</option>
+                    <option>视频/音频</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs mb-1">上传资源文件</label>
+                <div class="border-dashed border-2 rounded p-4 text-center text-xs text-gray-500">
+                    <i class="fa fa-upload text-lg mb-1"></i>
+                    <p>点击或拖拽上传</p>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-end gap-2">
+            <button onclick="closeModal('parseModal')" class="border px-4 py-1.5 rounded text-sm">取消</button>
+            <button onclick="closeModal('parseModal');alert('AI 正在解析多模态资源，完成后可被AI助教调用')" class="bg-primary text-white px-4 py-1.5 rounded text-sm">开始解析</button>
+        </div>
+    </div>
+</div>
+
+<!-- 弹窗2：知识点画像（可跳转） -->
+<div id="pointModal" class="mask fade hidden fixed inset-0 z-50 items-center justify-center">
+    <div class="bg-white rounded-lg w-[600px] p-5 shadow-xl max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="font-bold">知识点画像：无菌技术</h3>
+            <button onclick="closeModal('pointModal')" class="text-lg">×</button>
+        </div>
+        <div class="text-sm space-y-3">
+            <p><strong>知识点名称：</strong>无菌技术</p>
+            <p><strong>知识点内容：</strong>在医疗护理操作中，保持无菌物品不被污染、防止病原微生物传播的一系列操作技术。</p>
+            <p><strong>关联关系：</strong>属于医院感染控制模块，上级知识点：护理安全；同级：隔离技术、手卫生。</p>
+            <p><strong>关联资源：</strong>视频、PPT、教材、习题、操作流程</p>
+            <p><strong>关联题目：</strong>单选题5道、多选题3道、判断题2道、实操题1道</p>
+        </div>
+        <div class="mt-4 text-right">
+            <button onclick="closeModal('pointModal')" class="bg-primary text-white px-4 py-1.5 rounded text-sm">关闭</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function openModal(id) {
+    document.getElementById(id).classList.remove('hidden');
+    document.getElementById(id).classList.add('flex');
+}
+function closeModal(id) {
+    document.getElementById(id).classList.add('hidden');
+}
+function openPointModal() {
+    openModal('pointModal');
+}
+</script>
+</body>
+</html>

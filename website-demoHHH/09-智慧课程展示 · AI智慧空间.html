@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智慧课程 - AI智慧空间</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#D92B3B',
+                        success: '#10B981',
+                        warning: '#F59E0B',
+                        info: '#3B82F6',
+                        purple: '#8B5CF6',
+                        grayMain: '#4B5563'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .card-shadow { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .scroll-inner::-webkit-scrollbar { width: 5px; }
+        .scroll-inner::-webkit-scrollbar-thumb { background: #ddd; border-radius: 5px; }
+        .tab-active { border-bottom: 2px solid #D92B3B; color: #D92B3B; font-weight: 500; }
+    </style>
+</head>
+<body class="bg-gray-100 text-grayMain">
+<!-- 顶部 -->
+<header class="bg-white shadow-sm">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div>
+            <h1 class="text-lg font-bold">智慧课程展示 · AI智慧空间</h1>
+            <p class="text-xs text-gray-500">临床医学综合实训课程 | 全域AI数据统计</p>
+        </div>
+        <div class="flex gap-2">
+            <button class="border px-3 py-1.5 rounded text-xs hover:bg-gray-50">
+                <i class="fa fa-refresh mr-1"></i> 刷新
+            </button>
+            <button class="bg-primary text-white px-3 py-1.5 rounded text-xs">
+                <i class="fa fa-download mr-1"></i> 导出报表
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- 标签栏 -->
+<section class="bg-white mt-2">
+    <div class="container mx-auto px-4">
+        <div class="flex text-xs border-b">
+            <div class="tab-active px-4 py-2 cursor-pointer" data-tab="agent">智能体统计</div>
+            <div class="px-4 py-2 cursor-pointer" data-tab="command">AI指令统计</div>
+            <div class="px-4 py-2 cursor-pointer" data-tab="tool">AI工具统计</div>
+            <div class="px-4 py-2 cursor-pointer" data-tab="dialog">引导对话</div>
+        </div>
+    </div>
+</section>
+
+<main class="container mx-auto px-4 py-4">
+    <!-- 数据概览 -->
+    <div class="grid grid-cols-5 gap-3 mb-4">
+        <div class="bg-white rounded p-3 card-shadow"><p class="text-xs text-gray-500">建设学校</p><p class="text-xl font-bold mt-1 text-info">18</p></div>
+        <div class="bg-white rounded p-3 card-shadow"><p class="text-xs text-gray-500">智能体总数</p><p class="text-xl font-bold mt-1 text-purple">9</p></div>
+        <div class="bg-white rounded p-3 card-shadow"><p class="text-xs text-gray-500">智能体累计使用</p><p class="text-xl font-bold mt-1 text-primary">26890</p></div>
+        <div class="bg-white rounded p-3 card-shadow"><p class="text-xs text-gray-500">AI指令使用人次</p><p class="text-xl font-bold mt-1 text-success">15620</p></div>
+        <div class="bg-white rounded p-3 card-shadow"><p class="text-xs text-gray-500">AI工具使用次数</p><p class="text-xl font-bold mt-1 text-warning">32156</p></div>
+    </div>
+
+    <!-- 智能体统计 -->
+    <div id="panel-agent" class="tab-panel">
+        <div class="grid grid-cols-3 gap-4">
+            <div class="col-span-2 bg-white rounded-lg p-4 card-shadow h-[420px]">
+                <h2 class="text-sm font-semibold mb-3">智能体使用次数统计</h2>
+                <div class="h-[360px] overflow-y-auto scroll-inner pr-1">
+                    <table class="w-full text-xs">
+                        <thead class="bg-gray-50 sticky top-0"><tr>
+                            <th class="px-3 py-2 text-left">智能体名称</th>
+                            <th class="px-3 py-2 text-left">所属学校</th>
+                            <th class="px-3 py-2 text-left">功能</th>
+                            <th class="px-3 py-2 text-center">累计次数</th>
+                        </tr></thead>
+                        <tbody>
+                            <tr class="border-t"><td class="px-3 py-2">临床问诊智能体</td><td class="px-3 py-2">医科大学1</td><td class="px-3 py-2">模拟问诊</td><td class="px-3 py-2 text-center">5260</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">病例分析智能体</td><td class="px-3 py-2">医科大学2</td><td class="px-3 py-2">病例解读</td><td class="px-3 py-2 text-center">4120</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">医学答题智能体</td><td class="px-3 py-2">职业医学院</td><td class="px-3 py-2">习题测评</td><td class="px-3 py-2 text-center">3890</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">手术模拟智能体</td><td class="px-3 py-2">综合医学院</td><td class="px-3 py-2">实操演练</td><td class="px-3 py-2 text-center">3560</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">护理实训智能体</td><td class="px-3 py-2">护理专科</td><td class="px-3 py-2">护理技能</td><td class="px-3 py-2 text-center">2980</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">药理知识智能体</td><td class="px-3 py-2">药科院校</td><td class="px-3 py-2">药理讲解</td><td class="px-3 py-2 text-center">2150</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">影像判读智能体</td><td class="px-3 py-2">地方医学院</td><td class="px-3 py-2">影像诊断</td><td class="px-3 py-2 text-center">1860</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">急救实训智能体</td><td class="px-3 py-2">综合医科</td><td class="px-3 py-2">急救演练</td><td class="px-3 py-2 text-center">1620</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">健康宣教智能体</td><td class="px-3 py-2">基层医教</td><td class="px-3 py-2">健康科普</td><td class="px-3 py-2 text-center">1350</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg p-4 card-shadow h-[420px]">
+                <h2 class="text-sm font-semibold mb-3">使用分布</h2>
+                <canvas id="agentChart" class="h-[360px]"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI指令统计 -->
+    <div id="panel-command" class="tab-panel hidden">
+        <div class="grid grid-cols-3 gap-4">
+            <div class="col-span-2 bg-white rounded-lg p-4 card-shadow h-[420px]">
+                <h2 class="text-sm font-semibold mb-3">课程特色AI指令（共14条）</h2>
+                <div class="h-[360px] overflow-y-auto scroll-inner pr-1">
+                    <table class="w-full text-xs">
+                        <thead class="bg-gray-50 sticky top-0"><tr>
+                            <th class="px-3 py-2 text-left">指令名称</th>
+                            <th class="px-3 py-2 text-left">功能</th>
+                            <th class="px-3 py-2 text-center">使用人次</th>
+                        </tr></thead>
+                        <tbody>
+                            <tr class="border-t"><td class="px-3 py-2">知识点梳理总结</td><td class="px-3 py-2">梳理重难点</td><td class="px-3 py-2 text-center">1860</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">考点预测分析</td><td class="px-3 py-2">预测高频考点</td><td class="px-3 py-2 text-center">1620</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">案例拓展解读</td><td class="px-3 py-2">临床案例讲解</td><td class="px-3 py-2 text-center">1480</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">易错点专项讲解</td><td class="px-3 py-2">错题解析</td><td class="px-3 py-2 text-center">1350</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">口语问答互动</td><td class="px-3 py-2">实时答疑</td><td class="px-3 py-2 text-center">1210</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">模拟考场出题</td><td class="px-3 py-2">生成试卷</td><td class="px-3 py-2 text-center">1160</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">实操步骤拆解</td><td class="px-3 py-2">流程演示</td><td class="px-3 py-2 text-center">1080</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">术语通俗翻译</td><td class="px-3 py-2">术语解释</td><td class="px-3 py-2 text-center">960</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">课后作业辅导</td><td class="px-3 py-2">习题思路</td><td class="px-3 py-2 text-center">890</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">知识关联拓展</td><td class="px-3 py-2">跨章节串联</td><td class="px-3 py-2 text-center">780</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">学习计划定制</td><td class="px-3 py-2">个性化方案</td><td class="px-3 py-2 text-center">720</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">文献资料检索</td><td class="px-3 py-2">资料查询</td><td class="px-3 py-2 text-center">650</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">错题复盘总结</td><td class="px-3 py-2">错题分析</td><td class="px-3 py-2 text-center">580</td></tr>
+                            <tr class="border-t"><td class="px-3 py-2">小组研讨引导</td><td class="px-3 py-2">讨论话题</td><td class="px-3 py-2 text-center">520</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg p-4 card-shadow h-[420px]">
+                <h2 class="text-sm font-semibold mb-3">AI助教指令使用趋势</h2>
+                <canvas id="commandChart" class="h-[360px]"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI工具统计 -->
+    <div id="panel-tool" class="tab-panel hidden">
+        <div class="bg-white rounded-lg p-4 card-shadow h-[420px]">
+            <h2 class="text-sm font-semibold mb-3">AI教学工具（共13个）</h2>
+            <div class="h-[360px] overflow-y-auto scroll-inner pr-1">
+                <table class="w-full text-xs">
+                    <thead class="bg-gray-50 sticky top-0"><tr>
+                        <th class="px-3 py-2 text-left">工具名称</th>
+                        <th class="px-3 py-2 text-left">工具用途</th>
+                        <th class="px-3 py-2 text-center">使用次数</th>
+                        <th class="px-3 py-2 text-center">状态</th>
+                    </tr></thead>
+                    <tbody>
+                        <tr class="border-t"><td class="px-3 py-2">AI智能出题工具</td><td class="px-3 py-2">生成试题</td><td class="px-3 py-2 text-center">4260</td><td class="px-3 py-2 text-center">正常</td></tr>
+                        <tr class="border-t"><td class="px-3 py-2">虚拟仿真实训工具</td><td class="px-3 py-2">实操演练</td><td class="px-3 py-2 text-center">3890</td><td class="px-3 py-2 text-center">正常</td></tr>
+                        <tr class="border-t"><td class="px-3 py-2">语音评测工具</td><td class="px-3 py-2">发音测评</td><td class="px-3 py-2 text-center">3250</td><td class="px-3 py-2 text-center">正常</td></tr>
+                        <tr class="border-t"><td class="px-3 py-2">学情分析工具</td><td class="px-3 py-2">学习统计</td><td class="px-3 py-2 text-center">2960</td><td class="px-3 py-2 text-center">正常</td></tr>
+                        <tr class="border-t"><td class="px-3 py-2">图文课件生成工具</td><td class="px-3 py-2">制作课件</td><td class="px-3 py-2 text-center">2780</td><td class="px-3 py-2 text-center">正常</td></tr>
+                        <tr class="border-t"><td class="px-3 py-2">作业智能批改工具</td><td class="px-3 py-2">自动批改</td><td class="px-3 py-2 text-center">2560</td><td class="px-3 py-2 text-center">正常</td></tr>
+                        <tr class="border-t"><td class="px-3 py-2">知识点图谱工具</td><td class="px-3 py-2">知识可视化</td><td class="px-3 py-2 text-center">2120</td><td class="px-3 py-2 text-center">正常</td></tr>
+                        <tr class="border-t"><td class="px-3 py-2">错题本整理工具</td><td class="px-3 py-2">错题归集</td><td class="px-3 py-2 text-center">1980</td><td class="px-3 py-2 text-center">正常</td></tr>
+                        <tr class="border-t"><td class="px-3 py-2">在线研讨助手</td><td class="px-3 py-2">讨论管理</td><td class="px-3 py-2 text-center">1760</td><td class="px-3 py-2 text-center">正常</td></tr>
+                        <tr class="border-t"><td class="px-3 py-2">文献解析工具</td><td class="px-3 py-2">文献解读</td><td class="px-3 py-2 text-center">1520</td><td class="px-3 py-2 text-center">正常</td></tr>
+                        <tr class="border-t"><td class="px-3 py-2">双语翻译工具</td><td class="px-3 py-2">中英文互译</td><td class="px-3 py-2 text-center">1360</td><td class="px-3 py-2 text-center">正常</td></tr>
+                        <tr class="border-t"><td class="px-3 py-2">课堂考勤助手</td><td class="px-3 py-2">智能考勤</td><td class="px-3 py-2 text-center">1220</td><td class="px-3 py-2 text-center">正常</td></tr>
+                        <tr class="border-t"><td class="px-3 py-2">学习氛围互动工具</td><td class="px-3 py-2">课堂互动</td><td class="px-3 py-2 text-center">1076</td><td class="px-3 py-2 text-center">正常</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引导对话 -->
+    <div id="panel-dialog" class="tab-panel hidden">
+        <div class="bg-white rounded-lg p-4 card-shadow h-[420px]">
+            <h2 class="text-sm font-semibold mb-3">智能体引导对话记录</h2>
+            <div class="h-[360px] overflow-y-auto scroll-inner pr-1 bg-gray-50 rounded p-3 text-xs space-y-3">
+                <div class="flex gap-2"><div class="w-14 text-gray-400">智能体</div><div class="bg-white p-2 rounded shadow-sm">你好，欢迎进入临床实训课程，需要进行问诊模拟、病例分析还是习题练习？</div></div>
+                <div class="flex gap-2"><div class="w-14 text-gray-400">用户</div><div class="bg-blue-50 p-2 rounded shadow-sm">我想进行临床问诊模拟训练。</div></div>
+                <div class="flex gap-2"><div class="w-14 text-gray-400">智能体</div><div class="bg-white p-2 rounded shadow-sm">已开启问诊场景，请按标准流程操作，我会实时为你纠错。</div></div>
+                <div class="flex gap-2"><div class="w-14 text-gray-400">智能体</div><div class="bg-white p-2 rounded shadow-sm">你可以使用：知识点梳理、易错点讲解、实操步骤拆解等AI指令。</div></div>
+                <div class="flex gap-2"><div class="w-14 text-gray-400">用户</div><div class="bg-blue-50 p-2 rounded shadow-sm">帮我梳理本章节重难点。</div></div>
+                <div class="flex gap-2"><div class="w-14 text-gray-400">智能体</div><div class="bg-white p-2 rounded shadow-sm">重点：问诊流程、症状询问、沟通礼仪；难点：症状鉴别、病史采集。</div></div>
+                <div class="flex gap-2"><div class="w-14 text-gray-400">智能体</div><div class="bg-white p-2 rounded shadow-sm">学习中可使用AI出题、虚拟仿真、学情分析等工具提升效率。</div></div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+// 标签切换
+const tabs = document.querySelectorAll('[data-tab]');
+const panels = document.querySelectorAll('.tab-panel');
+tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('tab-active'));
+        tab.classList.add('tab-active');
+        panels.forEach(p => p.classList.add('hidden'));
+        document.getElementById('panel-' + tab.dataset.tab).classList.remove('hidden');
+    });
+});
+
+// 图表
+new Chart(document.getElementById('agentChart'), {
+    type: 'bar',
+    data: { labels: ['问诊','病例','答题','手术','护理','药理','影像','急救','宣教'],
+            datasets: [{ data: [5260,4120,3890,3560,2980,2150,1860,1620,1350], backgroundColor: '#3B82F6' }]
+    },
+    options: { responsive: true, maintainAspectRatio: false }
+});
+
+new Chart(document.getElementById('commandChart'), {
+    type: 'line',
+    data: {
+        labels: ['1周','2周','3周','4周','5周','6周','7周','8周'],
+        datasets: [{ data: [1200,1680,2150,2460,2090,2350,1960,1730], borderColor: '#D92B3B', backgroundColor: 'rgba(217,43,59,0.1)', fill: true }]
+    },
+    options: { responsive: true, maintainAspectRatio: false }
+});
+</script>
+</body>
+</html>

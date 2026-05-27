@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能体测评任务管理</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#D92B3B',
+                        success: '#10B981',
+                        warning: '#F59E0B',
+                        danger: '#EF4444',
+                        info: '#3B82F6'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .mask { background: rgba(0,0,0,0.5); }
+        .fade-anim { animation: fadeIn 0.2s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .table-row:hover { background-color: #F9FAFB; }
+        .scroll-hide::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen">
+    <!-- 顶部导航 -->
+    <header class="bg-primary text-white px-6 py-4 shadow-md">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold">智能体测评任务管理</h1>
+                <p class="text-sm opacity-90 mt-1">任务创建、参数配置、评级规则、学生数据统计</p>
+            </div>
+            <button onclick="openCreateTaskModal()" class="bg-white text-primary px-4 py-2 rounded text-sm hover:bg-gray-50">
+                <i class="fa fa-plus mr-1"></i> 新建测评任务
+            </button>
+        </div>
+    </header>
+
+    <main class="p-6">
+        <!-- 筛选搜索栏 -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <div class="flex flex-wrap items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-sm font-medium">任务状态：</span>
+                    <button class="px-3 py-1.5 rounded bg-primary text-white text-sm">全部</button>
+                    <button class="px-3 py-1.5 rounded bg-gray-100 hover:bg-gray-200 text-sm">进行中</button>
+                    <button class="px-3 py-1.5 rounded bg-gray-100 hover:bg-gray-200 text-sm">未开始</button>
+                    <button class="px-3 py-1.5 rounded bg-gray-100 hover:bg-gray-200 text-sm">已结束</button>
+                </div>
+                <div class="flex-1 min-w-[260px] flex">
+                    <input type="text" placeholder="搜索任务名称/智能体名称" class="flex-1 border border-gray-300 rounded-l px-3 py-2 text-sm">
+                    <button class="bg-primary text-white px-4 py-2 rounded-r">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 任务列表 -->
+        <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+            <div class="p-4 border-b font-semibold">测评任务列表</div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-3 text-left font-medium text-gray-600">任务名称</th>
+                            <th class="px-4 py-3 text-left font-medium text-gray-600">关联智能体</th>
+                            <th class="px-4 py-3 text-left font-medium text-gray-600">发布班级</th>
+                            <th class="px-4 py-3 text-left font-medium text-gray-600">任务时间</th>
+                            <th class="px-4 py-3 text-left font-medium text-gray-600">练习次数</th>
+                            <th class="px-4 py-3 text-left font-medium text-gray-600">状态</th>
+                            <th class="px-4 py-3 text-center font-medium text-gray-600">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-row border-t">
+                            <td class="px-4 py-3">临床问诊模拟测评</td>
+                            <td class="px-4 py-3">临床问诊智能体</td>
+                            <td class="px-4 py-3">2024临床1班、2班</td>
+                            <td class="px-4 py-3">2026-05-20 ~ 2026-06-10</td>
+                            <td class="px-4 py-3">不限次数</td>
+                            <td class="px-4 py-3"><span class="px-2 py-0.5 bg-green-100 text-green-600 rounded text-xs">进行中</span></td>
+                            <td class="px-4 py-3 text-center">
+                                <button onclick="openDetailModal()" class="text-info hover:underline mr-2">查看详情</button>
+                                <button class="text-gray-500 hover:underline mr-2">编辑</button>
+                                <button class="text-danger hover:underline">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="table-row border-t">
+                            <td class="px-4 py-3">辩论赛场能力测评</td>
+                            <td class="px-4 py-3">辩论互动智能体</td>
+                            <td class="px-4 py-3">2024思政1班</td>
+                            <td class="px-4 py-3">2026-05-22 ~ 2026-05-28</td>
+                            <td class="px-4 py-3">最多3次</td>
+                            <td class="px-4 py-3"><span class="px-2 py-0.5 bg-danger/10 text-danger rounded text-xs">已结束</span></td>
+                            <td class="px-4 py-3 text-center">
+                                <button onclick="openDetailModal()" class="text-info hover:underline mr-2">查看详情</button>
+                                <button class="text-gray-500 hover:underline mr-2">编辑</button>
+                                <button class="text-danger hover:underline">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="table-row border-t">
+                            <td class="px-4 py-3">岗位实训对话考核</td>
+                            <td class="px-4 py-3">岗位模拟智能体</td>
+                            <td class="px-4 py-3">2024实训1-3班</td>
+                            <td class="px-4 py-3">2026-06-01 ~ 2026-06-20</td>
+                            <td class="px-4 py-3">最多2次</td>
+                            <td class="px-4 py-3"><span class="px-2 py-0.5 bg-warning/10 text-warning rounded text-xs">未开始</span></td>
+                            <td class="px-4 py-3 text-center">
+                                <button onclick="openDetailModal()" class="text-info hover:underline mr-2">查看详情</button>
+                                <button class="text-gray-500 hover:underline mr-2">编辑</button>
+                                <button class="text-danger hover:underline">删除</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 数据概览卡片 -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-white rounded-lg shadow p-5">
+                <p class="text-gray-500 text-sm">总任务数</p>
+                <p class="text-2xl font-bold mt-2">12</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-5">
+                <p class="text-gray-500 text-sm">进行中任务</p>
+                <p class="text-2xl font-bold mt-2 text-success">5</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-5">
+                <p class="text-gray-500 text-sm">参与总人数</p>
+                <p class="text-2xl font-bold mt-2 text-info">326</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-5">
+                <p class="text-gray-500 text-sm">平均得分</p>
+                <p class="text-2xl font-bold mt-2 text-warning">78.5</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- 弹窗：新建测评任务 -->
+    <div id="createTaskModal" class="fixed inset-0 mask hidden items-center justify-center fade-anim z-50">
+        <div class="bg-white rounded-lg w-[700px] max-h-[90vh] overflow-y-auto scroll-hide shadow-xl p-6">
+            <div class="flex justify-between items-center mb-5">
+                <h3 class="font-semibold text-lg">新建智能体测评任务</h3>
+                <button onclick="closeModal('createTaskModal')" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+            </div>
+
+            <div class="space-y-4">
+                <!-- 基础信息 -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-sm text-gray-600 block mb-1">任务名称 <span class="text-danger">*</span></label>
+                        <input type="text" class="w-full border rounded px-3 py-2 text-sm" placeholder="请输入测评任务名称">
+                    </div>
+                    <div>
+                        <label class="text-sm text-gray-600 block mb-1">选择智能体 <span class="text-danger">*</span></label>
+                        <select class="w-full border rounded px-3 py-2 text-sm">
+                            <option>临床问诊智能体</option>
+                            <option>辩论赛场智能体</option>
+                            <option>岗位模拟实训智能体</option>
+                            <option>课堂问答智能体</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-sm text-gray-600 block mb-1">发布班级 <span class="text-danger">*</span></label>
+                    <div class="flex flex-wrap gap-2 border rounded p-3 min-h-[42px]">
+                        <label class="flex items-center text-sm"><input type="checkbox" class="mr-1"> 2024临床1班</label>
+                        <label class="flex items-center text-sm"><input type="checkbox" class="mr-1"> 2024临床2班</label>
+                        <label class="flex items-center text-sm"><input type="checkbox" class="mr-1"> 2024思政1班</label>
+                        <label class="flex items-center text-sm"><input type="checkbox" class="mr-1"> 2024实训1班</label>
+                        <label class="flex items-center text-sm"><input type="checkbox" class="mr-1"> 2024实训2班</label>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-sm text-gray-600 block mb-1">开始时间 <span class="text-danger">*</span></label>
+                        <input type="date" class="w-full border rounded px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="text-sm text-gray-600 block mb-1">结束时间 <span class="text-danger">*</span></label>
+                        <input type="date" class="w-full border rounded px-3 py-2 text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-sm text-gray-600 block mb-1">通知方式</label>
+                    <div class="flex gap-4 text-sm">
+                        <label class="flex items-center"><input type="radio" name="notify" class="mr-1"> 小程序</label>
+                        <label class="flex items-center"><input type="radio" name="notify" class="mr-1"> 短信</label>
+                        <label class="flex items-center"><input type="radio" name="notify" checked class="mr-1"> 小程序+短信</label>
+                        <label class="flex items-center"><input type="radio" name="notify" class="mr-1"> 不通知</label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-sm text-gray-600 block mb-1">允许重复练习次数</label>
+                    <div class="flex items-center gap-4 text-sm">
+                        <label class="flex items-center"><input type="radio" name="practiceTimes" checked class="mr-1"> 不限制次数</label>
+                        <label class="flex items-center gap-2">
+                            <input type="radio" name="practiceTimes" class="mr-1"> 限制次数
+                            <input type="number" min="1" value="3" class="w-16 border rounded px-2 py-1"> 次
+                        </label>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-sm text-gray-600 block mb-1">任务满分值</label>
+                        <input type="number" value="100" min="1" class="w-full border rounded px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="text-sm text-gray-600 block mb-1">计分标准说明</label>
+                        <input type="text" placeholder="如：取最高分/取平均分" class="w-full border rounded px-3 py-2 text-sm">
+                    </div>
+                </div>
+
+                <!-- 评分等级设置 -->
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-sm text-gray-600">自定义评分等级与评级</label>
+                        <button onclick="addRankRow()" class="text-primary text-sm hover:underline">+ 新增等级</button>
+                    </div>
+                    <div id="rankBox" class="border rounded p-3 space-y-2">
+                        <div class="flex items-center gap-3 text-sm">
+                            <span class="w-20">评级名称</span>
+                            <span class="w-32">最低分数要求</span>
+                            <span class="w-32">分数区间</span>
+                            <span class="w-16">操作</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm rank-row">
+                            <input type="text" value="优秀" class="w-20 border rounded px-2 py-1">
+                            <input type="number" value="85" class="w-32 border rounded px-2 py-1">
+                            <span class="w-32">85 ~ 100 分</span>
+                            <button onclick="delRankRow(this)" class="text-danger">删除</button>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm rank-row">
+                            <input type="text" value="良好" class="w-20 border rounded px-2 py-1">
+                            <input type="number" value="70" class="w-32 border rounded px-2 py-1">
+                            <span class="w-32">70 ~ 84 分</span>
+                            <button onclick="delRankRow(this)" class="text-danger">删除</button>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm rank-row">
+                            <input type="text" value="合格" class="w-20 border rounded px-2 py-1">
+                            <input type="number" value="60" class="w-32 border rounded px-2 py-1">
+                            <span class="w-32">60 ~ 69 分</span>
+                            <button onclick="delRankRow(this)" class="text-danger">删除</button>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm rank-row">
+                            <input type="text" value="不合格" class="w-20 border rounded px-2 py-1">
+                            <input type="number" value="0" class="w-32 border rounded px-2 py-1">
+                            <span class="w-32">0 ~ 59 分</span>
+                            <button onclick="delRankRow(this)" class="text-danger">删除</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3 mt-6">
+                <button onclick="closeModal('createTaskModal')" class="border px-5 py-2 rounded text-sm">取消</button>
+                <button onclick="closeModal('createTaskModal');alert('测评任务创建成功，已发布至对应班级')" class="bg-primary text-white px-5 py-2 rounded text-sm">确认创建</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 弹窗：任务完成详情 -->
+    <div id="detailModal" class="fixed inset-0 mask hidden items-center justify-center fade-anim z-50">
+        <div class="bg-white rounded-lg w-[750px] max-h-[90vh] overflow-y-auto scroll-hide shadow-xl p-6">
+            <div class="flex justify-between items-center mb-5">
+                <h3 class="font-semibold text-lg">任务完成详情 - 临床问诊模拟测评</h3>
+                <button onclick="closeModal('detailModal')" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+            </div>
+
+            <!-- 统计概览 -->
+            <div class="grid grid-cols-3 gap-4 mb-5">
+                <div class="border rounded p-4 text-center">
+                    <p class="text-gray-500 text-sm">总人数</p>
+                    <p class="text-xl font-bold mt-1">86</p>
+                </div>
+                <div class="border rounded p-4 text-center">
+                    <p class="text-gray-500 text-sm">已参与人数</p>
+                    <p class="text-xl font-bold mt-1 text-success">72</p>
+                </div>
+                <div class="border rounded p-4 text-center">
+                    <p class="text-gray-500 text-sm">未参与人数</p>
+                    <p class="text-xl font-bold mt-1 text-danger">14</p>
+                </div>
+            </div>
+
+            <!-- 学生明细列表 -->
+            <div class="border rounded overflow-hidden">
+                <div class="p-3 bg-gray-50 font-medium text-sm">学生测评明细</div>
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b">
+                            <th class="px-3 py-2 text-left">姓名</th>
+                            <th class="px-3 py-2 text-left">班级</th>
+                            <th class="px-3 py-2 text-left">测评次数</th>
+                            <th class="px-3 py-2 text-left">最终成绩</th>
+                            <th class="px-3 py-2 text-left">评级</th>
+                            <th class="px-3 py-2 text-left">完成时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-t table-row">
+                            <td class="px-3 py-2">张三</td>
+                            <td class="px-3 py-2">2024临床1班</td>
+                            <td class="px-3 py-2">2</td>
+                            <td class="px-3 py-2 font-medium text-success">92</td>
+                            <td class="px-3 py-2"><span class="px-2 py-0.5 bg-green-100 text-green-600 rounded text-xs">优秀</span></td>
+                            <td class="px-3 py-2">2026-05-23 14:22</td>
+                        </tr>
+                        <tr class="border-t table-row">
+                            <td class="px-3 py-2">李四</td>
+                            <td class="px-3 py-2">2024临床1班</td>
+                            <td class="px-3 py-2">1</td>
+                            <td class="px-3 py-2 font-medium text-info">76</td>
+                            <td class="px-3 py-2"><span class="px-2 py-0.5 bg-blue-100 text-blue-600 rounded text-xs">良好</span></td>
+                            <td class="px-3 py-2">2026-05-23 15:10</td>
+                        </tr>
+                        <tr class="border-t table-row">
+                            <td class="px-3 py-2">王五</td>
+                            <td class="px-3 py-2">2024临床2班</td>
+                            <td class="px-3 py-2">3</td>
+                            <td class="px-3 py-2 font-medium text-warning">65</td>
+                            <td class="px-3 py-2"><span class="px-2 py-0.5 bg-amber-100 text-amber-600 rounded text-xs">合格</span></td>
+                            <td class="px-3 py-2">2026-05-24 09:05</td>
+                        </tr>
+                        <tr class="border-t table-row">
+                            <td class="px-3 py-2">赵六</td>
+                            <td class="px-3 py-2">2024临床2班</td>
+                            <td class="px-3 py-2">0</td>
+                            <td class="px-3 py-2 font-medium text-danger">0</td>
+                            <td class="px-3 py-2"><span class="px-2 py-0.5 bg-red-100 text-red-600 rounded text-xs">未参与</span></td>
+                            <td class="px-3 py-2">—</td>
+                        </tr>
+                        <tr class="border-t table-row">
+                            <td class="px-3 py-2">孙七</td>
+                            <td class="px-3 py-2">2024临床1班</td>
+                            <td class="px-3 py-2">2</td>
+                            <td class="px-3 py-2 font-medium text-danger">52</td>
+                            <td class="px-3 py-2"><span class="px-2 py-0.5 bg-red-100 text-red-600 rounded text-xs">不合格</span></td>
+                            <td class="px-3 py-2">2026-05-24 10:36</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="flex justify-end gap-3 mt-5">
+                <button class="border px-4 py-2 rounded text-sm">导出明细</button>
+                <button onclick="closeModal('detailModal')" class="bg-primary text-white px-4 py-2 rounded text-sm">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 关闭弹窗
+        function closeModal(id) {
+            const el = document.getElementById(id);
+            el.classList.add('hidden');
+            el.classList.remove('flex');
+        }
+        // 打开弹窗
+        function openCreateTaskModal() {
+            document.getElementById('createTaskModal').classList.remove('hidden');
+            document.getElementById('createTaskModal').classList.add('flex');
+        }
+        function openDetailModal() {
+            document.getElementById('detailModal').classList.remove('hidden');
+            document.getElementById('detailModal').classList.add('flex');
+        }
+
+        // 新增评分等级行
+        function addRankRow() {
+            const box = document.getElementById('rankBox');
+            const row = document.createElement('div');
+            row.className = 'flex items-center gap-3 text-sm rank-row border-t pt-2';
+            row.innerHTML = `
+                <input type="text" placeholder="评级名称" class="w-20 border rounded px-2 py-1">
+                <input type="number" placeholder="最低分数" class="w-32 border rounded px-2 py-1">
+                <span class="w-32">--</span>
+                <button onclick="delRankRow(this)" class="text-danger">删除</button>
+            `;
+            box.appendChild(row);
+        }
+        // 删除评分等级行
+        function delRankRow(btn) {
+            const rows = document.querySelectorAll('.rank-row');
+            if (rows.length <= 1) {
+                alert('至少保留一条评分等级');
+                return;
+            }
+            btn.parentElement.remove();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程能力图谱</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#D92B3B',
+                        'card-red': '#D92B3B',
+                        'card-yellow': '#F5B800',
+                        'card-blue': '#2A52BE',
+                        'text-gray': '#333333',
+                        'bg-light': '#F8F9FA',
+                    },
+                    fontFamily: {
+                        sans: ['PingFang SC', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .progress-bar {
+                height: 6px;
+                border-radius: 3px;
+                background-color: #E0E0E0;
+                overflow: hidden;
+            }
+            .progress-fill {
+                height: 100%;
+                border-radius: 3px;
+            }
+            .card-shadow {
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            }
+            .tab-active {
+                color: #D92B3B;
+                border-bottom: 2px solid #D92B3B;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-text-gray font-sans">
+    <!-- 顶部导航栏 -->
+    <header class="bg-primary text-white py-4 px-6 flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-bold">课程能力图谱</h1>
+            <p class="text-sm opacity-90">可视化展示课程能力目标与知识点的关联关系</p>
+        </div>
+        <div class="flex gap-3">
+            <button class="bg-white text-primary px-4 py-2 rounded-md text-sm font-medium flex items-center gap-1 hover:bg-gray-100 transition">
+                <i class="fa fa-plus"></i> 新增能力目标
+            </button>
+            <button class="bg-white text-primary px-4 py-2 rounded-md text-sm font-medium flex items-center gap-1 hover:bg-gray-100 transition">
+                <i class="fa fa-download"></i> 导出图谱
+            </button>
+        </div>
+    </header>
+
+    <!-- 主体内容 -->
+    <main class="px-6 py-4">
+        <!-- 当前课程选择 -->
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex items-center gap-2">
+                <span class="text-sm text-gray-600">当前课程：</span>
+                <div class="relative">
+                    <select class="border border-gray-300 rounded-md px-3 py-1.5 pr-8 text-sm focus:outline-none focus:ring-1 focus:ring-primary">
+                        <option>数据结构与算法</option>
+                        <option>计算机网络</option>
+                        <option>操作系统</option>
+                    </select>
+                    <i class="fa fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 text-sm text-gray-600">
+                <span class="flex items-center gap-1"><i class="fa fa-cog"></i> 图谱设置</span>
+                <span class="flex items-center gap-1"><i class="fa fa-question-circle"></i> 帮助</span>
+            </div>
+        </div>
+
+        <!-- 能力目标概览 -->
+        <section class="mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold">能力目标概览</h2>
+                <div class="flex gap-2 text-sm">
+                    <button class="px-3 py-1 rounded-full bg-red-50 text-primary font-medium tab-active">全部能力</button>
+                    <button class="px-3 py-1 rounded-full text-gray-600 hover:bg-gray-100">已完成</button>
+                    <button class="px-3 py-1 rounded-full text-gray-600 hover:bg-gray-100">进行中</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- 卡片1：问题分析与解决 -->
+                <div class="bg-white rounded-lg p-4 card-shadow border-l-4 border-card-red">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h3 class="font-medium">问题分析与解决</h3>
+                            <p class="text-xs text-gray-500 mt-1">4个子能力目标</p>
+                        </div>
+                        <i class="fa fa-pencil text-gray-400"></i>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex justify-between text-xs text-gray-500 mb-1">
+                            <span>知识点覆盖率</span>
+                            <span>78%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-card-red" style="width: 78%"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between text-xs">
+                        <span class="flex items-center gap-1"><i class="fa fa-map-marker text-card-red"></i> 关联知识点：24个</span>
+                        <span class="flex items-center gap-1"><i class="fa fa-question-circle text-card-red"></i> 关联问题：18个</span>
+                    </div>
+                </div>
+
+                <!-- 卡片2：专业知识应用 -->
+                <div class="bg-white rounded-lg p-4 card-shadow border-l-4 border-card-red">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h3 class="font-medium">专业知识应用</h3>
+                            <p class="text-xs text-gray-500 mt-1">6个子能力目标</p>
+                        </div>
+                        <i class="fa fa-pencil text-gray-400"></i>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex justify-between text-xs text-gray-500 mb-1">
+                            <span>知识点覆盖率</span>
+                            <span>92%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-card-red" style="width: 92%"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between text-xs">
+                        <span class="flex items-center gap-1"><i class="fa fa-map-marker text-card-red"></i> 关联知识点：36个</span>
+                        <span class="flex items-center gap-1"><i class="fa fa-question-circle text-card-red"></i> 关联问题：29个</span>
+                    </div>
+                </div>
+
+                <!-- 卡片3：创新思维培养 -->
+                <div class="bg-white rounded-lg p-4 card-shadow border-l-4 border-card-yellow">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h3 class="font-medium">创新思维培养</h3>
+                            <p class="text-xs text-gray-500 mt-1">3个子能力目标</p>
+                        </div>
+                        <i class="fa fa-pencil text-gray-400"></i>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex justify-between text-xs text-gray-500 mb-1">
+                            <span>知识点覆盖率</span>
+                            <span>65%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-card-yellow" style="width: 65%"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between text-xs">
+                        <span class="flex items-center gap-1"><i class="fa fa-map-marker text-card-yellow"></i> 关联知识点：15个</span>
+                        <span class="flex items-center gap-1"><i class="fa fa-question-circle text-card-yellow"></i> 关联问题：12个</span>
+                    </div>
+                </div>
+
+                <!-- 卡片4：实践操作能力 -->
+                <div class="bg-white rounded-lg p-4 card-shadow border-l-4 border-card-blue">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h3 class="font-medium">实践操作能力</h3>
+                            <p class="text-xs text-gray-500 mt-1">5个子能力目标</p>
+                        </div>
+                        <i class="fa fa-pencil text-gray-400"></i>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex justify-between text-xs text-gray-500 mb-1">
+                            <span>知识点覆盖率</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-card-blue" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between text-xs">
+                        <span class="flex items-center gap-1"><i class="fa fa-map-marker text-card-blue"></i> 关联知识点：28个</span>
+                        <span class="flex items-center gap-1"><i class="fa fa-question-circle text-card-blue"></i> 关联问题：22个</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 能力目标分布与达成度 -->
+        <section class="mb-8 bg-white rounded-lg p-4 card-shadow">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold">能力目标分布与达成度</h2>
+                <div class="flex gap-2">
+                    <button class="border border-gray-300 rounded px-3 py-1 text-sm flex items-center gap-1 hover:bg-gray-50">
+                        <i class="fa fa-file-text-o"></i> 提取文字
+                    </button>
+                    <button class="border border-gray-300 rounded px-3 py-1 text-sm flex items-center gap-1 hover:bg-gray-50">
+                        更多 <i class="fa fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="h-80">
+                <canvas id="capabilityChart"></canvas>
+            </div>
+        </section>
+
+        <!-- 能力知识图谱 -->
+        <section class="bg-white rounded-lg p-4 card-shadow">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold">能力知识图谱</h2>
+            </div>
+            <div class="border-t pt-4">
+                <div class="flex justify-between items-center mb-3">
+                    <div>
+                        <h3 class="font-medium">整体能力知识图谱</h3>
+                        <p class="text-xs text-gray-500">展示所有能力目标与知识点的关联关系</p>
+                    </div>
+                    <div class="flex gap-3 text-sm text-gray-600">
+                        <span class="flex items-center gap-1 cursor-pointer hover:text-primary"><i class="fa fa-filter"></i> 筛选</span>
+                        <span class="flex items-center gap-1 cursor-pointer hover:text-primary"><i class="fa fa-search-plus"></i> 放大</span>
+                        <span class="flex items-center gap-1 cursor-pointer hover:text-primary"><i class="fa fa-expand"></i> 全屏</span>
+                    </div>
+                </div>
+                <div class="h-48 bg-gray-50 rounded border border-dashed border-gray-200 flex items-center justify-center text-gray-400">
+                    图谱可视化区域（待实现）
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 初始化图表
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('capabilityChart').getContext('2d');
+            
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['问题分析与解决', '专业知识应用', '创新思维培养', '实践操作能力'],
+                    datasets: [
+                        {
+                            label: '子能力目标数量',
+                            data: [4, 6, 3, 5],
+                            backgroundColor: '#D9647A',
+                            barPercentage: 0.6,
+                            categoryPercentage: 0.8
+                        },
+                        {
+                            label: '知识点覆盖率(%)',
+                            data: [78, 92, 65, 85],
+                            backgroundColor: '#FFC846',
+                            barPercentage: 0.6,
+                            categoryPercentage: 0.8
+                        },
+                        {
+                            label: '能力达成度(%)',
+                            data: [70, 80, 60, 85],
+                            backgroundColor: '#6B7B95',
+                            barPercentage: 0.6,
+                            categoryPercentage: 0.8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    if (value <= 6) return value;
+                                    return '';
+                                },
+                                font: {
+                                    size: 9
+                                }
+                            }
+                        },
+                        y1: {
+                            beginAtZero: true,
+                            max: 100,
+                            position: 'right',
+                            grid: {
+                                drawOnChartArea: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                },
+                                font: {
+                                    size: 9
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            align: 'start',
+                            labels: {
+                                boxWidth: 12,
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

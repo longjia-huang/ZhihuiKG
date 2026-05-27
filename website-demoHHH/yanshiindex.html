@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程AI智慧平台 - 模块整合导航</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f2f2f2; /* 灰色背景 */
+            display: flex;
+            min-height: 100vh;
+        }
+        /* 侧边栏 - 红色主调 */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #c92a2a 0%, #a61e20 100%);
+            color: white;
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .sidebar-header h1 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        .sidebar-header p {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+        .nav-group {
+            margin-top: 20px;
+        }
+        .nav-group-title {
+            padding: 10px 20px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.85);
+            font-weight: 600;
+        }
+        .nav-item {
+            display: block;
+            padding: 12px 20px 12px 35px;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        .nav-item:hover {
+            background-color: rgba(255,255,255,0.15);
+            border-left-color: #ffcc00; /* 黄色高亮 */
+            color: #ffcc00;
+        }
+        /* 主内容区 */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 30px;
+        }
+        .page-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .page-header h2 {
+            font-size: 24px;
+            color: #a61e20; /* 红色标题 */
+            margin-bottom: 8px;
+        }
+        .page-header p {
+            color: #666;
+            font-size: 15px;
+        }
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .module-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 4px solid #c92a2a; /* 红色顶部线条 */
+        }
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        .module-card h3 {
+            font-size: 17px;
+            color: #a61e20;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .module-card p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .tag {
+            background-color: #fff4e6;
+            color: #c92a2a;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .open-btn {
+            background-color: #c92a2a;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+            transition: background-color 0.3s ease;
+        }
+        .open-btn:hover {
+            background-color: #a61e20;
+        }
+        .fullscreen-btn {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #ffcc00; /* 黄色按钮 */
+            color: #a61e20;
+            padding: 10px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .fullscreen-btn:hover {
+            background-color: #ffdd00;
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边栏 - 严格按 01~14 序号排序 -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>课程AI智慧平台</h1>
+            <p>模块整合导航中心</p>
+        </div>
+
+        <div class="nav-group">
+            <div class="nav-group-title">全部模块（按序号排序）</div>
+            <a href="01-课程能力图谱.html" class="nav-item" target="_blank">01 课程能力图谱</a>
+            <a href="02-课程知识点 & 思政主题管理.html" class="nav-item" target="_blank">02 知识点 & 思政主题管理</a>
+            <a href="03-课程专属案例库.html" class="nav-item" target="_blank">03 课程专属案例库</a>
+            <a href="04-知识点建设进度管理.html" class="nav-item" target="_blank">04 知识点建设进度管理</a>
+            <a href="05-课程专属智能体构建管理.html" class="nav-item" target="_blank">05 课程专属智能体构建</a>
+            <a href="06-智能体测评任务管理.html" class="nav-item" target="_blank">06 智能体测评任务管理</a>
+            <a href="07-AI智能出题平台.html" class="nav-item" target="_blank">07 AI智能出题平台</a>
+            <a href="08-AI智能出题平台【题库】.html" class="nav-item" target="_blank">08 AI智能出题平台【题库】</a>
+            <a href="09-智慧课程展示·AI智慧空间.html" class="nav-item" target="_blank">09 智慧课程展示·AI智慧空间</a>
+            <a href="10-AI教学运行报告生成系统.html" class="nav-item" target="_blank">10 AI教学运行报告生成系统</a>
+            <a href="11-知识图谱智慧课程·全国共享平台.html" class="nav-item" target="_blank">11 知识图谱智慧课程共享平台</a>
+            <a href="12-AI知识库资源解析与智能问答.html" class="nav-item" target="_blank">12 AI知识库智能问答</a>
+            <a href="13-学生端·学科探索中心.html" class="nav-item" target="_blank">13 学生端·学科探索中心</a>
+            <a href="14-教师端·课件库中心.html" class="nav-item" target="_blank">14 教师端·课件库中心</a>
+        </div>
+    </div>
+
+    <!-- 主内容区卡片 - 同样 01~14 顺序 -->
+    <div class="main-content">
+        <div class="page-header">
+            <h2>课程AI智慧平台 - 模块总览</h2>
+            <p>按预设序号 01 - 14 依次排列，快速访问各功能模块</p>
+            <a href="09-智慧课程展示·AI智慧空间.html" class="fullscreen-btn" target="_blank">🚀 进入整体智慧课程空间</a>
+        </div>
+
+        <div class="module-grid">
+            <div class="module-card">
+                <h3>01 📊 课程能力图谱</h3>
+                <p>构建课程能力维度图谱，可视化展示课程能力目标与达成路径</p>
+                <div class="card-footer">
+                    <span class="tag">模块01</span>
+                    <a href="01-课程能力图谱.html" class="open-btn" target="_blank">打开</a>
+                </div>
+            </div>
+
+            <div class="module-card">
+                <h3>02 📚 知识点 & 思政主题管理</h3>
+                <p>管理课程知识点体系，关联思政主题，实现课程思政一体化建设</p>
+                <div class="card-footer">
+                    <span class="tag">模块02</span>
+                    <a href="02-课程知识点 & 思政主题管理.html" class="open-btn" target="_blank">打开</a>
+                </div>
+            </div>
+
+            <div class="module-card">
+                <h3>03 📁 课程专属案例库</h3>
+                <p>建设课程专属案例资源库，支持案例分类、检索与复用</p>
+                <div class="card-footer">
+                    <span class="tag">模块03</span>
+                    <a href="03-课程专属案例库.html" class="open-btn" target="_blank">打开</a>
+                </div>
+            </div>
+
+            <div class="module-card">
+                <h3>04 📈 知识点建设进度管理</h3>
+                <p>跟踪课程知识点建设进度，实时查看完成状态与待办任务</p>
+                <div class="card-footer">
+                    <span class="tag">模块04</span>
+                    <a href="04-知识点建设进度管理.html" class="open-btn" target="_blank">打开</a>
+                </div>
+            </div>
+
+            <div class="module-card">
+                <h3>05 🤖 课程专属智能体构建</h3>
+                <p>构建课程专属AI教学智能体，配置知识库、对话规则与教学场景</p>
+                <div class="card-footer">
+                    <span class="tag">模块05</span>
+                    <a href="05-课程专属智能体构建管理.html" class="open-btn" target="_blank">打开</a>
+                </div>
+            </div>
+
+            <div class="module-card">
+                <h3>06 ✅ 智能体测评任务管理</h3>
+                <p>创建与管理AI智能体测评任务，支持多维度教学效果评估</p>
+                <div class="card-footer">
+                    <span class="tag">模块06</span>
+                    <a href="06-智能体测评任务管理.html" class="open-btn" target="_blank">打开</a>
+                </div>
+            </div>
+
+            <div class="module-card">
+                <h3>07 📝 AI智能出题平台</h3>
+                <p>基于课程知识点的AI智能出题系统，支持多种题型与难度设置</p>
+                <div class="card-footer">
+                    <span class="tag">模块07</span>
+                    <a href="07-AI智能出题平台.html" class="open-btn" target="_blank">打开</a>
+                </div>
+            </div>
+
+            <div class="module-card">
+                <h3>08 📚 AI智能出题平台【题库】</h3>
+                <p>课程专属题库管理系统，支持题目分类、导入导出与批量编辑</p>
+                <div class="card-footer">
+                    <span class="tag">模块08</span>
+                    <a href="08-AI智能出题平台【题库】.html" class="open-btn" target="_blank">打开</a>
+                </div>
+            </div>
+
+            <div class="module-card">
+                <h3>09 🏫 智慧课程展示·AI智慧空间</h3>
+                <p>课程整体展示空间，集成所有模块功能，为师生提供一站式学习入口</p>
+                <div class="card-footer">
+                    <span class="tag">模块09</span>
+                    <a href="09-智慧课程展示·AI智慧空间.html" class="open-btn" target="_blank">打开</a>
+                </div>
+            </div>
+
+            <div class="module-card">
+                <h3>10 📊 AI教学运行报告生成系统</h3>
+                <p>基于教学数据自动生成课程运行报告，支持多维度教学效果分析</p>
+                <div class="card-footer">
+                    <span class="tag">模块10</span>
+                    <a href="10-AI教学运行报告生成系统.html" class="open-btn" target="_blank">打开</a>
+                </div>
+            </div>
+
+            <div class="module-card">
+                <h3>11 🌐 知识图谱智慧课程共享平台</h3>
+                <p>面向全国的智慧课程共享平台，支持课程展示、资源共享与交流</p>
+                <div class="card-footer">
+                    <span class="tag">模块11</span>
+                    <a href="11-知识图谱智慧课程·全国共享平台.html" class="open-btn" target="_blank">打开</a>
+                </div>
+            </div>
+
+            <div class="module-card">
+                <h3>12 ❓ AI知识库智能问答</h3>
+                <p>基于课程知识库的智能问答系统，支持学生自主答疑与知识查询</p>
+                <div class="card-footer">
+                    <span class="tag">模块12</span>
+                    <a href="12-AI知识库资源解析与智能问答.html" class="open-btn" target="_blank">打开</a>
+                </div>
+            </div>
+
+            <div class="module-card">
+                <h3>13 🎓 学生端·学科探索中心</h3>
+                <p>面向学生的学科探索平台，支持知识图谱浏览、AI问答与自主学习</p>
+                <div class="card-footer">
+                    <span class="tag">模块13</span>
+                    <a href="13-学生端·学科探索中心.html" class="open-btn" target="_blank">打开</a>
+                </div>
+            </div>
+
+            <div class="module-card">
+                <h3>14 📝 教师端·课件库中心</h3>
+                <p>教师专属课件资源管理中心，支持课件上传、分类与在线编辑</p>
+                <div class="card-footer">
+                    <span class="tag">模块14</span>
+                    <a href="14-教师端·课件库中心.html" class="open-btn" target="_blank">打开</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

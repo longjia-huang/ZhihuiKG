@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程知识点-思政主题管理</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#D92B3B',
+                        neutral: '#f5f7fa',
+                        textDark: '#2d3748'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .tag-item {
+            display: inline-flex;
+            align-items: center;
+        }
+        .color-picker-item {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+        }
+        .theme-card {
+            transition: all 0.2s ease;
+        }
+        .theme-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-textDark min-h-screen">
+    <!-- 顶部导航 -->
+    <header class="bg-primary text-white px-6 py-4 shadow">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold">课程知识点 & 思政主题管理</h1>
+                <p class="text-sm opacity-90 mt-1">知识点分类汇聚、自定义思政主题与标签管理</p>
+            </div>
+            <div class="flex gap-3">
+                <button class="bg-white text-primary px-4 py-2 rounded text-sm font-medium hover:bg-gray-50">
+                    <i class="fa fa-plus mr-1"></i> 新增思政主题
+                </button>
+                <button class="bg-white text-primary px-4 py-2 rounded text-sm font-medium hover:bg-gray-50">
+                    <i class="fa fa-save mr-1"></i> 保存配置
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="p-6">
+        <!-- 筛选与分类区 -->
+        <div class="bg-white rounded-lg p-4 shadow mb-6">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium">知识点分类：</span>
+                    <select class="border border-gray-300 rounded px-3 py-1.5 text-sm w-44">
+                        <option>全部分类</option>
+                        <option>理论基础</option>
+                        <option>实操技能</option>
+                        <option>拓展延伸</option>
+                    </select>
+                    <input type="text" placeholder="搜索知识点" class="border border-gray-300 rounded px-3 py-1.5 text-sm w-52">
+                </div>
+                <div class="flex gap-2">
+                    <button class="px-3 py-1.5 border border-gray-300 rounded text-sm hover:bg-gray-50">批量添加标签</button>
+                    <button class="px-3 py-1.5 border border-gray-300 rounded text-sm hover:bg-gray-50">批量移入主题</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- 左侧：知识点列表 -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow h-full flex flex-col">
+                    <div class="p-4 border-b flex justify-between items-center">
+                        <h2 class="font-semibold">课程知识点列表</h2>
+                        <span class="text-xs text-gray-500">共 32 个知识点</span>
+                    </div>
+                    <div class="p-4 flex-1 overflow-y-auto max-h-[600px] space-y-3">
+                        <!-- 知识点项 -->
+                        <div class="border rounded p-3 hover:bg-neutral">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium">1. 行业发展历程概述</span>
+                                <div class="flex gap-1">
+                                    <button class="text-xs text-gray-500 hover:text-primary">编辑</button>
+                                    <button class="text-xs text-gray-500 hover:text-primary">移入主题</button>
+                                </div>
+                            </div>
+                            <!-- 已添加标签 -->
+                            <div class="flex flex-wrap gap-1 mt-2">
+                                <span class="tag-item bg-red-100 text-red-600 text-xs px-2 py-0.5 rounded">家国情怀 <i class="fa fa-times ml-1 cursor-pointer"></i></span>
+                                <span class="tag-item bg-blue-100 text-blue-600 text-xs px-2 py-0.5 rounded">职业素养 <i class="fa fa-times ml-1 cursor-pointer"></i></span>
+                                <span class="tag-item bg-green-100 text-green-600 text-xs px-2 py-0.5 rounded">工匠精神 <i class="fa fa-times ml-1 cursor-pointer"></i></span>
+                                <span class="tag-item bg-yellow-100 text-yellow-700 text-xs px-2 py-0.5 rounded">创新精神 <i class="fa fa-times ml-1 cursor-pointer"></i></span>
+                                <span class="tag-item bg-purple-100 text-purple-600 text-xs px-2 py-0.5 rounded">法治观念 <i class="fa fa-times ml-1 cursor-pointer"></i></span>
+                                <button class="text-xs text-primary ml-1">+ 添加标签</button>
+                            </div>
+                        </div>
+
+                        <div class="border rounded p-3 hover:bg-neutral">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium">2. 岗位能力核心要求</span>
+                                <div class="flex gap-1">
+                                    <button class="text-xs text-gray-500 hover:text-primary">编辑</button>
+                                    <button class="text-xs text-gray-500 hover:text-primary">移入主题</button>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-1 mt-2">
+                                <span class="tag-item bg-blue-100 text-blue-600 text-xs px-2 py-0.5 rounded">职业道德 <i class="fa fa-times ml-1 cursor-pointer"></i></span>
+                                <button class="text-xs text-primary ml-1">+ 添加标签</button>
+                            </div>
+                        </div>
+
+                        <div class="border rounded p-3 hover:bg-neutral">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium">3. 技术标准与规范</span>
+                                <div class="flex gap-1">
+                                    <button class="text-xs text-gray-500 hover:text-primary">编辑</button>
+                                    <button class="text-xs text-gray-500 hover:text-primary">移入主题</button>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-1 mt-2">
+                                <span class="tag-item bg-green-100 text-green-600 text-xs px-2 py-0.5 rounded">严谨求实 <i class="fa fa-times ml-1 cursor-pointer"></i></span>
+                                <span class="tag-item bg-purple-100 text-purple-600 text-xs px-2 py-0.5 rounded">合规意识 <i class="fa fa-times ml-1 cursor-pointer"></i></span>
+                                <button class="text-xs text-primary ml-1">+ 添加标签</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧：思政主题管理 -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow p-4 mb-4">
+                    <h2 class="font-semibold mb-3">思政主题配置</h2>
+                    <!-- 新增/编辑主题表单 -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                        <div>
+                            <label class="block text-xs text-gray-600 mb-1">主题名称</label>
+                            <input type="text" placeholder="请输入自定义主题名称" class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-600 mb-1">背景颜色</label>
+                            <div class="flex gap-2 items-center">
+                                <div class="color-picker-item bg-[#fef2f2]"></div>
+                                <div class="color-picker-item bg-[#f0fdf4]"></div>
+                                <div class="color-picker-item bg-[#eff6ff]"></div>
+                                <div class="color-picker-item bg-[#fffbeb]"></div>
+                                <div class="color-picker-item bg-[#faf5ff]"></div>
+                                <input type="color" class="w-6 h-6 p-0 border-0 rounded cursor-pointer">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-600 mb-1">文字颜色</label>
+                            <div class="flex gap-2 items-center">
+                                <div class="color-picker-item bg-[#dc2626]"></div>
+                                <div class="color-picker-item bg-[#16a34a]"></div>
+                                <div class="color-picker-item bg-[#2563eb]"></div>
+                                <div class="color-picker-item bg-[#ca8a04]"></div>
+                                <div class="color-picker-item bg-[#7c3aed]"></div>
+                                <input type="color" class="w-6 h-6 p-0 border-0 rounded cursor-pointer">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 mt-4">
+                        <button class="bg-primary text-white px-4 py-2 rounded text-sm">确认创建主题</button>
+                        <button class="border border-gray-300 px-4 py-2 rounded text-sm">重置</button>
+                    </div>
+                </div>
+
+                <!-- 已创建思政主题列表 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- 主题卡片1 -->
+                    <div class="theme-card rounded-lg p-4 shadow" style="background-color: #fef2f2; color: #dc2626;">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="font-bold text-base">红色文化教育主题</h3>
+                            <div class="flex gap-2">
+                                <button class="text-sm hover:opacity-80"><i class="fa fa-pencil"></i></button>
+                                <button class="text-sm hover:opacity-80"><i class="fa fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <p class="text-xs opacity-80 mb-3">关联知识点：6 个</p>
+                        <div class="border-t border-red-200 pt-3 space-y-2 max-h-48 overflow-y-auto">
+                            <div class="flex justify-between items-center text-sm">
+                                <span>行业红色发展史</span>
+                                <button class="text-xs underline">移除</button>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span>模范人物事迹解读</span>
+                                <button class="text-xs underline">移除</button>
+                            </div>
+                        </div>
+                        <button class="w-full mt-3 border border-current rounded py-1.5 text-sm hover:bg-white/20">
+                            <i class="fa fa-plus mr-1"></i> 新增关联知识点
+                        </button>
+                    </div>
+
+                    <!-- 主题卡片2 -->
+                    <div class="theme-card rounded-lg p-4 shadow" style="background-color: #eff6ff; color: #2563eb;">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="font-bold text-base">职业素养培育主题</h3>
+                            <div class="flex gap-2">
+                                <button class="text-sm hover:opacity-80"><i class="fa fa-pencil"></i></button>
+                                <button class="text-sm hover:opacity-80"><i class="fa fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <p class="text-xs opacity-80 mb-3">关联知识点：8 个</p>
+                        <div class="border-t border-blue-200 pt-3 space-y-2 max-h-48 overflow-y-auto">
+                            <div class="flex justify-between items-center text-sm">
+                                <span>职业道德基本准则</span>
+                                <button class="text-xs underline">移除</button>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span>岗位责任与担当</span>
+                                <button class="text-xs underline">移除</button>
+                            </div>
+                        </div>
+                        <button class="w-full mt-3 border border-current rounded py-1.5 text-sm hover:bg-white/20">
+                            <i class="fa fa-plus mr-1"></i> 新增关联知识点
+                        </button>
+                    </div>
+
+                    <!-- 主题卡片3 -->
+                    <div class="theme-card rounded-lg p-4 shadow" style="background-color: #f0fdf4; color: #16a34a;">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="font-bold text-base">工匠精神传承主题</h3>
+                            <div class="flex gap-2">
+                                <button class="text-sm hover:opacity-80"><i class="fa fa-pencil"></i></button>
+                                <button class="text-sm hover:opacity-80"><i class="fa fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <p class="text-xs opacity-80 mb-3">关联知识点：5 个</p>
+                        <div class="border-t border-green-200 pt-3 space-y-2 max-h-48 overflow-y-auto">
+                            <div class="flex justify-between items-center text-sm">
+                                <span>精益求精技术理念</span>
+                                <button class="text-xs underline">移除</button>
+                            </div>
+                        </div>
+                        <button class="w-full mt-3 border border-current rounded py-1.5 text-sm hover:bg-white/20">
+                            <i class="fa fa-plus mr-1"></i> 新增关联知识点
+                        </button>
+                    </div>
+
+                    <!-- 主题卡片4 -->
+                    <div class="theme-card rounded-lg p-4 shadow" style="background-color: #fffbeb; color: #ca8a04;">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="font-bold text-base">创新实践教育主题</h3>
+                            <div class="flex gap-2">
+                                <button class="text-sm hover:opacity-80"><i class="fa fa-pencil"></i></button>
+                                <button class="text-sm hover:opacity-80"><i class="fa fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <p class="text-xs opacity-80 mb-3">关联知识点：4 个</p>
+                        <div class="border-t border-yellow-200 pt-3 space-y-2 max-h-48 overflow-y-auto">
+                            <div class="flex justify-between items-center text-sm">
+                                <span>技术创新思维训练</span>
+                                <button class="text-xs underline">移除</button>
+                            </div>
+                        </div>
+                        <button class="w-full mt-3 border border-current rounded py-1.5 text-sm hover:bg-white/20">
+                            <i class="fa fa-plus mr-1"></i> 新增关联知识点
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 添加标签弹窗(简易) -->
+    <div class="fixed inset-0 bg-black/40 hidden items-center justify-center" id="tagModal">
+        <div class="bg-white rounded-lg p-5 w-96 shadow-lg">
+            <h3 class="font-semibold mb-4">添加自定义思政标签</h3>
+            <input type="text" placeholder="输入标签名称，回车添加" class="w-full border rounded px-3 py-2 text-sm mb-3">
+            <p class="text-xs text-gray-500 mb-4">单个知识点最多可添加 8 个标签（满足不少于5个要求）</p>
+            <div class="flex justify-end gap-2">
+                <button class="border px-4 py-1.5 rounded text-sm">取消</button>
+                <button class="bg-primary text-white px-4 py-1.5 rounded text-sm">确定添加</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

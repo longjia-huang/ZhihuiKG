@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>教师端 - 课件库中心</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Microsoft YaHei", sans-serif;
+}
+body {
+    background: #f5f5f5;
+    color: #333;
+}
+.header {
+    background: #E53E3E;
+    color: #fff;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.header h1 {
+    font-size: 18px;
+}
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.avatar {
+    width: 32px;
+    height: 32px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #E53E3E;
+    font-weight: bold;
+}
+.main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    padding: 18px;
+    margin-bottom: 20px;
+}
+.card-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #E53E3E;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.btn {
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+}
+.btn-red {
+    background: #E53E3E;
+    color: #fff;
+}
+.btn-yellow {
+    background: #F59E0B;
+    color: #fff;
+}
+.btn-gray {
+    background: #666;
+    color: #fff;
+}
+.tabs {
+    display: flex;
+    gap: 20px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 16px;
+}
+.tab {
+    padding: 8px 0;
+    cursor: pointer;
+    font-size: 14px;
+    border-bottom: 2px solid transparent;
+}
+.tab.active {
+    border-color: #E53E3E;
+    color: #E53E3E;
+    font-weight: bold;
+}
+.search-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+.search-bar input {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+}
+.search-bar button {
+    background: #E53E3E;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0 14px;
+    cursor: pointer;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+.course-item {
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 14px;
+    font-size: 14px;
+    position: relative;
+}
+.course-item .title {
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+.course-item .info {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+}
+.course-item .tag {
+    display: inline-block;
+    padding: 2px 6px;
+    font-size: 12px;
+    border-radius: 3px;
+    margin-right: 4px;
+}
+.tag-private {
+    background: #f0f0f0;
+    color: #666;
+}
+.tag-public {
+    background: #e5f5ff;
+    color: #0088ff;
+}
+.tag-class {
+    background: #fff1f0;
+    color: #E53E3E;
+}
+.ops {
+    margin-top: 10px;
+    display: flex;
+    gap: 6px;
+}
+.mask {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 99;
+}
+.modal {
+    background: #fff;
+    width: 460px;
+    border-radius: 8px;
+    padding: 24px;
+}
+.modal-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    color: #E53E3E;
+}
+.form-item {
+    margin-bottom: 12px;
+}
+.form-item label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+.form-item input,
+.form-item select,
+.form-item textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.modal-btns {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 16px;
+}
+.btn-close {
+    background: #eee;
+    color: #333;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>教师端 · 课件库中心</h1>
+    <div class="user-info">
+        <div class="avatar">教</div>
+        <span>教师账号</span>
+    </div>
+</div>
+
+<div class="main">
+
+    <!-- 课件库分区 -->
+    <div class="card">
+        <div class="card-title">
+            <span>课件库管理</span>
+            <button class="btn btn-red" onclick="openModal('createModal')">+ 新建课件</button>
+        </div>
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab(0)">私有课件库</div>
+            <div class="tab" onclick="switchTab(1)">课程课件库</div>
+        </div>
+
+        <!-- 私有课件库 -->
+        <div class="tab-content" id="tab0">
+            <div class="search-bar">
+                <input type="text" placeholder="搜索私有课件">
+                <button>搜索</button>
+            </div>
+            <div class="grid">
+                <div class="course-item">
+                    <div class="title">内科护理学 - 无菌技术</div>
+                    <div class="info">PPT | 2025-12-10</div>
+                    <div class="tag tag-private">仅自己可见</div>
+                    <div class="ops">
+                        <button class="btn btn-gray" onclick="openShareModal()">分享</button>
+                        <button class="btn btn-red">编辑</button>
+                    </div>
+                </div>
+                <div class="course-item">
+                    <div class="title">临床护理技能实操</div>
+                    <div class="info">PPT | 2025-12-15</div>
+                    <div class="tag tag-private">仅自己可见</div>
+                    <div class="ops">
+                        <button class="btn btn-gray" onclick="openShareModal()">分享</button>
+                        <button class="btn btn-red">编辑</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 课程课件库（公开/共享） -->
+        <div class="tab-content" id="tab1" style="display:none;">
+            <div class="search-bar">
+                <input type="text" placeholder="搜索课程课件">
+                <button>搜索</button>
+            </div>
+            <div class="grid">
+                <div class="course-item">
+                    <div class="title">护理学基础 - 全章节</div>
+                    <div class="info">PPT | 2025-11-20</div>
+                    <div class="tag tag-public">教师团队共享</div>
+                    <div class="ops">
+                        <button class="btn btn-yellow">发布班级</button>
+                        <button class="btn btn-red">管理</button>
+                    </div>
+                </div>
+                <div class="course-item">
+                    <div class="title">护理安全与感染控制</div>
+                    <div class="info">PPT | 2025-12-05</div>
+                    <div class="tag tag-class">已发布：24护理1班</div>
+                    <div class="ops">
+                        <button class="btn btn-yellow">修改范围</button>
+                        <button class="btn btn-red">管理</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- 新建课件弹窗 -->
+<div class="mask" id="createModal">
+    <div class="modal">
+        <div class="modal-title">新建课件</div>
+        <div class="form-item">
+            <label>课件名称</label>
+            <input type="text" placeholder="请输入">
+        </div>
+        <div class="form-item">
+            <label>课件类型</label>
+            <select>
+                <option>PPT</option>
+                <option>文档</option>
+                <option>视频</option>
+            </select>
+        </div>
+        <div class="form-item">
+            <label>存储位置</label>
+            <select>
+                <option>私有课件库</option>
+                <option>课程课件库</option>
+            </select>
+        </div>
+        <div class="modal-btns">
+            <button class="btn btn-close" onclick="closeAllModal()">取消</button>
+            <button class="btn btn-red" onclick="alert('创建成功');closeAllModal()">确认创建</button>
+        </div>
+    </div>
+</div>
+
+<!-- 分享/发布范围弹窗（分层共享） -->
+<div class="mask" id="shareModal">
+    <div class="modal">
+        <div class="modal-title">设置课件共享范围（分层发布）</div>
+        <div class="form-item">
+            <label>共享范围</label>
+            <select id="shareType">
+                <option>私有（仅自己）</option>
+                <option>教师团队共享</option>
+                <option>指定班级学生可见</option>
+            </select>
+        </div>
+        <div class="form-item" id="classItem" style="display:none;">
+            <label>选择发布班级</label>
+            <select>
+                <option>24护理1班</option>
+                <option>24护理2班</option>
+                <option>24临床3班</option>
+            </select>
+        </div>
+        <div class="modal-btns">
+            <button class="btn btn-close" onclick="closeAllModal()">取消</button>
+            <button class="btn btn-red" onclick="alert('设置成功');closeAllModal()">确认发布</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// 标签切换
+function switchTab(index) {
+    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab'+index).style.display = 'block';
+    document.querySelectorAll('.tab')[index].classList.add('active');
+}
+
+// 弹窗控制
+function openModal(id) {
+    closeAllModal();
+    document.getElementById(id).style.display = 'flex';
+}
+function closeAllModal() {
+    document.querySelectorAll('.mask').forEach(el => el.style.display = 'none');
+}
+
+// 打开分享弹窗，并联动显示班级选择
+function openShareModal() {
+    openModal('shareModal');
+    document.getElementById('shareType').onchange = function() {
+        if(this.value === '指定班级学生可见') {
+            document.getElementById('classItem').style.display = 'block';
+        } else {
+            document.getElementById('classItem').style.display = 'none';
+        }
+    }
+}
+</script>
+</body>
+</html>
