@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>广西信息职院 - 26门课程精品申报汇报</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "MiSans", "PingFang SC", "Helvetica Neue", sans-serif;
+}
+
+:root {
+  --mi-orange: #ff6700;
+  --mi-blue: #0088ff;
+  --mi-gray: #f5f5f5;
+  --mi-white: #ffffff;
+  --mi-text: #212121;
+  --mi-secondary: #666666;
+  --mi-card-radius: 12px;
+  --mi-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  --mi-gap: 20px;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: var(--mi-gray);
+  color: var(--mi-text);
+  overflow: hidden;
+}
+
+/* 小米官网式居中容器 */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* 全屏翻页 */
+.slider {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+.slide {
+  width: 100%;
+  height: 100%;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+/* 小米官网标题样式 */
+.title {
+  font-size: 40px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--mi-text);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+.subtitle {
+  font-size: 18px;
+  color: var(--mi-secondary);
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+/* 小米官网网格布局 */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--mi-gap);
+  width: 100%;
+}
+
+/* 小米官网卡片 */
+.card {
+  background: var(--mi-white);
+  border-radius: var(--mi-card-radius);
+  padding: 32px 28px;
+  box-shadow: var(--mi-shadow);
+  transition: all 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+.card h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.card p {
+  font-size: 15px;
+  color: var(--mi-secondary);
+  line-height: 1.5;
+}
+
+/* 标签 */
+.badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  display: inline-block;
+}
+.badge-blue    { background: #e6f4ff; color: #0066cc; }
+.badge-green   { background: #e6f9f0; color: #1e8e57; }
+.badge-orange  { background: #fff0e6; color: #cc5200; }
+.badge-purple  { background: #f3e5ff; color: #7a2fb4; }
+.badge-pink    { background: #ffe6ee; color: #cc2255; }
+
+/* 图表容器（小米官网简约风格） */
+.chart-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mi-gap);
+  justify-content: center;
+  width: 100%;
+}
+.chart-box {
+  width: 100%;
+  max-width: 400px;
+  background: var(--mi-white);
+  border-radius: var(--mi-card-radius);
+  padding: 32px;
+  box-shadow: var(--mi-shadow);
+  text-align: center;
+}
+.chart-box h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* 小米风简约饼图 */
+.pie-chart {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  margin: 0 auto;
+  background: conic-gradient(
+    var(--mi-blue) 0% 30.8%,
+    #1e8e57 30.8% 61.6%,
+    var(--mi-orange) 61.6% 100%
+  );
+  position: relative;
+}
+.pie-chart::after {
+  content: "";
+  width: 110px;
+  height: 110px;
+  background: var(--mi-white);
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 小米风柱状图 */
+.bar-chart {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  gap: 10px;
+}
+.bar {
+  flex: 1;
+  background: var(--mi-blue);
+  border-radius: 4px 4px 0 0;
+  color: #fff;
+  font-size: 12px;
+  display: grid;
+  place-items: center;
+  padding-bottom: 4px;
+}
+
+/* 右侧圆点导航 */
+.pagination {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 99;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #ddd;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.dot.active {
+  background: var(--mi-orange);
+  transform: scale(1.3);
+}
+
+/* 课程标签 */
+.tag-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  max-width: 1000px;
+}
+.tag-item {
+  background: var(--mi-white);
+  padding: 16px 24px;
+  border-radius: var(--mi-card-radius);
+  font-size: 15px;
+  font-weight: 500;
+  box-shadow: var(--mi-shadow);
+}
+</style>
+</head>
+
+<body>
+
+<div class="pagination">
+  <div class="dot active" onclick="go(1)"></div>
+  <div class="dot" onclick="go(2)"></div>
+  <div class="dot" onclick="go(3)"></div>
+  <div class="dot" onclick="go(4)"></div>
+  <div class="dot" onclick="go(5)"></div>
+  <div class="dot" onclick="go(6)"></div>
+  <div class="dot" onclick="go(7)"></div>
+  <div class="dot" onclick="go(8)"></div>
+  <div class="dot" onclick="go(9)"></div>
+  <div class="dot" onclick="go(10)"></div>
+  <div class="dot" onclick="go(11)"></div>
+  <div class="dot" onclick="go(12)"></div>
+  <div class="dot" onclick="go(13)"></div>
+  <div class="dot" onclick="go(14)"></div>
+  <div class="dot" onclick="go(15)"></div>
+</div>
+
+<div class="slider" id="slider">
+  <div class="slide" id="p1">
+    <div class="container">
+      <h1 class="title">网络营销与直播电商专业<br>26门课程精品申报综合分析汇报</h1>
+      <p class="subtitle">国家级精品课程遴选 · 高标准 · 高通过率</p>
+    </div>
+  </div>
+
+  <div class="slide" id="p2">
+    <div class="container">
+      <h2 class="title">汇报目录</h2>
+      <p class="subtitle">全维度分析 · 体系化呈现 · 精准化推荐</p>
+      <div class="grid">
+        <div class="card"><h3>01 专业概况</h3><p>课程体系、结构、考核方式</p></div>
+        <div class="card"><h3>02 数据图表</h3><p>占比分析、产业覆盖</p></div>
+        <div class="card"><h3>03 推荐课程</h3><p>S级高分、优先申报</p></div>
+        <div class="card"><h3>04 批次规划</h3><p>分级培育、有序推进</p></div>
+        <div class="card"><h3>05 核心优势</h3><p>区位、政策、产业、特色</p></div>
+        <div class="card"><h3>06 结论策略</h3><p>最终方案、提升路径</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="p3">
+    <div class="container">
+      <h2 class="title">专业建设背景</h2>
+      <p class="subtitle">数字经济 + 直播电商 + 东盟跨境 + 广西政策</p>
+      <div class="grid">
+        <div class="card"><h3>产业刚需</h3><p>直播电商、新媒体、跨境电商高速发展</p></div>
+        <div class="card"><h3>政策支持</h3><p>数字丝路、自贸试验区、数商兴农</p></div>
+        <div class="card"><h3>区位优势</h3><p>东盟桥头堡、广西特色产业</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="p4">
+    <div class="container">
+      <h2 class="title">课程总体概况</h2>
+      <p class="subtitle">26门专业课程 | 基础8门 + 核心8门 + 拓展10门</p>
+      <div class="grid">
+        <div class="card">
+          <span class="badge badge-blue">专业基础课</span>
+          <h3>8 门 · 30.8%</h3>
+          <p>电商基础、经济学、市场营销、法律法规、商品拍摄、数据分析、短视频、零售基础</p>
+        </div>
+        <div class="card">
+          <span class="badge badge-green">专业核心课</span>
+          <h3>8 门 · 30.8%</h3>
+          <p>直播运营、直播销售、网络推广、市场策划、营销渠道运维、客户服务、内容策划、新媒体运营</p>
+        </div>
+        <div class="card">
+          <span class="badge badge-orange">专业拓展课</span>
+          <h3>10 门 · 38.4%</h3>
+          <p>主播素养、跨境电商、数据化运营、O2O运营、消费者行为、综合实训、移动电商、网店运营等</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="p5">
+    <div class="container">
+      <h2 class="title">考核方式分布</h2>
+      <p class="subtitle">考试12门、考查11门、实训3门 | 理实一体化</p>
+      <div class="grid">
+        <div class="card"><span class="badge badge-blue">考试</span><h3>12门</h3><p>理论基础、专业核心课程</p></div>
+        <div class="card"><span class="badge badge-green">考查</span><h3>11门</h3><p>实践、技能、应用课程</p></div>
+        <div class="card"><span class="badge badge-orange">实训</span><h3>3门</h3><p>综合实战、项目化教学</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="p6">
+    <div class="container">
+      <h2 class="title">数据可视化分析</h2>
+      <p class="subtitle">课程结构占比 & 产业热点贴合度</p>
+      <div class="chart-wrapper">
+        <div class="chart-box">
+          <h3>📊 课程类型占比</h3>
+          <div class="pie-chart"></div>
+          <div style="margin-top:20px;font-size:14px;color:#666">🔵基础课30.8% 🟢核心课30.8% 🟠拓展课38.4%</div>
+        </div>
+        <div class="chart-box">
+          <h3>📈 产业方向覆盖</h3>
+          <div class="bar-chart">
+            <div class="bar" style="height:88%">7门<br>直播</div>
+            <div class="bar" style="height:72%">5门<br>新媒体</div>
+            <div class="bar" style="height:56%">4门<br>数据</div>
+            <div class="bar" style="height:40%">2门<br>跨境</div>
+            <div class="bar" style="height:56%">4门<br>新零售</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="p7">
+    <div class="container">
+      <h2 class="title">国家级精品课 · 首选推荐</h2>
+      <p class="subtitle">S级高分梯队 · 通过率最高 · 第一批次优先申报</p>
+      <div class="tag-group">
+        <div class="tag-item">市场营销（89.00）</div>
+        <div class="tag-item">消费者行为分析（87.00）</div>
+        <div class="tag-item">新媒体运营（85.00）</div>
+        <div class="tag-item">网店运营与推广（83.00）</div>
+        <div class="tag-item">商务数据分析与应用（82.00）</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="p8">
+    <div class="container">
+      <h2 class="title">第二批次推荐课程</h2>
+      <p class="subtitle">A级优质课程 · 重点培育 · 次年申报</p>
+      <div class="tag-group">
+        <div class="tag-item">直播运营</div>
+        <div class="tag-item">网络推广</div>
+        <div class="tag-item">跨境电商运营</div>
+        <div class="tag-item">移动电子商务</div>
+        <div class="tag-item">电子商务法律法规</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="p9">
+    <div class="container">
+      <h2 class="title">分批次申报全规划</h2>
+      <p class="subtitle">按竞争力、成熟度、通过率分级分批申报</p>
+      <div class="grid">
+        <div class="card"><span class="badge badge-blue">第一批</span><h3>5门 S级</h3><p>立即申报，通过率最高</p></div>
+        <div class="card"><span class="badge badge-green">第二批</span><h3>5门 A级</h3><p>重点培育，1年内申报</p></div>
+        <div class="card"><span class="badge badge-orange">第三批</span><h3>6门 B级</h3><p>完善材料后申报</p></div>
+        <div class="card"><span class="badge badge-purple">第四批</span><h3>8门 C级</h3><p>升级优化后申报</p></div>
+        <div class="card"><span class="badge badge-pink">第五批</span><h3>2门 D级</h3><p>深度重构后申报</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="p10">
+    <div class="container">
+      <h2 class="title">首选课程核心优势</h2>
+      <p class="subtitle">最易获评国家级精品课的关键依据</p>
+      <div class="grid">
+        <div class="card"><h3>市场营销</h3><p>商科核心根基，全国立项率极高，适配东盟与广西特产品牌营销</p></div>
+        <div class="card"><h3>消费者行为分析</h3><p>用户运营底层核心，对接直播转化、私域、东盟消费市场</p></div>
+        <div class="card"><h3>新媒体运营</h3><p>政策热点最强，助农、文旅、县域电商高度贴合</p></div>
+        <div class="card"><h3>网店运营与推广</h3><p>岗位刚需最强，实战性突出，全国立项案例成熟</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="p11">
+    <div class="container">
+      <h2 class="title">广西区位与政策优势</h2>
+      <p class="subtitle">独家特色 · 评审加分 · 差异化竞争力</p>
+      <div class="grid">
+        <div class="card"><h3>东盟跨境</h3><p>面向东盟的数字电商门户</p></div>
+        <div class="card"><h3>桂字号品牌</h3><p>广西特产、文旅、助农全覆盖</p></div>
+        <div class="card"><h3>自贸试验区</h3><p>政策红利、跨境电商试点</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="p12">
+    <div class="container">
+      <h2 class="title">AI数字化教学融合</h2>
+      <p class="subtitle">新时代国家级课程必备亮点</p>
+      <div class="grid">
+        <div class="card"><h3>AI内容创作</h3><p>智能文案、短视频、直播脚本</p></div>
+        <div class="card"><h3>AI数据分析</h3><p>用户画像、流量分析、转化预测</p></div>
+        <div class="card"><h3>AI多语种</h3><p>东盟跨境直播、翻译、智能客服</p></div>
+        <div class="card"><h3>虚拟直播</h3><p>数字人主播、虚拟场景运营</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="p13">
+    <div class="container">
+      <h2 class="title">申报提升核心策略</h2>
+      <p class="subtitle">直接提高通过率的关键动作</p>
+      <div class="grid">
+        <div class="card"><h3>强化广西本土化</h3><p>桂字号、东盟跨境、助农、文旅案例库</p></div>
+        <div class="card"><h3>突出政策对标</h3><p>数字丝路、十四五电商规划、自贸区政策</p></div>
+        <div class="card"><h3>量化成果支撑</h3><p>直播销售额、账号数据、竞赛获奖、证书率</p></div>
+        <div class="card"><h3>校企深度融合</h3><p>MCN、跨境企业、真实项目、实战基地</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="p14">
+    <div class="container">
+      <h2 class="title">课程建设保障体系</h2>
+      <p class="subtitle">师资、实训、资源、成果全方位支撑</p>
+      <div class="grid">
+        <div class="card"><h3>师资团队</h3><p>双师型、企业导师、行业专家</p></div>
+        <div class="card"><h3>实训条件</h3><p>直播实训室、新媒体工作室、跨境基地</p></div>
+        <div class="card"><h3>教学资源</h3><p>课件、案例、题库、平台、标准</p></div>
+        <div class="card"><h3>成果产出</h3><p>竞赛、证书、专利、课题、教材</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="p15">
+    <div class="container">
+      <h2 class="title">最终结论</h2>
+      <p class="subtitle">5门课程最易获评国家级精品课</p>
+      <div class="tag-group">
+        <div class="tag-item">市场营销</div>
+        <div class="tag-item">消费者行为分析</div>
+        <div class="tag-item">新媒体运营</div>
+        <div class="tag-item">网店运营与推广</div>
+        <div class="tag-item">商务数据分析与应用</div>
+      </div>
+      <p style="margin-top:40px;font-size:17px;color:#666;text-align:center;line-height:1.6">
+        以上课程赛道稀缺、特色鲜明、成果易展示、同质化最低，<br>获评国家级精品课程概率最高！
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+const dots = document.querySelectorAll('.dot');
+const slider = document.getElementById('slider');
+
+function go(page) {
+  document.getElementById(`p${page}`).scrollIntoView({ behavior: 'smooth' });
+}
+
+slider.addEventListener('scroll', () => {
+  const idx = Math.round(slider.scrollTop / slider.clientHeight);
+  dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+});
+</script>
+</body>
+</html>
