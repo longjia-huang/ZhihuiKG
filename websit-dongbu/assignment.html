@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作业发布 - 视评智能AI测评系统</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --accent-color: #f59e0b;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --background: #f8fafc;
+            --card-background: #ffffff;
+            --border-subtle: #e2e8f0;
+            --gradient-main: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #f59e0b 100%);
+            --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+            --shadow-medium: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-medium: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
+            border-radius: 4px;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 48px;
+            transition: var(--transition-medium);
+        }
+
+        .nav .logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 36px;
+            width: auto;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            position: relative;
+            transition: var(--transition-fast);
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-menu .back-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .hero {
+            position: relative;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 140px 48px 80px;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .hero-gradient {
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+                        radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.06) 0%, transparent 50%);
+            filter: blur(60px);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(5deg); }
+            66% { transform: translate(-20px, 20px) rotate(-3deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .hero-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(99, 102, 241, 0.12);
+            color: var(--primary-color);
+            padding: 10px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -1.5px;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 32px;
+            font-weight: 400;
+        }
+
+        .section {
+            padding: 80px 48px;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: clamp(28px, 4vw, 42px);
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 14px;
+            transition: var(--transition-medium);
+            cursor: pointer;
+        }
+
+        .hero-btn-primary {
+            background: var(--gradient-main);
+            color: white;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .hero-btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 40px rgba(99, 102, 241, 0.4);
+        }
+
+        .hero-btn-secondary {
+            background: white;
+            color: var(--text-primary);
+            border: 2px solid var(--border-subtle);
+        }
+
+        .hero-btn-secondary:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .form-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-background);
+            border-radius: 24px;
+            padding: 48px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+        }
+
+        .form-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .form-section-title::before {
+            content: '';
+            width: 8px;
+            height: 28px;
+            background: var(--gradient-main);
+            border-radius: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border-subtle);
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: var(--transition-fast);
+            background: white;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 10px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .checkbox-item:hover {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .checkbox-item input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+
+        .selected-agent {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 16px;
+            border: 2px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .selected-agent-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-main);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .selected-agent-info h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .selected-agent-info p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--gradient-main);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition-medium);
+            margin-top: 16px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(99, 102, 241, 0.35);
+        }
+
+        .demo-placeholder {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+            border: 2px dashed var(--primary-color);
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            margin-top: 60px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .demo-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .demo-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .footer {
+            background: var(--text-primary);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 48px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        @media (max-width: 1024px) {
+            .nav {
+                padding: 0 24px;
+            }
+
+            .section {
+                padding: 60px 24px;
+            }
+
+            .form-container {
+                padding: 32px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="dongbu.html" class="logo">
+            <img src="home-logo-dark.png" alt="智慧树" class="logo-img">
+            <span>作业发布</span>
+        </a>
+        <div class="nav-menu">
+            <a href="dongbu.html" class="back-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5"></path>
+                    <path d="M12 19l-7-7 7-7"></path>
+                </svg>
+                返回主页
+            </a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-bg">
+            <div class="hero-gradient"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-label">
+                第三步
+            </div>
+            <h1>发布评测作业</h1>
+            <p>在课程中创建评测任务，设置作业要求，发布给学生完成并提交</p>
+            <div class="hero-btns">
+                <a href="agent-config.html" class="hero-btn hero-btn-secondary">
+                    上一步：智能体配置
+                </a>
+                <a href="student-submit.html" class="hero-btn hero-btn-primary">
+                    下一步：学生提交
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14"></path>
+                        <path d="M12 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">创建评测作业</h2>
+            <p class="section-subtitle">填写作业信息，设置评测要求，一键发布给学生</p>
+        </div>
+
+        <div class="form-container">
+            <div class="form-section">
+                <h3 class="form-section-title">基本信息</h3>
+                <div class="form-group">
+                    <label class="form-label">作业名称</label>
+                    <input type="text" class="form-input" placeholder="例如：舞蹈基础动作考核">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">所属课程</label>
+                        <select class="form-select">
+                            <option>舞蹈艺术基础</option>
+                            <option>体育舞蹈</option>
+                            <option>形体训练</option>
+                            <option>健美操</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">班级</label>
+                        <select class="form-select">
+                            <option>2024级舞蹈1班</option>
+                            <option>2024级舞蹈2班</option>
+                            <option>全部班级</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">作业描述</label>
+                    <textarea class="form-textarea" placeholder="请详细描述作业要求、评测标准等内容..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3 class="form-section-title">评测配置</h3>
+                <div class="form-group">
+                    <label class="form-label">已选智能体</label>
+                    <div class="selected-agent">
+                        <div class="selected-agent-icon">💃</div>
+                        <div class="selected-agent-info">
+                            <h4>舞蹈评测智能体</h4>
+                            <p>动作标准度 · 节奏感 · 肢体协调</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">评测维度</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" checked> 动作标准度
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" checked> 节奏感
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" checked> 姿态优美
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox"> 流畅度
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox"> 创意表现
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3 class="form-section-title">时间设置</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">开始时间</label>
+                        <input type="datetime-local" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">截止时间</label>
+                        <input type="datetime-local" class="form-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3 class="form-section-title">提交要求</h3>
+                <div class="form-group">
+                    <label class="form-label">视频要求</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" checked> 视频格式限制
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" checked> 时长限制
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox"> 文件大小限制
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" checked> 横屏拍摄
+                        </label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">最少提交次数</label>
+                        <select class="form-select">
+                            <option>1次</option>
+                            <option>2次</option>
+                            <option>3次</option>
+                            <option>不限</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">是否允许重交</label>
+                        <select class="form-select">
+                            <option>允许</option>
+                            <option>不允许</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button class="submit-btn">发布作业</button>
+        </div>
+
+        <div class="demo-placeholder">
+            <div class="demo-icon">📚</div>
+            <h3 style="margin-bottom: 16px;">进入智慧树课程平台</h3>
+            <p class="demo-text">点击下方按钮，在智慧树课程平台创建和发布作业</p>
+            <div class="hero-btns">
+                <a href="https://www.zhihuishu.com/" target="_blank" class="hero-btn hero-btn-primary">
+                    进入智慧树
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14"></path>
+                        <path d="M12 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+                <a href="student-submit.html" class="hero-btn hero-btn-secondary">
+                    前往下一步
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        © 2025 智慧树网 版权所有 | 作业发布 | 技术支持：智慧树人工智能实验室
+    </footer>
+</body>
+</html>

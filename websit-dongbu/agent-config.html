@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能体配置 - 视评智能AI测评系统</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #10b981;
+            --secondary-color: #059669;
+            --accent-color: #f59e0b;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --background: #f0fdf4;
+            --card-background: #ffffff;
+            --border-subtle: #d1fae5;
+            --gradient-main: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+            --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+            --shadow-medium: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-medium: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #ecfdf5;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
+            border-radius: 4px;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 48px;
+            transition: var(--transition-medium);
+        }
+
+        .nav .logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 36px;
+            width: auto;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            position: relative;
+            transition: var(--transition-fast);
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-menu .back-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .hero {
+            position: relative;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 140px 48px 80px;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .hero-gradient {
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(5, 150, 105, 0.12) 0%, transparent 50%),
+                        radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.06) 0%, transparent 50%);
+            filter: blur(60px);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(5deg); }
+            66% { transform: translate(-20px, 20px) rotate(-3deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .hero-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--primary-color);
+            padding: 10px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -1.5px;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 32px;
+            font-weight: 400;
+        }
+
+        .section {
+            padding: 80px 48px;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: clamp(28px, 4vw, 42px);
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 14px;
+            transition: var(--transition-medium);
+            cursor: pointer;
+        }
+
+        .hero-btn-primary {
+            background: var(--gradient-main);
+            color: white;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        }
+
+        .hero-btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 40px rgba(16, 185, 129, 0.4);
+        }
+
+        .hero-btn-secondary {
+            background: white;
+            color: var(--text-primary);
+            border: 2px solid var(--border-subtle);
+        }
+
+        .hero-btn-secondary:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .agent-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 32px;
+        }
+
+        .agent-card {
+            background: var(--card-background);
+            border-radius: 24px;
+            padding: 32px;
+            border: 1px solid var(--border-subtle);
+            transition: var(--transition-medium);
+            cursor: pointer;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-medium);
+            border-color: var(--primary-color);
+        }
+
+        .agent-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .agent-avatar {
+            width: 64px;
+            height: 64px;
+            background: var(--gradient-main);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .agent-info h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .agent-tag {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary-color);
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .agent-desc {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .agent-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .agent-feature {
+            background: rgba(16, 185, 129, 0.08);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .agent-action {
+            width: 100%;
+            padding: 12px;
+            background: var(--gradient-main);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-medium);
+        }
+
+        .agent-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .config-panel {
+            max-width: 1200px;
+            margin: 60px auto 0;
+            background: var(--card-background);
+            border-radius: 24px;
+            padding: 48px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .config-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 32px;
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+        }
+
+        .config-item {
+            background: rgba(16, 185, 129, 0.05);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .config-item h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .config-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .config-option {
+            padding: 8px 16px;
+            background: white;
+            border: 2px solid var(--border-subtle);
+            border-radius: 10px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .config-option:hover,
+        .config-option.active {
+            border-color: var(--primary-color);
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary-color);
+        }
+
+        .demo-placeholder {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(5, 150, 105, 0.05));
+            border: 2px dashed var(--primary-color);
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .demo-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .demo-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .footer {
+            background: var(--text-primary);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 48px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        @media (max-width: 1024px) {
+            .nav {
+                padding: 0 24px;
+            }
+
+            .section {
+                padding: 60px 24px;
+            }
+
+            .config-panel {
+                padding: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="dongbu.html" class="logo">
+            <img src="home-logo-dark.png" alt="智慧树" class="logo-img">
+            <span>智能体配置</span>
+        </a>
+        <div class="nav-menu">
+            <a href="dongbu.html" class="back-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5"></path>
+                    <path d="M12 19l-7-7 7-7"></path>
+                </svg>
+                返回主页
+            </a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-bg">
+            <div class="hero-gradient"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-label">
+                第二步
+            </div>
+            <h1>智能体配置</h1>
+            <p>在智能体广场选择合适的评测智能体，配置个性化的评测参数与规则</p>
+            <div class="hero-btns">
+                <a href="knowledge-graph.html" class="hero-btn hero-btn-secondary">
+                    上一步：数据采集
+                </a>
+                <a href="assignment.html" class="hero-btn hero-btn-primary">
+                    下一步：发布作业
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14"></path>
+                        <path d="M12 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="demo-placeholder">
+            <div class="demo-icon">🤖</div>
+            <h3 style="margin-bottom: 16px;">进入智能体广场</h3>
+            <p class="demo-text">点击下方按钮，体验完整的智能体选择与配置功能</p>
+            <div class="hero-btns">
+                <a href="https://kg-smart-course-admin-pro.zhihuishu.com/square?mapUid=2010528284078960640" target="_blank" class="hero-btn hero-btn-primary">
+                    进入智能体广场
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14"></path>
+                        <path d="M12 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+                <a href="assignment.html" class="hero-btn hero-btn-secondary">
+                    前往下一步
+                </a>
+            </div>
+        </div>
+        
+        <div class="section-header">
+            <h2 class="section-title">智能体选择</h2>
+            <p class="section-subtitle">根据学科需求选择合适的评测智能体</p>
+        </div>
+
+        <div class="agent-grid">
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-avatar">💃</div>
+                    <div class="agent-info">
+                        <h3>舞蹈评测智能体</h3>
+                        <span class="agent-tag">体育艺术</span>
+                    </div>
+                </div>
+                <p class="agent-desc">基于动作捕捉技术，自动评测舞蹈动作的标准度、节奏感和表现力</p>
+                <div class="agent-features">
+                    <span class="agent-feature">动作标准度</span>
+                    <span class="agent-feature">节奏感</span>
+                    <span class="agent-feature">肢体协调</span>
+                </div>
+                <button class="agent-action">选择此智能体</button>
+            </div>
+
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-avatar">🏃</div>
+                    <div class="agent-info">
+                        <h3>体育评测智能体</h3>
+                        <span class="agent-tag">运动科学</span>
+                    </div>
+                </div>
+                <p class="agent-desc">适用于各种体育运动项目的动作评测，确保运动姿势规范与安全</p>
+                <div class="agent-features">
+                    <span class="agent-feature">姿势规范</span>
+                    <span class="agent-feature">动作幅度</span>
+                    <span class="agent-feature">运动轨迹</span>
+                </div>
+                <button class="agent-action">选择此智能体</button>
+            </div>
+
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-avatar">🎤</div>
+                    <div class="agent-info">
+                        <h3>演讲评测智能体</h3>
+                        <span class="agent-tag">语言艺术</span>
+                    </div>
+                </div>
+                <p class="agent-desc">多模态分析演讲表现，包括语音、肢体语言和表达技巧</p>
+                <div class="agent-features">
+                    <span class="agent-feature">语音表达</span>
+                    <span class="agent-feature">肢体语言</span>
+                    <span class="agent-feature">情感表达</span>
+                </div>
+                <button class="agent-action">选择此智能体</button>
+            </div>
+
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-avatar">🤖</div>
+                    <div class="agent-info">
+                        <h3>机器人评测智能体</h3>
+                        <span class="agent-tag">人工智能</span>
+                    </div>
+                </div>
+                <p class="agent-desc">评测机器人动作精度、任务完成度和交互表现</p>
+                <div class="agent-features">
+                    <span class="agent-feature">动作精度</span>
+                    <span class="agent-feature">任务完成</span>
+                    <span class="agent-feature">交互体验</span>
+                </div>
+                <button class="agent-action">选择此智能体</button>
+            </div>
+
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-avatar">🎵</div>
+                    <div class="agent-info">
+                        <h3>音乐评测智能体</h3>
+                        <span class="agent-tag">艺术教育</span>
+                    </div>
+                </div>
+                <p class="agent-desc">结合音频分析和视觉动作捕捉，全方位评测音乐演奏表现</p>
+                <div class="agent-features">
+                    <span class="agent-feature">音准节奏</span>
+                    <span class="agent-feature">演奏姿势</span>
+                    <span class="agent-feature">表现力</span>
+                </div>
+                <button class="agent-action">选择此智能体</button>
+            </div>
+
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-avatar">⚙️</div>
+                    <div class="agent-info">
+                        <h3>自定义智能体</h3>
+                        <span class="agent-tag">定制开发</span>
+                    </div>
+                </div>
+                <p class="agent-desc">根据特定评测需求，自定义配置智能体的评测维度和算法</p>
+                <div class="agent-features">
+                    <span class="agent-feature">灵活配置</span>
+                    <span class="agent-feature">自定义指标</span>
+                    <span class="agent-feature">私有模型</span>
+                </div>
+                <button class="agent-action">自定义配置</button>
+            </div>
+        </div>
+
+        <div class="config-panel">
+            <h3 class="config-title">评测配置</h3>
+            <div class="config-grid">
+                <div class="config-item">
+                    <h4>📊 评测维度</h4>
+                    <div class="config-options">
+                        <span class="config-option active">动作标准度</span>
+                        <span class="config-option">节奏同步</span>
+                        <span class="config-option active">姿态优美</span>
+                        <span class="config-option">流畅度</span>
+                        <span class="config-option">创意表现</span>
+                    </div>
+                </div>
+
+                <div class="config-item">
+                    <h4>⚡ 评测精度</h4>
+                    <div class="config-options">
+                        <span class="config-option">快速模式</span>
+                        <span class="config-option active">标准模式</span>
+                        <span class="config-option">高精度模式</span>
+                    </div>
+                </div>
+
+                <div class="config-item">
+                    <h4>🎯 评分标准</h4>
+                    <div class="config-options">
+                        <span class="config-option active">百分制</span>
+                        <span class="config-option">等级制</span>
+                        <span class="config-option">通过/不通过</span>
+                    </div>
+                </div>
+
+                <div class="config-item">
+                    <h4>📋 输出内容</h4>
+                    <div class="config-options">
+                        <span class="config-option active">总体评分</span>
+                        <span class="config-option active">详细报告</span>
+                        <span class="config-option">优化建议</span>
+                        <span class="config-option">视频对比</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+    </section>
+
+    <footer class="footer">
+        © 2025 智慧树网 版权所有 | 智能体配置 | 技术支持：智慧树人工智能实验室
+    </footer>
+</body>
+</html>
