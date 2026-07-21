@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI动捕教学系统 - 教师端</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.6/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel" data-presets="react">
+const { useState, useRef, useEffect } = React;
+
+// Inline SVG Icon components
+const Icon = ({ path, size = 18, className = "", color }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color || "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    {path}
+  </svg>
+);
+
+const UploadIcon = (p) => <Icon {...p} path={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></>} />;
+const ClockIcon = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></>} />;
+const RulerIcon = (p) => <Icon {...p} path={<><path d="M21.3 15.3l-2.6-2.6a1 1 0 0 0-1.4 0l-10.6 10.6a1 1 0 0 0-.3.7V21a1 1 0 0 0 1 1h7a1 1 0 0 0 .7-.3l10.6-10.6a1 1 0 0 0 0-1.4z"/><path d="m7.5 10.5 2 2"/><path d="m10.5 7.5 2 2"/><path d="m13.5 4.5 2 2"/><path d="m16.5 13.5 2 2"/></>} />;
+const HashIcon = (p) => <Icon {...p} path={<><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></>} />;
+const VideoIcon = (p) => <Icon {...p} path={<><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></>} />;
+const ActivityIcon = (p) => <Icon {...p} path={<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>} />;
+const BarChartIcon = (p) => <Icon {...p} path={<><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></>} />;
+const UsersIcon = (p) => <Icon {...p} path={<><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>} />;
+const SettingsIcon = (p) => <Icon {...p} path={<><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></>} />;
+const BellIcon = (p) => <Icon {...p} path={<><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></>} />;
+const SearchIcon = (p) => <Icon {...p} path={<><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>} />;
+const ChevronRightIcon = (p) => <Icon {...p} path={<polyline points="9 18 15 12 9 6"/>} />;
+const TrendingUpIcon = (p) => <Icon {...p} path={<><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></>} />;
+const AwardIcon = (p) => <Icon {...p} path={<><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></>} />;
+const TargetIcon = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></>} />;
+const ZapIcon = (p) => <Icon {...p} path={<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>} />;
+const EyeIcon = (p) => <Icon {...p} path={<><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></>} />;
+const FileVideoIcon = (p) => <Icon {...p} path={<><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="10 12 15 15 10 18 10 12"/></>} />;
+const UserIcon = (p) => <Icon {...p} path={<><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></>} />;
+const CalendarIcon = (p) => <Icon {...p} path={<><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></>} />;
+const FilterIcon = (p) => <Icon {...p} path={<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>} />;
+const DownloadIcon = (p) => <Icon {...p} path={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></>} />;
+const RefreshCwIcon = (p) => <Icon {...p} path={<><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></>} />;
+const CheckCircle2Icon = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></>} />;
+const StarIcon = (p) => <Icon {...p} path={<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>} />;
+const AlertCircleIcon = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></>} />;
+
+const ACTIONS = [
+  { id: 1, name: "单脚站立平衡", duration: 30, unit: "s", icon: "🧘", color: "#6366f1" },
+  { id: 2, name: "站立收腿跳", duration: 30, unit: "s", icon: "🦵", color: "#8b5cf6" },
+  { id: 3, name: "立定跳远", duration: 30, unit: "s", icon: "🏃", color: "#a855f7" },
+  { id: 4, name: "直棍跳", duration: 30, unit: "s", icon: "", color: "#d946ef" },
+  { id: 5, name: "开合跳", duration: 30, unit: "s", icon: "⭐", color: "#ec4899" },
+  { id: 6, name: "左右双脚跳", duration: 30, unit: "s", icon: "↔️", color: "#f43f5e" },
+  { id: 7, name: "前后双脚跳", duration: 30, unit: "s", icon: "↕️", color: "#ef4444" },
+  { id: 8, name: "手位练习", duration: 60, unit: "s", icon: "🙌", color: "#f97316" },
+];
+
+const MOCK_STUDENTS = [
+  { id: 1, name: "张小明", class: "大班A", avatar: "👦", score: 92, status: "completed", actions: 8 },
+  { id: 2, name: "李雨萱", class: "大班A", avatar: "👧", score: 88, status: "completed", actions: 8 },
+  { id: 3, name: "王浩然", class: "大班A", avatar: "👦", score: 76, status: "analyzing", actions: 6 },
+  { id: 4, name: "陈思琪", class: "大班A", avatar: "👧", score: 95, status: "completed", actions: 8 },
+  { id: 5, name: "刘子轩", class: "大班A", avatar: "👦", score: 0, status: "pending", actions: 0 },
+  { id: 6, name: "赵欣怡", class: "大班A", avatar: "👧", score: 83, status: "completed", actions: 7 },
+];
+
+const MOCK_EVAL_DIMS = [
+  { label: "时间", icon: ClockIcon, desc: "小班≥5秒，中班≥10秒，大班≥20秒", value: "23秒", pass: true },
+  { label: "计数", icon: HashIcon, desc: "连续完成5次以上", value: "7次", pass: true },
+  { label: "距离", icon: RulerIcon, desc: "中班≥60cm，大班≥80cm", value: "92cm", pass: true },
+];
+
+function ActionCard({ action, status, progress }) {
+  const statusConfig = {
+    completed: { bg: "bg-emerald-50", border: "border-emerald-200", text: "text-emerald-700", label: "已完成" },
+    analyzing: { bg: "bg-amber-50", border: "border-amber-200", text: "text-amber-700", label: "分析中" },
+    pending: { bg: "bg-slate-50", border: "border-slate-200", text: "text-slate-500", label: "待检测" },
+  };
+  const cfg = statusConfig[status] || statusConfig.pending;
+
+  return (
+    <div className={`rounded-xl border ${cfg.border} ${cfg.bg} p-4 transition-all hover:shadow-md`}>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">{action.icon}</span>
+          <span className="font-semibold text-slate-800 text-sm">{action.name}</span>
+        </div>
+        <span className={`text-xs font-medium px-2 py-1 rounded-full ${cfg.text} bg-white/60`}>
+          {cfg.label}
+        </span>
+      </div>
+      <div className="flex items-center justify-between text-xs text-slate-500 mb-2">
+        <span>标准时长 {action.duration}{action.unit}</span>
+        <span className="font-medium text-slate-700">{progress || 0}%</span>
+      </div>
+      <div className="h-2 bg-white/80 rounded-full overflow-hidden">
+        <div
+          className="h-full rounded-full transition-all duration-700"
+          style={{ width: `${progress || 0}%`, backgroundColor: action.color }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function StudentRow({ student }) {
+  const statusMap = {
+    completed: { label: "已完成", color: "text-emerald-600 bg-emerald-50" },
+    analyzing: { label: "分析中", color: "text-amber-600 bg-amber-50" },
+    pending: { label: "待上传", color: "text-slate-400 bg-slate-50" },
+  };
+  const s = statusMap[student.status];
+  return (
+    <tr className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
+      <td className="py-3 px-4">
+        <div className="flex items-center gap-3">
+          <span className="text-xl">{student.avatar}</span>
+          <div>
+            <div className="font-medium text-slate-800 text-sm">{student.name}</div>
+            <div className="text-xs text-slate-400">{student.class}</div>
+          </div>
+        </div>
+      </td>
+      <td className="py-3 px-4 text-sm text-slate-600">{student.actions}/8</td>
+      <td className="py-3 px-4">
+        {student.score > 0 ? (
+          <div className="flex items-center gap-2">
+            <div className="w-16 h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500" style={{ width: `${student.score}%` }} />
+            </div>
+            <span className="text-sm font-semibold text-slate-700">{student.score}</span>
+          </div>
+        ) : <span className="text-sm text-slate-300">—</span>}
+      </td>
+      <td className="py-3 px-4">
+        <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${s.color}`}>{s.label}</span>
+      </td>
+      <td className="py-3 px-4">
+        <button className="text-indigo-500 hover:text-indigo-700 text-sm font-medium flex items-center gap-1">
+          <EyeIcon size={14} /> 详情
+        </button>
+      </td>
+    </tr>
+  );
+}
+
+function App() {
+  const [activeTab, setActiveTab] = useState("upload");
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
+  const [selectedClass, setSelectedClass] = useState("大班A");
+  const [dragOver, setDragOver] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const handleUpload = () => {
+    setIsUploading(true);
+    setUploadProgress(0);
+    const interval = setInterval(() => {
+      setUploadProgress((p) => {
+        if (p >= 100) { clearInterval(interval); setIsUploading(false); return 100; }
+        return p + Math.random() * 15;
+      });
+    }, 300);
+  };
+
+  const tabs = [
+    { id: "upload", label: "视频上传", icon: UploadIcon },
+    { id: "analysis", label: "动作分析", icon: ActivityIcon },
+    { id: "results", label: "评估结果", icon: BarChartIcon },
+    { id: "report", label: "学生报告", icon: FileVideoIcon },
+    { id: "analytics", label: "学情数据", icon: TrendingUpIcon },
+    { id: "students", label: "学生管理", icon: UsersIcon },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/20">
+      {/* Top Nav */}
+      <header className="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 sticky top-0 z-50">
+        <div className="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-200">
+              <ZapIcon size={18} className="text-white" />
+            </div>
+            <div>
+              <h1 className="text-lg font-bold text-slate-800 leading-tight">AI动捕教学系统</h1>
+              <p className="text-[10px] text-slate-400 -mt-0.5">Motion Capture Teaching Platform</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <SearchIcon size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                className="pl-9 pr-4 py-2 bg-slate-100/60 rounded-lg text-sm text-slate-600 w-56 border border-transparent focus:border-indigo-300 focus:bg-white focus:outline-none transition-all"
+                placeholder="搜索学生、班级..."
+              />
+            </div>
+            <button className="relative p-2 rounded-lg hover:bg-slate-100 transition-colors">
+              <BellIcon size={18} className="text-slate-500" />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+            </button>
+            <div className="flex items-center gap-2 pl-3 border-l border-slate-200">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-sm font-medium">王</div>
+              <div className="text-sm">
+                <div className="font-medium text-slate-700">王老师</div>
+                <div className="text-[10px] text-slate-400">体育教师</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-[1400px] mx-auto px-6 py-6 flex gap-6">
+        {/* Sidebar */}
+        <aside className="w-56 shrink-0">
+          <nav className="bg-white rounded-2xl border border-slate-200/60 p-3 shadow-sm">
+            {tabs.map((tab) => {
+              const IconComp = tab.icon;
+              const active = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all mb-1 ${
+                    active
+                      ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-md shadow-indigo-200"
+                      : "text-slate-600 hover:bg-slate-50"
+                  }`}
+                >
+                  <IconComp size={18} />
+                  {tab.label}
+                  {active && <ChevronRightIcon size={14} className="ml-auto" />}
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Quick Stats */}
+          <div className="mt-4 bg-white rounded-2xl border border-slate-200/60 p-4 shadow-sm">
+            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">本次测试概览</h3>
+            <div className="space-y-3">
+              {[
+                { label: "已检测学生", value: "4/6", color: "text-indigo-600" },
+                { label: "平均得分", value: "88.5", color: "text-emerald-600" },
+                { label: "动作识别率", value: "94.2%", color: "text-purple-600" },
+              ].map((item) => (
+                <div key={item.label} className="flex items-center justify-between">
+                  <span className="text-xs text-slate-500">{item.label}</span>
+                  <span className={`text-sm font-bold ${item.color}`}>{item.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Class Selector */}
+          <div className="mt-4 bg-white rounded-2xl border border-slate-200/60 p-4 shadow-sm">
+            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">当前班级</h3>
+            <select
+              value={selectedClass}
+              onChange={(e) => setSelectedClass(e.target.value)}
+              className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 text-slate-700 bg-slate-50 focus:outline-none focus:border-indigo-300"
+            >
+              <option>小班A</option>
+              <option>中班A</option>
+              <option>大班A</option>
+            </select>
+            <div className="mt-3 flex items-center gap-2 text-xs text-slate-400">
+              <CalendarIcon size={12} />
+              <span>2026年7月15日</span>
+            </div>
+          </div>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 min-w-0">
+          {/* Upload Tab */}
+          {activeTab === "upload" && (
+            <div className="space-y-6">
+              <div className="bg-white rounded-2xl border border-slate-200/60 p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-5">
+                  <div>
+                    <h2 className="text-lg font-bold text-slate-800">上传动作视频</h2>
+                    <p className="text-sm text-slate-400 mt-1">支持 MP4 / MOV / AVI 格式，单个文件最大 500MB</p>
+                  </div>
+                  <button className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors flex items-center gap-2">
+                    <FilterIcon size={14} /> 批量上传
+                  </button>
+                </div>
+                <div
+                  className={`relative border-2 border-dashed rounded-2xl p-10 text-center transition-all cursor-pointer ${
+                    dragOver ? "border-indigo-400 bg-indigo-50/50" : "border-slate-200 hover:border-indigo-300 hover:bg-indigo-50/20"
+                  }`}
+                  onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                  onDragLeave={() => setDragOver(false)}
+                  onDrop={(e) => { e.preventDefault(); setDragOver(false); handleUpload(); }}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <input ref={fileInputRef} type="file" className="hidden" accept="video/*" onChange={handleUpload} />
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
+                    <FileVideoIcon size={28} className="text-indigo-500" />
+                  </div>
+                  <p className="text-slate-700 font-medium mb-1">拖拽视频文件到此处，或点击上传</p>
+                  <p className="text-xs text-slate-400">支持同时上传多个学生的动作视频</p>
+                  {isUploading && (
+                    <div className="mt-6 max-w-md mx-auto">
+                      <div className="flex items-center justify-between text-sm mb-2">
+                        <span className="text-slate-600 font-medium">正在上传并分析...</span>
+                        <span className="text-indigo-600 font-bold">{Math.min(Math.round(uploadProgress), 100)}%</span>
+                      </div>
+                      <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300" style={{ width: `${Math.min(uploadProgress, 100)}%` }} />
+                      </div>
+                      <div className="flex items-center justify-center gap-4 mt-3 text-xs text-slate-400">
+                        <span className="flex items-center gap-1"><VideoIcon size={12} /> 视频解析</span>
+                        <span className="flex items-center gap-1"><ActivityIcon size={12} /> 骨骼提取</span>
+                        <span className="flex items-center gap-1"><ZapIcon size={12} /> 动作识别</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="bg-white rounded-2xl border border-slate-200/60 p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-5">
+                  <div>
+                    <h2 className="text-lg font-bold text-slate-800">标准动作识别</h2>
+                    <p className="text-sm text-slate-400 mt-1">当前可识别 8 种标准动作，时长根据校方要求划定</p>
+                  </div>
+                  <span className="text-xs text-slate-400 bg-slate-100 px-3 py-1.5 rounded-full">8 种动作已配置</span>
+                </div>
+                <div className="grid grid-cols-4 gap-3">
+                  {ACTIONS.map((action) => (
+                    <ActionCard key={action.id} action={action}
+                      status={action.id <= 5 ? "completed" : action.id <= 7 ? "analyzing" : "pending"}
+                      progress={action.id <= 5 ? 100 : action.id <= 7 ? 65 : 0}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Analysis Tab */}
+          {activeTab === "analysis" && (
+            <div className="space-y-6">
+              <div className="bg-white rounded-2xl border border-slate-200/60 p-6 shadow-sm">
+                <h2 className="text-lg font-bold text-slate-800 mb-5">动作数据分析</h2>
+                <div className="grid grid-cols-3 gap-4 mb-6">
+                  {[
+                    { label: "骨骼关键点识别", value: "17/17", sub: "全部关键点", icon: ActivityIcon, color: "from-indigo-500 to-blue-500" },
+                    { label: "动作帧率", value: "30fps", sub: "流畅度优秀", icon: ZapIcon, color: "from-purple-500 to-pink-500" },
+                    { label: "识别准确率", value: "94.2%", sub: "高于行业平均", icon: TargetIcon, color: "from-emerald-500 to-teal-500" },
+                  ].map((card) => {
+                    const IconComp = card.icon;
+                    return (
+                      <div key={card.label} className="rounded-xl border border-slate-100 p-5 hover:shadow-md transition-shadow">
+                        <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${card.color} flex items-center justify-center mb-3`}>
+                          <IconComp size={18} className="text-white" />
+                        </div>
+                        <div className="text-2xl font-bold text-slate-800">{card.value}</div>
+                        <div className="text-sm text-slate-500">{card.label}</div>
+                        <div className="text-xs text-slate-400 mt-1">{card.sub}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="bg-slate-50 rounded-xl p-5">
+                  <h3 className="text-sm font-semibold text-slate-700 mb-4">各动作完成度对比</h3>
+                  <div className="space-y-3">
+                    {ACTIONS.map((action) => {
+                      const score = [92, 88, 95, 78, 91, 85, 82, 96][action.id - 1];
+                      return (
+                        <div key={action.id} className="flex items-center gap-3">
+                          <span className="text-lg w-7 text-center">{action.icon}</span>
+                          <span className="text-sm text-slate-600 w-24 truncate">{action.name}</span>
+                          <div className="flex-1 h-6 bg-white rounded-lg overflow-hidden border border-slate-100">
+                            <div className="h-full rounded-lg flex items-center justify-end pr-2 transition-all duration-700"
+                              style={{ width: `${score}%`, backgroundColor: action.color + "20", borderRight: `3px solid ${action.color}` }}>
+                              <span className="text-xs font-bold" style={{ color: action.color }}>{score}分</span>
+                            </div>
+                          </div>
+                          <span className="text-xs text-slate-400 w-16 text-right">{action.duration}{action.unit}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-2xl border border-slate-200/60 p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-5">
+                  <h2 className="text-lg font-bold text-slate-800">评价维度定制</h2>
+                  <button className="text-sm text-indigo-500 hover:text-indigo-700 font-medium flex items-center gap-1">
+                    <SettingsIcon size={14} /> 自定义维度
+                  </button>
+                </div>
+                <div className="grid grid-cols-3 gap-4">
+                  {MOCK_EVAL_DIMS.map((dim) => {
+                    const IconComp = dim.icon;
+                    return (
+                      <div key={dim.label} className={`rounded-xl border p-5 ${dim.pass ? "border-emerald-200 bg-emerald-50/50" : "border-red-200 bg-red-50/50"}`}>
+                        <div className="flex items-center gap-2 mb-3">
+                          <IconComp size={18} className={dim.pass ? "text-emerald-600" : "text-red-500"} />
+                          <span className="font-semibold text-slate-800">{dim.label}维度</span>
+                          {dim.pass && <CheckCircle2Icon size={16} className="text-emerald-500 ml-auto" />}
+                        </div>
+                        <p className="text-xs text-slate-500 mb-3">{dim.desc}</p>
+                        <div className="text-2xl font-bold text-slate-800">{dim.value}</div>
+                        <div className="text-xs mt-1">
+                          {dim.pass ? <span className="text-emerald-600 font-medium">达标 ✓</span> : <span className="text-red-500 font-medium">未达标 ✗</span>}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Results Tab */}
+          {activeTab === "results" && (
+            <div className="space-y-6">
+              <div className="grid grid-cols-4 gap-4">
+                {[
+                  { label: "班级平均分", value: "88.5", icon: AwardIcon, gradient: "from-indigo-500 to-purple-500", change: "+3.2" },
+                  { label: "最高分", value: "95", icon: StarIcon, gradient: "from-amber-500 to-orange-500", change: "陈思琪" },
+                  { label: "动作达标率", value: "94.2%", icon: TargetIcon, gradient: "from-emerald-500 to-teal-500", change: "+5.1%" },
+                  { label: "待分析视频", value: "2", icon: ClockIcon, gradient: "from-rose-500 to-pink-500", change: "预计5分钟" },
+                ].map((card) => {
+                  const IconComp = card.icon;
+                  return (
+                    <div key={card.label} className="bg-white rounded-2xl border border-slate-200/60 p-5 shadow-sm">
+                      <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${card.gradient} flex items-center justify-center mb-3`}>
+                        <IconComp size={18} className="text-white" />
+                      </div>
+                      <div className="text-2xl font-bold text-slate-800">{card.value}</div>
+                      <div className="text-sm text-slate-500">{card.label}</div>
+                      <div className="text-xs text-emerald-500 font-medium mt-1">{card.change}</div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="bg-white rounded-2xl border border-slate-200/60 p-6 shadow-sm">
+                <h2 className="text-lg font-bold text-slate-800 mb-5">成绩分布</h2>
+                <div className="flex items-end gap-3 h-48 px-4">
+                  {[
+                    { range: "90-100", count: 2, color: "from-emerald-400 to-emerald-500" },
+                    { range: "80-89", count: 2, color: "from-indigo-400 to-indigo-500" },
+                    { range: "70-79", count: 1, color: "from-amber-400 to-amber-500" },
+                    { range: "60-69", count: 0, color: "from-orange-400 to-orange-500" },
+                    { range: "<60", count: 0, color: "from-rose-400 to-rose-500" },
+                  ].map((bar) => (
+                    <div key={bar.range} className="flex-1 flex flex-col items-center gap-2">
+                      <div className="w-full flex justify-center">
+                        <div className={`w-12 rounded-t-lg bg-gradient-to-t ${bar.color} transition-all duration-700`} style={{ height: `${Math.max(bar.count * 60, 4)}px` }} />
+                      </div>
+                      <span className="text-xs text-slate-500 font-medium">{bar.range}</span>
+                      <span className="text-sm font-bold text-slate-700">{bar.count}人</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="bg-white rounded-2xl border border-slate-200/60 p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-5">
+                  <h2 className="text-lg font-bold text-slate-800">学生评估明细</h2>
+                  <button className="px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors flex items-center gap-2">
+                    <DownloadIcon size={14} /> 导出报告
+                  </button>
+                </div>
+                <table className="w-full">
+                  <thead>
+                    <tr className="text-xs text-slate-400 uppercase tracking-wider border-b border-slate-100">
+                      <th className="text-left py-3 px-4 font-medium">学生</th>
+                      <th className="text-left py-3 px-4 font-medium">完成动作</th>
+                      <th className="text-left py-3 px-4 font-medium">综合得分</th>
+                      <th className="text-left py-3 px-4 font-medium">状态</th>
+                      <th className="text-left py-3 px-4 font-medium">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {MOCK_STUDENTS.map((student) => <StudentRow key={student.id} student={student} />)}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Student Report Tab */}
+          {activeTab === "report" && (
+            <div className="space-y-6">
+              {/* Student Selector */}
+              <div className="bg-white rounded-2xl border border-slate-200/60 p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-5">
+                  <div>
+                    <h2 className="text-lg font-bold text-slate-800">学生动作评价报告</h2>
+                    <p className="text-sm text-slate-400 mt-1">查看每位学生各动作的详细评价与AI建议</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <select className="text-sm border border-slate-200 rounded-lg px-3 py-2 text-slate-700 bg-slate-50 focus:outline-none focus:border-indigo-300">
+                      <option>张小明</option>
+                      <option>李雨萱</option>
+                      <option>王浩然</option>
+                      <option>陈思琪</option>
+                      <option>赵欣怡</option>
+                    </select>
+                    <button className="px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors flex items-center gap-2">
+                      <DownloadIcon size={14} /> 导出PDF
+                    </button>
+                  </div>
+                </div>
+                {/* Student Profile Header */}
+                <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl mb-6">
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-2xl font-bold">张</div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3">
+                      <span className="text-lg font-bold text-slate-800">张小明</span>
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-600 font-medium">大班A</span>
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-600 font-medium">综合优秀</span>
+                    </div>
+                    <div className="text-sm text-slate-500 mt-1">综合得分 92 分 · 完成 8/8 个动作 · 测试日期 2026-07-15</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-3xl font-bold text-indigo-600">92</div>
+                    <div className="text-xs text-slate-400">综合评分</div>
+                  </div>
+                </div>
+                {/* Per-Action Reports */}
+                <div className="space-y-4">
+                  {[
+                    { action: "单脚站立平衡", icon: "🧘", time: "30.2s", timePass: true, count: "—", countPass: true, distance: "—", distPass: true, score: 95, comment: "平衡能力优秀，重心稳定，全程无明显晃动。建议增加闭眼单脚站立训练进一步提升前庭功能。", color: "#6366f1" },
+                    { action: "站立收腿跳", icon: "🦵", time: "28.5s", timePass: true, count: "6次", countPass: true, distance: "—", distPass: true, score: 90, comment: "动作连贯性良好，收腿高度达标。左腿收腿幅度略小于右腿，建议加强左侧力量训练。", color: "#8b5cf6" },
+                    { action: "立定跳远", icon: "🏃", time: "—", timePass: true, count: "3次", countPass: true, distance: "92cm", distPass: true, score: 93, comment: "起跳角度合理，腾空姿态标准。最远跳跃距离92cm，超过大班标准(≥80cm)。摆臂协调性可进一步提升。", color: "#a855f7" },
+                    { action: "直棍跳", icon: "", time: "27.8s", timePass: true, count: "5次", countPass: true, distance: "—", distPass: true, score: 82, comment: "基本动作掌握，但落地稳定性不足，有2次轻微失衡。建议增加踝关节力量和本体感觉训练。", color: "#d946ef" },
+                    { action: "开合跳", icon: "⭐", time: "30.0s", timePass: true, count: "12次", countPass: true, distance: "—", distPass: true, score: 91, comment: "节奏感好，手脚协调性优秀。动作幅度标准，全程保持良好节律。", color: "#ec4899" },
+                    { action: "左右双脚跳", icon: "↔️", time: "29.1s", timePass: true, count: "8次", countPass: true, distance: "—", distPass: true, score: 88, comment: "横向移动能力良好，但向右跳跃距离略短于向左。建议加强右侧下肢爆发力。", color: "#f43f5e" },
+                    { action: "前后双脚跳", icon: "↕️", time: "28.3s", timePass: true, count: "7次", countPass: true, distance: "—", distPass: true, score: 85, comment: "前后方向转换稍显迟缓，落地缓冲不够充分。建议增加弹性训练和落地姿势练习。", color: "#ef4444" },
+                    { action: "手位练习", icon: "🙌", time: "58.6s", timePass: true, count: "—", countPass: true, distance: "—", distPass: true, score: 96, comment: "手位准确度极高，动作流畅自然。节奏把控优秀，是本次测试中表现最好的项目。", color: "#f97316" },
+                  ].map((item, idx) => (
+                    <div key={idx} className="rounded-xl border border-slate-100 p-5 hover:shadow-md transition-shadow">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ backgroundColor: item.color + "15" }}>
+                          {item.icon}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold text-slate-800">{item.action}</span>
+                              <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: item.color + "15", color: item.color }}>
+                                {item.score}分
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <div className="w-20 h-2 bg-slate-100 rounded-full overflow-hidden">
+                                <div className="h-full rounded-full" style={{ width: `${item.score}%`, backgroundColor: item.color }} />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-4 mb-3 text-xs">
+                            <span className="flex items-center gap-1">
+                              <ClockIcon size={12} className="text-slate-400" />
+                              <span className="text-slate-500">时长: {item.time}</span>
+                              {item.time !== "—" && <CheckCircle2Icon size={12} className={item.timePass ? "text-emerald-500" : "text-red-500"} />}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <HashIcon size={12} className="text-slate-400" />
+                              <span className="text-slate-500">计数: {item.count}</span>
+                              {item.count !== "—" && <CheckCircle2Icon size={12} className={item.countPass ? "text-emerald-500" : "text-red-500"} />}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <RulerIcon size={12} className="text-slate-400" />
+                              <span className="text-slate-500">距离: {item.distance}</span>
+                              {item.distance !== "—" && <CheckCircle2Icon size={12} className={item.distPass ? "text-emerald-500" : "text-red-500"} />}
+                            </span>
+                          </div>
+                          <div className="bg-slate-50 rounded-lg p-3">
+                            <div className="flex items-start gap-2">
+                              <ZapIcon size={14} className="text-amber-500 mt-0.5 shrink-0" />
+                              <p className="text-xs text-slate-600 leading-relaxed">{item.comment}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Class Analytics Tab */}
+          {activeTab === "analytics" && (
+            <div className="space-y-6">
+              {/* Overview Cards */}
+              <div className="grid grid-cols-5 gap-4">
+                {[
+                  { label: "班级人数", value: "6人", icon: UsersIcon, gradient: "from-blue-500 to-cyan-500" },
+                  { label: "参测率", value: "83.3%", icon: TargetIcon, gradient: "from-indigo-500 to-purple-500" },
+                  { label: "班级平均分", value: "88.5", icon: AwardIcon, gradient: "from-purple-500 to-pink-500" },
+                  { label: "动作达标率", value: "91.7%", icon: CheckCircle2Icon, gradient: "from-emerald-500 to-teal-500" },
+                  { label: "需关注学生", value: "1人", icon: AlertCircleIcon, gradient: "from-amber-500 to-orange-500" },
+                ].map((card) => {
+                  const IconComp = card.icon;
+                  return (
+                    <div key={card.label} className="bg-white rounded-2xl border border-slate-200/60 p-4 shadow-sm">
+                      <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${card.gradient} flex items-center justify-center mb-3`}>
+                        <IconComp size={16} className="text-white" />
+                      </div>
+                      <div className="text-xl font-bold text-slate-800">{card.value}</div>
+                      <div className="text-xs text-slate-500">{card.label}</div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Action Pass Rate Overview */}
+              <div className="bg-white rounded-2xl border border-slate-200/60 p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-5">
+                  <h2 className="text-lg font-bold text-slate-800">各动作班级达标率</h2>
+                  <span className="text-xs text-slate-400 bg-slate-100 px-3 py-1.5 rounded-full">大班A · 2026-07-15</span>
+                </div>
+                <div className="grid grid-cols-4 gap-3 mb-6">
+                  {ACTIONS.map((action) => {
+                    const passRate = [95, 88, 92, 72, 90, 83, 78, 96][action.id - 1];
+                    return (
+                      <div key={action.id} className="rounded-xl border border-slate-100 p-4 text-center">
+                        <div className="text-2xl mb-2">{action.icon}</div>
+                        <div className="text-sm font-semibold text-slate-800 mb-1">{action.name}</div>
+                        <div className="text-2xl font-bold mb-2" style={{ color: passRate >= 85 ? "#10b981" : passRate >= 70 ? "#f59e0b" : "#ef4444" }}>
+                          {passRate}%
+                        </div>
+                        <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                          <div className="h-full rounded-full" style={{ width: `${passRate}%`, backgroundColor: passRate >= 85 ? "#10b981" : passRate >= 70 ? "#f59e0b" : "#ef4444" }} />
+                        </div>
+                        <div className="text-xs text-slate-400 mt-2">标准 {action.duration}{action.unit}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Student Score Matrix */}
+              <div className="bg-white rounded-2xl border border-slate-200/60 p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-5">
+                  <h2 className="text-lg font-bold text-slate-800">学生-动作得分矩阵</h2>
+                  <div className="flex items-center gap-2 text-xs text-slate-400">
+                    <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-emerald-400 inline-block"></span> ≥90 优秀</span>
+                    <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-indigo-400 inline-block"></span> 80-89 良好</span>
+                    <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-amber-400 inline-block"></span> 70-79 合格</span>
+                    <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-slate-200 inline-block"></span> 未测</span>
+                  </div>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-slate-100">
+                        <th className="text-left py-3 px-3 font-medium text-slate-500 text-xs sticky left-0 bg-white">学生</th>
+                        {ACTIONS.map((a) => (
+                          <th key={a.id} className="text-center py-3 px-2 font-medium text-slate-500 text-xs min-w-[80px]">
+                            <div>{a.icon}</div>
+                            <div className="mt-1">{a.name}</div>
+                          </th>
+                        ))}
+                        <th className="text-center py-3 px-3 font-medium text-slate-500 text-xs">综合</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[
+                        { name: "张小明", avatar: "👦", scores: [95, 90, 93, 82, 91, 88, 85, 96], total: 92 },
+                        { name: "李雨萱", avatar: "👧", scores: [92, 88, 90, 78, 89, 85, 82, 94], total: 88 },
+                        { name: "王浩然", avatar: "👦", scores: [80, 75, 82, 68, 79, 73, 70, 85], total: 76 },
+                        { name: "陈思琪", avatar: "👧", scores: [96, 93, 95, 88, 94, 91, 89, 98], total: 95 },
+                        { name: "刘子轩", avatar: "👦", scores: [0, 0, 0, 0, 0, 0, 0, 0], total: 0 },
+                        { name: "赵欣怡", avatar: "👧", scores: [88, 82, 86, 75, 84, 80, 77, 90], total: 83 },
+                      ].map((student) => (
+                        <tr key={student.name} className="border-b border-slate-50 hover:bg-slate-50/50">
+                          <td className="py-3 px-3 sticky left-0 bg-white">
+                            <div className="flex items-center gap-2">
+                              <span>{student.avatar}</span>
+                              <span className="font-medium text-slate-700 text-xs">{student.name}</span>
+                            </div>
+                          </td>
+                          {student.scores.map((score, idx) => (
+                            <td key={idx} className="text-center py-3 px-2">
+                              {score > 0 ? (
+                                <span className={`inline-block px-2.5 py-1 rounded-lg text-xs font-bold ${
+                                  score >= 90 ? "bg-emerald-50 text-emerald-700" :
+                                  score >= 80 ? "bg-indigo-50 text-indigo-700" :
+                                  "bg-amber-50 text-amber-700"
+                                }`}>{score}</span>
+                              ) : (
+                                <span className="inline-block px-2.5 py-1 rounded-lg text-xs text-slate-300 bg-slate-50">—</span>
+                              )}
+                            </td>
+                          ))}
+                          <td className="text-center py-3 px-3">
+                            {student.total > 0 ? (
+                              <span className={`inline-block px-2.5 py-1 rounded-lg text-xs font-bold ${
+                                student.total >= 90 ? "bg-emerald-100 text-emerald-700" :
+                                student.total >= 80 ? "bg-indigo-100 text-indigo-700" :
+                                "bg-amber-100 text-amber-700"
+                              }`}>{student.total}</span>
+                            ) : (
+                              <span className="text-xs text-slate-300">—</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Weakness Analysis */}
+              <div className="grid grid-cols-2 gap-6">
+                <div className="bg-white rounded-2xl border border-slate-200/60 p-6 shadow-sm">
+                  <h3 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <AlertCircleIcon size={16} className="text-amber-500" />
+                    班级薄弱动作 TOP3
+                  </h3>
+                  <div className="space-y-3">
+                    {[
+                      { name: "直棍跳", icon: "", rate: 72, students: "王浩然、赵欣怡", suggestion: "加强踝关节力量和本体感觉训练" },
+                      { name: "前后双脚跳", icon: "↕️", rate: 78, students: "王浩然、李雨萱", suggestion: "增加弹性训练和落地姿势练习" },
+                      { name: "左右双脚跳", icon: "↔️", rate: 83, students: "王浩然", suggestion: "加强右侧下肢爆发力" },
+                    ].map((item, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-amber-50/50 rounded-xl border border-amber-100">
+                        <span className="text-lg">{item.icon}</span>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="font-semibold text-slate-800 text-sm">{item.name}</span>
+                            <span className="text-sm font-bold text-amber-600">{item.rate}%</span>
+                          </div>
+                          <div className="text-xs text-slate-500 mb-1">薄弱学生: {item.students}</div>
+                          <div className="text-xs text-indigo-600 font-medium">建议: {item.suggestion}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="bg-white rounded-2xl border border-slate-200/60 p-6 shadow-sm">
+                  <h3 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <TrendingUpIcon size={16} className="text-emerald-500" />
+                    需关注学生详情
+                  </h3>
+                  <div className="space-y-3">
+                    {[
+                      { name: "王浩然", avatar: "👦", score: 76, weakActions: ["直棍跳(68)", "前后双脚跳(70)", "左右双脚跳(73)"], trend: "↓", trendColor: "text-red-500" },
+                      { name: "刘子轩", avatar: "👦", score: 0, weakActions: ["全部动作未检测"], trend: "—", trendColor: "text-slate-400" },
+                    ].map((student, idx) => (
+                      <div key={idx} className="p-4 rounded-xl border border-slate-100 hover:shadow-md transition-shadow">
+                        <div className="flex items-center gap-3 mb-3">
+                          <span className="text-2xl">{student.avatar}</span>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold text-slate-800">{student.name}</span>
+                              <span className={`text-sm font-bold ${student.trendColor}`}>{student.trend}</span>
+                            </div>
+                            <div className="text-xs text-slate-400">综合得分: {student.score > 0 ? student.score : "未检测"}</div>
+                          </div>
+                        </div>
+                        <div className="text-xs text-slate-500 mb-2">薄弱项目:</div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {student.weakActions.map((action, aidx) => (
+                            <span key={aidx} className="text-xs px-2 py-1 rounded-full bg-red-50 text-red-600 font-medium">{action}</span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Students Tab */}
+          {activeTab === "students" && (
+            <div className="space-y-6">
+              <div className="bg-white rounded-2xl border border-slate-200/60 p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-5">
+                  <h2 className="text-lg font-bold text-slate-800">学生管理 — {selectedClass}</h2>
+                  <button className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg hover:shadow-md transition-all flex items-center gap-2">
+                    <UserIcon size={14} /> 添加学生
+                  </button>
+                </div>
+                <div className="grid grid-cols-3 gap-4">
+                  {MOCK_STUDENTS.map((student) => (
+                    <div key={student.id} className="rounded-xl border border-slate-100 p-4 hover:shadow-md transition-shadow">
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="text-3xl">{student.avatar}</span>
+                        <div>
+                          <div className="font-semibold text-slate-800">{student.name}</div>
+                          <div className="text-xs text-slate-400">{student.class}</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="text-xs text-slate-400">综合得分</div>
+                          <div className={`text-lg font-bold ${student.score >= 90 ? "text-emerald-600" : student.score >= 70 ? "text-amber-600" : "text-slate-300"}`}>
+                            {student.score > 0 ? student.score : "—"}
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-xs text-slate-400">动作完成</div>
+                          <div className="text-lg font-bold text-slate-700">{student.actions}/8</div>
+                        </div>
+                      </div>
+                      <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <span className={`text-xs px-2 py-1 rounded-full ${
+                          student.status === "completed" ? "bg-emerald-50 text-emerald-600" :
+                          student.status === "analyzing" ? "bg-amber-50 text-amber-600" :
+                          "bg-slate-50 text-slate-400"
+                        }`}>
+                          {student.status === "completed" ? "已完成" : student.status === "analyzing" ? "分析中" : "待上传"}
+                        </span>
+                        <button className="text-xs text-indigo-500 hover:text-indigo-700 font-medium">查看详情 →</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </main>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
