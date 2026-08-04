@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>备考中心 · 护理学科大模型 · 广西医科大学护理学院</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <style>
+    /* 备考中心页面专属补充样式 */
+    .subject-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 900px) { .subject-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .subject-grid { grid-template-columns: 1fr; } }
+    .subject-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin: 14px 0 10px;
+    }
+    .mock-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      border-radius: var(--radius-md);
+      background: rgba(10, 21, 48, 0.4);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .mock-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .mock-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .mock-sub {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      max-width: 380px;
+    }
+    .quiz-tip {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 20px;
+      letter-spacing: 0.05em;
+    }
+    .quiz-tip .text-gold { font-family: var(--font-latin); letter-spacing: 0.15em; }
+    @media (max-width: 640px) {
+      .mock-stats { gap: 20px; }
+      .mock-stats .stat-divider { display: none; }
+      .mock-stats .stat-item { flex: 1 1 40%; }
+    }
+  </style>
+</head>
+<body>
+  <!-- 宇宙背景 -->
+  <div class="cosmic-bg"></div>
+  <div class="stars"></div>
+
+  <div class="page-wrap">
+    <!-- 顶部导航 -->
+    <nav class="top-nav">
+      <div class="brand">
+        <div class="brand-seal">
+          <svg viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="21" stroke="#e8b04c" stroke-width="1.5"/>
+            <circle cx="22" cy="22" r="17" stroke="#e8b04c" stroke-width="0.8" opacity="0.5"/>
+            <path d="M22 12 C19 14 19 18 22 20 C25 22 25 26 22 28 C19 30 19 34 22 36" stroke="#e8b04c" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <circle cx="22" cy="12" r="2.5" fill="#e8b04c"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="cn">广西医科大学护理学院</span>
+          <span class="en">Nursing · Discipline LLM</span>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">首页</a>
+        <a href="chat.html" class="nav-link">智能对话</a>
+        <a href="knowledge.html" class="nav-link">知识图谱</a>
+        <a href="cases.html" class="nav-link">病例智库</a>
+        <a href="exam.html" class="nav-link active">备考中心</a>
+        <a href="skills.html" class="nav-link">技能实训</a>
+      </div>
+      <div class="user-avatar">护</div>
+    </nav>
+
+    <!-- 子页面主体 -->
+    <div class="sub-page" style="padding-bottom:100px;">
+      <!-- 子页面头部 -->
+      <div class="sub-header">
+        <div class="breadcrumb"><a href="index.html" style="color:var(--text-muted);">首页</a> / 备考中心</div>
+        <h1>护理考研<span class="text-gradient-gold">备考中心</span></h1>
+        <p class="sub-desc">真题演练 · 模拟测试 · 备考规划，助力金榜题名</p>
+      </div>
+
+      <!-- 备考中心主体 -->
+      <div class="exam-layout">
+        <div data-tab-group="exam">
+          <!-- 标签切换 -->
+          <div class="exam-tabs">
+            <button class="tab-btn active" data-tab="quiz">真题演练</button>
+            <button class="tab-btn" data-tab="mock">模拟测试</button>
+            <button class="tab-btn" data-tab="plan">备考规划</button>
+          </div>
+
+          <!-- ============ 真题演练 ============ -->
+          <div class="tab-panel active" data-tab-panel="exam" data-tab-id="quiz">
+            <p class="quiz-tip"><span class="text-gold">REAL EXAM QUESTIONS</span> · 点击选项作答，即时查看答案与解析</p>
+
+            <!-- 题目 01 -->
+            <div class="quiz-card fade-up d1">
+              <div class="quiz-header">
+                <span class="quiz-num">QUESTION 01</span>
+                <span class="quiz-type">单选题</span>
+              </div>
+              <div class="quiz-question">压疮（压力性损伤）最好发的部位是？</div>
+              <div class="quiz-options">
+                <div class="quiz-option"><span class="opt-label">A</span><span>足跟部</span></div>
+                <div class="quiz-option" data-correct="true"><span class="opt-label">B</span><span>骶尾部</span></div>
+                <div class="quiz-option"><span class="opt-label">C</span><span>髂前上棘</span></div>
+                <div class="quiz-option"><span class="opt-label">D</span><span>肩胛部</span></div>
+              </div>
+              <div class="quiz-explain">
+                <strong>正确答案：B 骶尾部</strong><br>
+                压疮多发生于长期受压且缺乏脂肪组织保护的骨隆突部位。仰卧位时骶尾部承受体压最大，是压疮最好发的部位。其他常见部位依次为足跟、髋部（大转子）、坐骨结节、肘部、肩胛部、枕部等。预防关键在于定时翻身（一般每2小时一次）、使用减压设施（气垫床/减压敷料）、保持皮肤清洁干燥及加强营养支持。
+              </div>
+            </div>
+
+            <!-- 题目 02 -->
+            <div class="quiz-card fade-up d2">
+              <div class="quiz-header">
+                <span class="quiz-num">QUESTION 02</span>
+                <span class="quiz-type">单选题</span>
+              </div>
+              <div class="quiz-question">成人徒手心肺复苏时，胸外按压的推荐频率为？</div>
+              <div class="quiz-options">
+                <div class="quiz-option"><span class="opt-label">A</span><span>60～80 次/分</span></div>
+                <div class="quiz-option"><span class="opt-label">B</span><span>80～100 次/分</span></div>
+                <div class="quiz-option" data-correct="true"><span class="opt-label">C</span><span>100～120 次/分</span></div>
+                <div class="quiz-option"><span class="opt-label">D</span><span>120～140 次/分</span></div>
+              </div>
+              <div class="quiz-explain">
+                <strong>正确答案：C 100～120 次/分</strong><br>
+                根据2020年美国心脏协会（AHA）心肺复苏指南，成人胸外按压频率为 100～120 次/分，按压深度 5～6 cm，每次按压后使胸廓完全回弹，尽量减少按压中断。按压与人工通气比例为 30:2。高质量胸外按压（按压频率、深度、回弹、最小中断）是提高自主循环恢复率与生存率的关键。
+              </div>
+            </div>
+
+            <!-- 题目 03 -->
+            <div class="quiz-card fade-up d3">
+              <div class="quiz-header">
+                <span class="quiz-num">QUESTION 03</span>
+                <span class="quiz-type">单选题</span>
+              </div>
+              <div class="quiz-question">静脉输液过程中患者发生空气栓塞时，应立即协助其采取的体位是？</div>
+              <div class="quiz-options">
+                <div class="quiz-option"><span class="opt-label">A</span><span>半坐卧位</span></div>
+                <div class="quiz-option"><span class="opt-label">B</span><span>端坐位，双腿下垂</span></div>
+                <div class="quiz-option" data-correct="true"><span class="opt-label">C</span><span>左侧卧位并头低足高位</span></div>
+                <div class="quiz-option"><span class="opt-label">D</span><span>右侧卧位并头高足低位</span></div>
+              </div>
+              <div class="quiz-explain">
+                <strong>正确答案：C 左侧卧位并头低足高位</strong><br>
+                发生空气栓塞时，应立即将患者置于左侧卧位并头低足高位。该体位可使进入右心的空气浮向右心室尖部，避开肺动脉入口，避免阻塞肺动脉；随着心脏跳动，空气被击碎成小泡沫分次进入肺循环而被吸收，从而缓解栓塞。同时应立即停止输液、通知医生、给予高流量氧气吸入，必要时配合抢救。
+              </div>
+            </div>
+          </div>
+
+          <!-- ============ 模拟测试 ============ -->
+          <div class="tab-panel" data-tab-panel="exam" data-tab-id="mock">
+            <!-- 模拟考试总览 -->
+            <div class="glass-card fade-up d1" style="padding:32px;margin-bottom:28px;cursor:default;">
+              <div class="mock-head">
+                <div>
+                  <div class="plan-phase" style="margin-bottom:8px;">MOCK EXAMINATION</div>
+                  <div class="mock-title">全真模拟测试</div>
+                  <div class="mock-sub">仿真实考场环境，智能组卷，即时评分与解析</div>
+                </div>
+                <a href="chat.html" class="btn-gold">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                  开始模拟考试
+                </a>
+              </div>
+              <div class="mock-stats">
+                <div class="stat-item">
+                  <div class="stat-num text-gradient-gold">2000+</div>
+                  <div class="stat-label">题目总数</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                  <div class="stat-num text-gradient-gold">180</div>
+                  <div class="stat-label">考试时长（分钟）</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                  <div class="stat-num text-gradient-gold">8</div>
+                  <div class="stat-label">涵盖科目</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                  <div class="stat-num text-gradient-gold">85%</div>
+                  <div class="stat-label">通过率目标</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 学科掌握度 -->
+            <div class="subject-grid">
+              <div class="glass-card fade-up d2" style="cursor:default;">
+                <div class="card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#f5c860" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="4"/></svg>
+                </div>
+                <div class="card-title">基础护理学</div>
+                <div class="card-en">Basic Nursing</div>
+                <div class="subject-meta">
+                  <span>题量 580 道</span>
+                  <span class="text-gold">掌握 72%</span>
+                </div>
+                <div class="skill-progress-bar"><div class="skill-progress-fill subject-fill" data-progress="72"></div></div>
+              </div>
+
+              <div class="glass-card fade-up d3" style="cursor:default;">
+                <div class="card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#f5c860" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 8h-3V4H7v4H4a2 2 0 00-2 2v8h20v-8a2 2 0 00-2-2z"/><path d="M12 12v4M10 14h4"/></svg>
+                </div>
+                <div class="card-title">内科护理学</div>
+                <div class="card-en">Medical Nursing</div>
+                <div class="subject-meta">
+                  <span>题量 620 道</span>
+                  <span class="text-gold">掌握 65%</span>
+                </div>
+                <div class="skill-progress-bar"><div class="skill-progress-fill subject-fill" data-progress="65"></div></div>
+              </div>
+
+              <div class="glass-card fade-up d4" style="cursor:default;">
+                <div class="card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#f5c860" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
+                </div>
+                <div class="card-title">外科护理学</div>
+                <div class="card-en">Surgical Nursing</div>
+                <div class="subject-meta">
+                  <span>题量 480 道</span>
+                  <span class="text-gold">掌握 58%</span>
+                </div>
+                <div class="skill-progress-bar"><div class="skill-progress-fill subject-fill" data-progress="58"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============ 备考规划 ============ -->
+          <div class="tab-panel" data-tab-panel="exam" data-tab-id="plan">
+            <div class="glass-card fade-up d1" style="padding:32px 36px;cursor:default;">
+              <div class="plan-timeline">
+                <div class="plan-item">
+                  <div class="plan-phase">PHASE 01 · MAR — JUN</div>
+                  <div class="plan-title">基础阶段（3-6月）</div>
+                  <div class="plan-desc">通读教材，构建知识框架。系统学习《护理学基础》《内科护理学》《外科护理学》核心章节，对照考试大纲梳理考点，每周完成 1-2 章精读与思维导图整理，夯实基本概念与操作规范。</div>
+                </div>
+
+                <div class="plan-item">
+                  <div class="plan-phase">PHASE 02 · JUL — SEP</div>
+                  <div class="plan-title">强化阶段（7-9月）</div>
+                  <div class="plan-desc">专题突破，重难点攻坚。针对水电解质平衡、用药护理、急救流程、各类导管护理等高频考点开展专题训练，结合真题分类练习，建立错题本，每周完成 2 套章节真题并复盘归纳。</div>
+                </div>
+
+                <div class="plan-item">
+                  <div class="plan-phase">PHASE 03 · OCT — NOV</div>
+                  <div class="plan-title">冲刺阶段（10-11月）</div>
+                  <div class="plan-desc">真题精练，查漏补缺。按考试时长完成近 10 年真题套卷，分析命题规律与高频考点，针对薄弱环节专项突破，强化记忆口诀、数据指标与操作流程要点，提升答题准确率与速度。</div>
+                </div>
+
+                <div class="plan-item">
+                  <div class="plan-phase">PHASE 04 · NOV — DEC</div>
+                  <div class="plan-title">模考阶段（11-12月）</div>
+                  <div class="plan-desc">全真模拟，实战演练。每周 2 次全真模拟考试，严格计时，训练答题节奏与心理素质；考后即时复盘，逐题分析错因，优化答题策略与时间分配，模拟阅卷标准自评得分。</div>
+                </div>
+
+                <div class="plan-item">
+                  <div class="plan-phase">PHASE 05 · DEC</div>
+                  <div class="plan-title">考前调整（12月）</div>
+                  <div class="plan-desc">心态调适，回归基础。回归教材与错题本，回顾高频考点与记忆口诀；调整作息与饮食，保持适度运动，避免熬夜，确保考试当天身心状态最佳，从容应考。</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部快捷栏 -->
+  <div class="bottom-dock">
+    <a href="chat.html" class="dock-item">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
+      <span class="dock-label">智能对话</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="knowledge.html" class="dock-item">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg>
+      </div>
+      <span class="dock-label">知识图谱</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="cases.html" class="dock-item">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+      </div>
+      <span class="dock-label">病例智库</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="exam.html" class="dock-item active">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      </div>
+      <span class="dock-label">备考中心</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="skills.html" class="dock-item">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+      </div>
+      <span class="dock-label">技能实训</span>
+    </a>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script>
+    // 模拟测试学科进度条动画：切换到 mock 标签时填充进度
+    function animateSubjectBars() {
+      document.querySelectorAll('.subject-fill').forEach(fill => {
+        const p = fill.dataset.progress || 0;
+        fill.style.width = p + '%';
+      });
+    }
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.tab === 'mock') {
+          setTimeout(animateSubjectBars, 120);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

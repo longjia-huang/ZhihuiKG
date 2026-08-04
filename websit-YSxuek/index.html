@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>护理学科大模型 · 广西医科大学护理学院</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <!-- 宇宙背景 -->
+  <div class="cosmic-bg"></div>
+  <div class="stars"></div>
+
+  <!-- DNA装饰 -->
+  <svg class="dna-deco left" width="120" height="400" viewBox="0 0 120 400" fill="none">
+    <path d="M20 0 Q100 50 20 100 Q-60 150 20 200 Q100 250 20 300 Q-60 350 20 400" stroke="#4a9bf5" stroke-width="1.5" fill="none"/>
+    <path d="M100 0 Q20 50 100 100 Q180 150 100 200 Q20 250 100 300 Q180 350 100 400" stroke="#e8b04c" stroke-width="1.5" fill="none"/>
+    <line x1="20" y1="25" x2="100" y2="25" stroke="#4a9bf5" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="75" x2="100" y2="75" stroke="#e8b04c" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="125" x2="100" y2="125" stroke="#4a9bf5" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="175" x2="100" y2="175" stroke="#e8b04c" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="225" x2="100" y2="225" stroke="#4a9bf5" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="275" x2="100" y2="275" stroke="#e8b04c" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="325" x2="100" y2="325" stroke="#4a9bf5" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="375" x2="100" y2="375" stroke="#e8b04c" stroke-width="0.8" opacity="0.5"/>
+  </svg>
+
+  <div class="page-wrap">
+    <!-- 顶部导航 -->
+    <nav class="top-nav">
+      <div class="brand">
+        <div class="brand-seal">
+          <svg viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="21" stroke="#e8b04c" stroke-width="1.5"/>
+            <circle cx="22" cy="22" r="17" stroke="#e8b04c" stroke-width="0.8" opacity="0.5"/>
+            <path d="M22 8v28M8 22h28" stroke="#4a9bf5" stroke-width="1" opacity="0.3"/>
+            <!-- 蛇杖 -->
+            <path d="M22 12 C19 14 19 18 22 20 C25 22 25 26 22 28 C19 30 19 34 22 36" stroke="#e8b04c" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <circle cx="22" cy="12" r="2.5" fill="#e8b04c"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="cn">广西医科大学护理学院</span>
+          <span class="en">Nursing · Discipline LLM</span>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link active">首页</a>
+        <a href="chat.html" class="nav-link">智能对话</a>
+        <a href="knowledge.html" class="nav-link">知识图谱</a>
+        <a href="cases.html" class="nav-link">病例智库</a>
+        <a href="exam.html" class="nav-link">备考中心</a>
+        <a href="skills.html" class="nav-link">技能实训</a>
+      </div>
+      <div class="user-avatar">护</div>
+    </nav>
+
+    <!-- 英雄区 -->
+    <section class="hero">
+      <!-- 南丁格尔灯 SVG 插画 -->
+      <div class="hero-illustration">
+        <svg viewBox="0 0 600 700" fill="none" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <!-- 灯焰渐变 -->
+            <radialGradient id="flameGlow" cx="50%" cy="40%">
+              <stop offset="0%" stop-color="#fff8e7" stop-opacity="1"/>
+              <stop offset="30%" stop-color="#f5c860" stop-opacity="0.9"/>
+              <stop offset="70%" stop-color="#e8b04c" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#d99836" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="flameCore" x1="50%" y1="0%" x2="50%" y2="100%">
+              <stop offset="0%" stop-color="#fff8e7"/>
+              <stop offset="50%" stop-color="#f5c860"/>
+              <stop offset="100%" stop-color="#e8b04c"/>
+            </linearGradient>
+            <linearGradient id="lampBody" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#d99836" stop-opacity="0.8"/>
+              <stop offset="50%" stop-color="#e8b04c"/>
+              <stop offset="100%" stop-color="#b87a28" stop-opacity="0.9"/>
+            </linearGradient>
+            <linearGradient id="robeGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+              <stop offset="0%" stop-color="#1a3a6e" stop-opacity="0.95"/>
+              <stop offset="60%" stop-color="#0e2552"/>
+              <stop offset="100%" stop-color="#060d1f"/>
+            </linearGradient>
+            <radialGradient id="auraGrad" cx="50%" cy="35%">
+              <stop offset="0%" stop-color="#f5c860" stop-opacity="0.15"/>
+              <stop offset="100%" stop-color="#f5c860" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="softBlur"><feGaussianBlur stdDeviation="8"/></filter>
+          </defs>
+
+          <!-- 光晕 -->
+          <ellipse cx="300" cy="240" rx="200" ry="220" fill="url(#auraGrad)"/>
+
+          <!-- 轨道环 -->
+          <ellipse cx="300" cy="280" rx="240" ry="60" stroke="#4a9bf5" stroke-width="0.6" opacity="0.15" fill="none" transform="rotate(-12 300 280)"/>
+          <ellipse cx="300" cy="280" rx="200" ry="45" stroke="#e8b04c" stroke-width="0.6" opacity="0.12" fill="none" transform="rotate(8 300 280)"/>
+
+          <!-- 灯焰外光晕 -->
+          <ellipse cx="300" cy="195" rx="55" ry="80" fill="url(#flameGlow)" filter="url(#softBlur)"/>
+
+          <!-- 灯焰 -->
+          <g class="lamp-flame">
+            <path d="M300 130 C285 160 278 185 285 205 C290 218 310 218 315 205 C322 185 315 160 300 130Z" fill="url(#flameCore)"/>
+            <path d="M300 155 C293 170 290 185 294 198 C297 206 303 206 306 198 C310 185 307 170 300 155Z" fill="#fff8e7" opacity="0.8"/>
+          </g>
+
+          <!-- 南丁格尔灯灯体 -->
+          <g class="lamp-body">
+            <!-- 灯笼框架 -->
+            <path d="M270 215 L270 270 Q270 290 300 295 Q330 290 330 270 L330 215 Z" fill="url(#lampBody)" stroke="#f5c860" stroke-width="1.5"/>
+            <!-- 灯笼竖条 -->
+            <line x1="285" y1="218" x2="285" y2="285" stroke="#b87a28" stroke-width="1" opacity="0.6"/>
+            <line x1="300" y1="218" x2="300" y2="290" stroke="#b87a28" stroke-width="1" opacity="0.6"/>
+            <line x1="315" y1="218" x2="315" y2="285" stroke="#b87a28" stroke-width="1" opacity="0.6"/>
+            <!-- 灯笼顶部 -->
+            <rect x="268" y="208" width="64" height="10" rx="3" fill="#d99836" stroke="#f5c860" stroke-width="1"/>
+            <!-- 灯笼提手 -->
+            <path d="M285 208 Q285 185 300 185 Q315 185 315 208" stroke="#d99836" stroke-width="2.5" fill="none"/>
+            <!-- 灯笼底座 -->
+            <rect x="275" y="296" width="50" height="6" rx="2" fill="#b87a28"/>
+            <rect x="282" y="302" width="36" height="12" rx="2" fill="#d99836"/>
+          </g>
+
+          <!-- 手 -->
+          <ellipse cx="300" cy="318" rx="22" ry="12" fill="#0e2552"/>
+
+          <!-- 护士帽 -->
+          <g class="nurse-cap">
+            <path d="M265 340 Q265 322 300 320 Q335 322 335 340 L330 348 L270 348 Z" fill="#f0f4f8" opacity="0.95"/>
+            <rect x="290" y="332" width="20" height="5" rx="1" fill="#1a5cc4"/>
+            <path d="M270 348 L330 348" stroke="#9db4d0" stroke-width="0.8"/>
+          </g>
+
+          <!-- 护士身形/长袍 -->
+          <path d="M300 350
+                   C260 355 240 380 235 420
+                   L215 560
+                   C212 580 218 600 240 605
+                   L260 615
+                   L340 615
+                   L360 605
+                   C382 600 388 580 385 560
+                   L365 420
+                   C360 380 340 355 300 350Z"
+                fill="url(#robeGrad)"/>
+
+          <!-- 长袍褶皱 -->
+          <path d="M300 360 L295 580" stroke="#1a3a6e" stroke-width="1.5" opacity="0.6"/>
+          <path d="M275 375 L268 570" stroke="#1a3a6e" stroke-width="1" opacity="0.4"/>
+          <path d="M325 375 L332 570" stroke="#1a3a6e" stroke-width="1" opacity="0.4"/>
+
+          <!-- 十字徽章 -->
+          <g transform="translate(300, 410)">
+            <circle r="14" fill="#0e2552" stroke="#e8b04c" stroke-width="1.5"/>
+            <path d="M0 -8 L0 8 M-8 0 L8 0" stroke="#e8b04c" stroke-width="2.5" stroke-linecap="round"/>
+          </g>
+
+          <!-- 地面光圈 -->
+          <ellipse cx="300" cy="620" rx="120" ry="15" fill="#e8b04c" opacity="0.08"/>
+        </svg>
+        <!-- 灯焰粒子容器 -->
+        <div class="ember-layer" id="emberContainer"></div>
+      </div>
+
+      <!-- 标题区 -->
+      <div class="hero-content">
+        <div class="hero-label fade-up d1">
+          <span class="label-line"></span>
+          <span>GUANGXI MEDICAL UNIVERSITY · NURSING</span>
+          <span class="label-line"></span>
+        </div>
+        <h1 class="hero-title fade-up d2">
+          <span class="title-main">护理学科大模型</span>
+        </h1>
+        <p class="hero-en fade-up d3">NURSING DISCIPLINE LARGE LANGUAGE MODEL</p>
+        <p class="hero-tagline fade-up d4">
+          <span class="text-gradient-gold">南丁格尔之光</span> · 照亮护理智慧之路
+        </p>
+        <p class="hero-desc fade-up d5">
+          融合临床护理知识库、学科前沿文献与AI智能引擎<br>
+          为护理教学、科研与临床实践提供专业智能支撑
+        </p>
+        <div class="hero-motto fade-up d6">
+          <span class="motto">厚 德 · 励 志 · 博 学 · 弘 医</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 智能体卡片 -->
+    <section class="agents-section container reveal">
+      <div class="section-title">
+        <span class="label">INTELLIGENT AGENTS</span>
+        <h2>智慧守护 · 四大专业智能体</h2>
+        <p class="sub">选择专属助手，开启你的护理探索之旅</p>
+      </div>
+      <div class="agents-grid">
+        <a href="chat.html?agent=clinical" class="glass-card fade-up d1" data-agent="clinical">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5c860" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M2 12h20"/>
+              <circle cx="12" cy="12" r="4" fill="none"/>
+            </svg>
+          </div>
+          <div class="card-title">临床护理问答</div>
+          <div class="card-en">Clinical Nursing Q&amp;A</div>
+          <div class="card-desc">涵盖内外科、急危重症、老年儿科护理知识，精准解答临床护理疑难</div>
+          <div class="card-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f5c860" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+
+        <a href="chat.html?agent=exam" class="glass-card fade-up d2" data-agent="exam">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5c860" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </div>
+          <div class="card-title">护理考研助手</div>
+          <div class="card-en">Postgraduate Exam Assistant</div>
+          <div class="card-desc">护理学基础、内科护理学等核心科目重点梳理，真题解析与备考规划</div>
+          <div class="card-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f5c860" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+
+        <a href="skills.html" class="glass-card fade-up d3">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5c860" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/>
+            </svg>
+          </div>
+          <div class="card-title">操作技能实训</div>
+          <div class="card-en">Skills Training</div>
+          <div class="card-desc">静脉穿刺、心肺复苏等50+项护理操作标准流程，分步实训与考核</div>
+          <div class="card-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f5c860" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+
+        <a href="knowledge.html" class="glass-card fade-up d4">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5c860" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/>
+            </svg>
+          </div>
+          <div class="card-title">护理知识图谱</div>
+          <div class="card-en">Knowledge Graph</div>
+          <div class="card-desc">学科知识体系可视化，关联导航，护理理论、操作、药理融会贯通</div>
+          <div class="card-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f5c860" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- 功能入口 -->
+    <section class="features-section container reveal">
+      <div class="section-title">
+        <span class="label">LEARNING MODULES</span>
+        <h2>学海导航 · 多维学习模块</h2>
+      </div>
+      <div class="features-grid">
+        <a href="cases.html" class="feature-tile fade-up d1">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+              <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
+            </svg>
+          </div>
+          <div class="feature-info">
+            <div class="feature-name">病例智库</div>
+            <div class="feature-desc">经典护理病例分析</div>
+          </div>
+          <div class="feature-count">120+ 案例</div>
+        </a>
+        <a href="exam.html" class="feature-tile fade-up d2">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+            </svg>
+          </div>
+          <div class="feature-info">
+            <div class="feature-name">备考中心</div>
+            <div class="feature-desc">考研真题与模拟测试</div>
+          </div>
+          <div class="feature-count">2000+ 题库</div>
+        </a>
+        <a href="knowledge.html" class="feature-tile fade-up d3">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
+            </svg>
+          </div>
+          <div class="feature-info">
+            <div class="feature-name">文献情报</div>
+            <div class="feature-desc">护理前沿研究动态</div>
+          </div>
+          <div class="feature-count">实时更新</div>
+        </a>
+        <a href="skills.html" class="feature-tile fade-up d4">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div class="feature-info">
+            <div class="feature-name">技能考核</div>
+            <div class="feature-desc">操作流程模拟演练</div>
+          </div>
+          <div class="feature-count">50+ 项目</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- 数据展示 -->
+    <section class="stats-section container reveal">
+      <div class="stats-grid">
+        <div class="stat-item fade-up d1">
+          <div class="stat-num text-gradient-gold" data-count="12000">0</div>
+          <div class="stat-label">护理知识条目</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item fade-up d2">
+          <div class="stat-num text-gradient-gold" data-count="50">0</div>
+          <div class="stat-label">操作技能规程</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item fade-up d3">
+          <div class="stat-num text-gradient-gold" data-count="2000">0</div>
+          <div class="stat-label">考研真题题库</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item fade-up d4">
+          <div class="stat-num text-gradient-gold" data-count="120">0</div>
+          <div class="stat-label">经典病例分析</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 底部信息 -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <span class="text-gold">护理学科大模型</span> · NURSING LLM
+        </div>
+        <div class="footer-info">
+          广西医科大学护理学院 · 建于1934 · 厚德励志 博学弘医
+        </div>
+        <div class="footer-copy">
+          健康所系 · 性命相托 · 守护生命之光
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- 底部快捷栏 -->
+  <div class="bottom-dock">
+    <a href="chat.html" class="dock-item active">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
+      <span class="dock-label">智能对话</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="knowledge.html" class="dock-item">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg>
+      </div>
+      <span class="dock-label">知识图谱</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="cases.html" class="dock-item">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+      </div>
+      <span class="dock-label">病例智库</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="exam.html" class="dock-item">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      </div>
+      <span class="dock-label">备考中心</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="skills.html" class="dock-item">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+      </div>
+      <span class="dock-label">技能实训</span>
+    </a>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script>
+    // 数字滚动
+    document.querySelectorAll('.stat-num').forEach(el => {
+      const target = parseInt(el.dataset.count);
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            let cur = 0;
+            const step = target / 40;
+            const tick = () => {
+              cur += step;
+              if (cur >= target) { el.textContent = target.toLocaleString() + '+'; }
+              else { el.textContent = Math.floor(cur).toLocaleString(); requestAnimationFrame(tick); }
+            };
+            tick();
+            obs.unobserve(el);
+          }
+        });
+      }, { threshold: 0.5 });
+      obs.observe(el);
+    });
+  </script>
+</body>
+</html>

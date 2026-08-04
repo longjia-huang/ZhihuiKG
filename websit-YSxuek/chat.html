@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智能对话 · 护理学科大模型</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <div class="cosmic-bg"></div>
+  <div class="stars"></div>
+
+  <div class="page-wrap chat-page">
+    <!-- 顶部导航 -->
+    <nav class="top-nav">
+      <div class="brand">
+        <div class="brand-seal">
+          <svg viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="21" stroke="#e8b04c" stroke-width="1.5"/>
+            <circle cx="22" cy="22" r="17" stroke="#e8b04c" stroke-width="0.8" opacity="0.5"/>
+            <path d="M22 12 C19 14 19 18 22 20 C25 22 25 26 22 28 C19 30 19 34 22 36" stroke="#e8b04c" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <circle cx="22" cy="12" r="2.5" fill="#e8b04c"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="cn">广西医科大学护理学院</span>
+          <span class="en">Nursing · Discipline LLM</span>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">首页</a>
+        <a href="chat.html" class="nav-link active">智能对话</a>
+        <a href="knowledge.html" class="nav-link">知识图谱</a>
+        <a href="cases.html" class="nav-link">病例智库</a>
+        <a href="exam.html" class="nav-link">备考中心</a>
+        <a href="skills.html" class="nav-link">技能实训</a>
+      </div>
+      <div class="user-avatar">护</div>
+    </nav>
+
+    <!-- 对话主区域 -->
+    <div class="chat-main">
+      <!-- 背景灯插画 -->
+      <svg class="chat-hero-bg" viewBox="0 0 400 500" fill="none">
+        <ellipse cx="200" cy="180" rx="120" ry="140" fill="url(#auraChat)"/>
+        <defs>
+          <radialGradient id="auraChat" cx="50%" cy="40%">
+            <stop offset="0%" stop-color="#f5c860" stop-opacity="0.2"/>
+            <stop offset="100%" stop-color="#f5c860" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <path d="M200 120 C185 150 178 175 185 195 C190 208 210 208 215 195 C222 175 215 150 200 120Z" fill="#f5c860" opacity="0.3"/>
+        <path d="M170 205 L170 250 Q170 270 200 275 Q230 270 230 250 L230 205 Z" fill="#d99836" opacity="0.25"/>
+        <path d="M200 300 C160 305 140 330 135 370 L120 480 L280 480 L265 370 C260 330 240 305 200 300Z" fill="#1a3a6e" opacity="0.3"/>
+      </svg>
+
+      <!-- 标题 -->
+      <div class="chat-title-area fade-up d1">
+        <h1><span class="text-gradient-gold">南丁格尔</span>智能对话</h1>
+        <p class="sub">请输入你的问题，开启护理智慧探索之旅～</p>
+      </div>
+
+      <!-- 智能体选择 -->
+      <div class="chat-agent-pills fade-up d2">
+        <div class="pill agent-pill active" data-agent="clinical">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="4"/></svg>
+          临床护理问答
+        </div>
+        <div class="pill agent-pill" data-agent="exam">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          护理考研助手
+        </div>
+        <div class="pill agent-pill" data-agent="skills">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+          操作技能指南
+        </div>
+        <div class="pill agent-pill" data-agent="literature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+          文献情报检索
+        </div>
+        <div class="pill agent-pill" data-agent="case">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+          病例分析
+        </div>
+      </div>
+
+      <!-- 搜索框 -->
+      <div class="search-bar fade-up d3">
+        <div class="lamp-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2C10 6 9 9 10 12c.5 1.5 3.5 1.5 4 0 1-3 0-6-2-10z" fill="currentColor"/>
+            <path d="M8 14h8M9 18h6M10 22h4"/>
+          </svg>
+        </div>
+        <input type="text" id="searchInput" placeholder="请输入你的问题，开启护理智慧探索之旅～">
+        <div class="search-send" id="sendBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+
+      <!-- 建议词 -->
+      <div class="suggestions fade-up d4">
+        <div class="suggestion-chip" data-q="压疮的分期护理要点是什么？">压疮的分期护理要点？→</div>
+        <div class="suggestion-chip" data-q="静脉留置针穿刺的操作流程">静脉留置针穿刺流程？→</div>
+        <div class="suggestion-chip" data-q="你能帮我做什么？">你能帮我做什么？→</div>
+      </div>
+    </div>
+
+    <!-- 对话区（初始隐藏，发消息后显示） -->
+    <div class="chat-area" id="chatArea" style="display:none;">
+      <div class="chat-body" id="chatBody"></div>
+      <div class="chat-input-area">
+        <input type="text" id="chatInput" placeholder="继续提问...">
+        <button class="chat-send-btn" id="chatSend">
+          发送
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部快捷栏 -->
+  <div class="bottom-dock">
+    <a href="chat.html" class="dock-item active">
+      <div class="dock-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+      <span class="dock-label">智能对话</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="knowledge.html" class="dock-item">
+      <div class="dock-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg></div>
+      <span class="dock-label">知识图谱</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="cases.html" class="dock-item">
+      <div class="dock-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></div>
+      <span class="dock-label">病例智库</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="exam.html" class="dock-item">
+      <div class="dock-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+      <span class="dock-label">备考中心</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="skills.html" class="dock-item">
+      <div class="dock-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div>
+      <span class="dock-label">技能实训</span>
+    </a>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script>
+    // 搜索框发送时切换到对话视图
+    const originalSend = window.initSearchBar;
+    document.addEventListener('DOMContentLoaded', () => {
+      const input = document.getElementById('searchInput');
+      const sendBtn = document.getElementById('sendBtn');
+      const chips = document.querySelectorAll('.suggestion-chip');
+      const chatArea = document.getElementById('chatArea');
+      const chatMain = document.querySelector('.chat-main');
+
+      const showChat = (text) => {
+        if (!text.trim()) return;
+        chatMain.style.display = 'none';
+        chatArea.style.display = 'flex';
+        chatArea.style.flex = '1';
+        const chatInput = document.getElementById('chatInput');
+        chatInput.value = text;
+        // 触发发送
+        setTimeout(() => {
+          const evt = new KeyboardEvent('keydown', { key: 'Enter' });
+          chatInput.dispatchEvent(evt);
+        }, 100);
+      };
+
+      sendBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        showChat(input.value);
+      });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          showChat(input.value);
+        }
+      });
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          showChat(chip.dataset.q || chip.textContent);
+        });
+      });
+
+      // URL 参数携带的问题
+      const params = new URLSearchParams(location.search);
+      const q = params.get('q');
+      const agent = params.get('agent');
+      if (agent) {
+        const pill = document.querySelector(`.agent-pill[data-agent="${agent}"]`);
+        if (pill) pill.click();
+      }
+      if (q) {
+        setTimeout(() => showChat(q), 300);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>护理操作技能实训 · 广西医科大学护理学院</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <!-- 宇宙背景 -->
+  <div class="cosmic-bg"></div>
+  <div class="stars"></div>
+
+  <!-- DNA装饰 -->
+  <svg class="dna-deco left" width="120" height="400" viewBox="0 0 120 400" fill="none">
+    <path d="M20 0 Q100 50 20 100 Q-60 150 20 200 Q100 250 20 300 Q-60 350 20 400" stroke="#4a9bf5" stroke-width="1.5" fill="none"/>
+    <path d="M100 0 Q20 50 100 100 Q180 150 100 200 Q20 250 100 300 Q180 350 100 400" stroke="#e8b04c" stroke-width="1.5" fill="none"/>
+    <line x1="20" y1="25" x2="100" y2="25" stroke="#4a9bf5" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="75" x2="100" y2="75" stroke="#e8b04c" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="125" x2="100" y2="125" stroke="#4a9bf5" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="175" x2="100" y2="175" stroke="#e8b04c" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="225" x2="100" y2="225" stroke="#4a9bf5" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="275" x2="100" y2="275" stroke="#e8b04c" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="325" x2="100" y2="325" stroke="#4a9bf5" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="375" x2="100" y2="375" stroke="#e8b04c" stroke-width="0.8" opacity="0.5"/>
+  </svg>
+
+  <div class="page-wrap">
+    <!-- 顶部导航 -->
+    <nav class="top-nav">
+      <div class="brand">
+        <div class="brand-seal">
+          <svg viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="21" stroke="#e8b04c" stroke-width="1.5"/>
+            <circle cx="22" cy="22" r="17" stroke="#e8b04c" stroke-width="0.8" opacity="0.5"/>
+            <path d="M22 8v28M8 22h28" stroke="#4a9bf5" stroke-width="1" opacity="0.3"/>
+            <!-- 蛇杖 -->
+            <path d="M22 12 C19 14 19 18 22 20 C25 22 25 26 22 28 C19 30 19 34 22 36" stroke="#e8b04c" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <circle cx="22" cy="12" r="2.5" fill="#e8b04c"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="cn">广西医科大学护理学院</span>
+          <span class="en">Nursing · Discipline LLM</span>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">首页</a>
+        <a href="chat.html" class="nav-link">智能对话</a>
+        <a href="knowledge.html" class="nav-link">知识图谱</a>
+        <a href="cases.html" class="nav-link">病例智库</a>
+        <a href="exam.html" class="nav-link">备考中心</a>
+        <a href="skills.html" class="nav-link active">技能实训</a>
+      </div>
+      <div class="user-avatar">护</div>
+    </nav>
+
+    <!-- 子页面内容 -->
+    <div class="sub-page" style="padding-bottom:100px;">
+      <!-- 页头 -->
+      <div class="sub-header">
+        <div class="breadcrumb">首页 / 技能实训</div>
+        <h1>护理操作技能实训</h1>
+        <p class="sub-desc">50+ 项护理操作标准流程，点击步骤标记完成进度</p>
+      </div>
+
+      <!-- 技能卡片 -->
+      <div class="skills-layout">
+
+        <!-- 技能 1：静脉留置针穿刺术 -->
+        <div class="skill-card">
+          <div class="skill-header">
+            <div class="skill-name">
+              静脉留置针穿刺术
+              <span class="skill-badge">中级</span>
+            </div>
+            <div class="skill-progress-wrap">
+              <div class="skill-progress-bar">
+                <div class="skill-progress-fill" id="skillProgress"></div>
+              </div>
+              <span id="skillProgressText">0 / 8</span>
+            </div>
+          </div>
+          <div class="skill-steps">
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">01</div>
+              <div class="step-text">评估核对患者信息、血管条件与凝血功能</div>
+              <div class="step-detail">双人核对</div>
+            </div>
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">02</div>
+              <div class="step-text">洗手戴口罩，准备留置针、透明敷贴及消毒用物</div>
+              <div class="step-detail">六步洗手</div>
+            </div>
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">03</div>
+              <div class="step-text">选择合适血管，穿刺点上方扎止血带</div>
+              <div class="step-detail">上方10cm</div>
+            </div>
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">04</div>
+              <div class="step-text">消毒皮肤，待干后穿刺</div>
+              <div class="step-detail">消毒范围≥8cm</div>
+            </div>
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">05</div>
+              <div class="step-text">绷紧皮肤进针，见回血后降低角度再进</div>
+              <div class="step-detail">15°-30°进针</div>
+            </div>
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">06</div>
+              <div class="step-text">送软管，撤出针芯</div>
+              <div class="step-detail">再进0.2cm</div>
+            </div>
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">07</div>
+              <div class="step-text">松止血带，无张力贴透明敷贴固定</div>
+              <div class="step-detail">无张力贴敷</div>
+            </div>
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">08</div>
+              <div class="step-text">宣教注意事项并记录穿刺时间</div>
+              <div class="step-detail">留置72-96h</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 技能 2：心肺复苏术 -->
+        <div class="skill-card">
+          <div class="skill-header">
+            <div class="skill-name">
+              心肺复苏术
+              <span class="skill-badge">基础</span>
+            </div>
+            <div class="skill-progress-wrap">
+              <div class="skill-progress-bar">
+                <div class="skill-progress-fill" id="skillProgress2"></div>
+              </div>
+              <span id="skillProgressText2">0 / 7</span>
+            </div>
+          </div>
+          <div class="skill-steps">
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">01</div>
+              <div class="step-text">评估环境安全，判断患者意识</div>
+              <div class="step-detail">≤10秒</div>
+            </div>
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">02</div>
+              <div class="step-text">呼叫急救，检查呼吸与颈动脉搏动</div>
+              <div class="step-detail">观察5-10秒</div>
+            </div>
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">03</div>
+              <div class="step-text">胸外按压30次，频率100-120次/分</div>
+              <div class="step-detail">深度5-6cm</div>
+            </div>
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">04</div>
+              <div class="step-text">开放气道，仰头抬颏法</div>
+              <div class="step-detail">仰角90°</div>
+            </div>
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">05</div>
+              <div class="step-text">人工呼吸2次，观察胸廓起伏</div>
+              <div class="step-detail">每次1秒</div>
+            </div>
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">06</div>
+              <div class="step-text">5个循环后评估复苏效果</div>
+              <div class="step-detail">约2分钟</div>
+            </div>
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">07</div>
+              <div class="step-text">持续复苏至专业救援到达</div>
+              <div class="step-detail">不可中断</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 技能 3：无菌技术操作 -->
+        <div class="skill-card">
+          <div class="skill-header">
+            <div class="skill-name">
+              无菌技术操作
+              <span class="skill-badge">基础</span>
+            </div>
+            <div class="skill-progress-wrap">
+              <div class="skill-progress-bar">
+                <div class="skill-progress-fill" id="skillProgress3"></div>
+              </div>
+              <span id="skillProgressText3">0 / 7</span>
+            </div>
+          </div>
+          <div class="skill-steps">
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">01</div>
+              <div class="step-text">洗手戴口罩，修剪指甲</div>
+              <div class="step-detail">六步洗手</div>
+            </div>
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">02</div>
+              <div class="step-text">检查无菌包有效期、化学指示与完整性</div>
+              <div class="step-detail">查化学指示</div>
+            </div>
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">03</div>
+              <div class="step-text">打开无菌包，铺无菌盘</div>
+              <div class="step-detail">边缘外2.5cm</div>
+            </div>
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">04</div>
+              <div class="step-text">取无菌持物钳夹取物品</div>
+              <div class="step-detail">钳端闭合</div>
+            </div>
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">05</div>
+              <div class="step-text">无菌区域保持腰部以上、视线范围内</div>
+              <div class="step-detail">腰际以上</div>
+            </div>
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">06</div>
+              <div class="step-text">操作完毕，清理用物</div>
+              <div class="step-detail">分类处理</div>
+            </div>
+            <div class="skill-step">
+              <div class="step-check"></div>
+              <div class="step-num">07</div>
+              <div class="step-text">记录操作时间并签名</div>
+              <div class="step-detail">签名时间</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 底部信息 -->
+      <footer class="footer">
+        <div class="footer-content">
+          <div class="footer-brand">
+            <span class="text-gold">护理学科大模型</span> · NURSING LLM
+          </div>
+          <div class="footer-info">
+            广西医科大学护理学院 · 建于1934 · 厚德励志 博学弘医
+          </div>
+          <div class="footer-copy">
+            健康所系 · 性命相托 · 守护生命之光
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- 底部快捷栏 -->
+  <div class="bottom-dock">
+    <a href="chat.html" class="dock-item">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
+      <span class="dock-label">智能对话</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="knowledge.html" class="dock-item">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg>
+      </div>
+      <span class="dock-label">知识图谱</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="cases.html" class="dock-item">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+      </div>
+      <span class="dock-label">病例智库</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="exam.html" class="dock-item">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      </div>
+      <span class="dock-label">备考中心</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="skills.html" class="dock-item active">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+      </div>
+      <span class="dock-label">技能实训</span>
+    </a>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script>
+    // 技能实训 — 按卡片独立统计进度
+    // common.js 的 initSkillSteps 已为每个 .skill-step 绑定点击切换 .done 的逻辑，
+    // 并调用全局 updateSkillProgress（其仅识别第一张卡片的 #skillProgress 且统计全部步骤）。
+    // 这里将全局 updateSkillProgress 中和为空函数，改由下方按卡片独立计算进度，
+    // 避免与 common.js 的切换逻辑产生二次切换冲突。
+    document.addEventListener('DOMContentLoaded', () => {
+      window.updateSkillProgress = function () {};
+      document.querySelectorAll('.skill-card').forEach((card) => {
+        const steps = card.querySelectorAll('.skill-step');
+        const bar = card.querySelector('.skill-progress-fill');
+        const text = card.querySelector('[id^="skillProgressText"]');
+        const updateCard = () => {
+          const total = steps.length;
+          const done = card.querySelectorAll('.skill-step.done').length;
+          if (bar) bar.style.width = (done / total * 100) + '%';
+          if (text) text.textContent = `${done} / ${total}`;
+        };
+        steps.forEach(step => step.addEventListener('click', updateCard));
+      });
+    });
+  </script>
+</body>
+</html>

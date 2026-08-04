@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>护理知识图谱 · 广西医科大学护理学院</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <!-- 宇宙背景 -->
+  <div class="cosmic-bg"></div>
+  <div class="stars"></div>
+
+  <!-- DNA装饰 -->
+  <svg class="dna-deco left" width="120" height="400" viewBox="0 0 120 400" fill="none">
+    <path d="M20 0 Q100 50 20 100 Q-60 150 20 200 Q100 250 20 300 Q-60 350 20 400" stroke="#4a9bf5" stroke-width="1.5" fill="none"/>
+    <path d="M100 0 Q20 50 100 100 Q180 150 100 200 Q20 250 100 300 Q180 350 100 400" stroke="#e8b04c" stroke-width="1.5" fill="none"/>
+    <line x1="20" y1="25" x2="100" y2="25" stroke="#4a9bf5" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="75" x2="100" y2="75" stroke="#e8b04c" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="125" x2="100" y2="125" stroke="#4a9bf5" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="175" x2="100" y2="175" stroke="#e8b04c" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="225" x2="100" y2="225" stroke="#4a9bf5" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="275" x2="100" y2="275" stroke="#e8b04c" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="325" x2="100" y2="325" stroke="#4a9bf5" stroke-width="0.8" opacity="0.5"/>
+    <line x1="20" y1="375" x2="100" y2="375" stroke="#e8b04c" stroke-width="0.8" opacity="0.5"/>
+  </svg>
+
+  <div class="page-wrap">
+    <!-- 顶部导航 -->
+    <nav class="top-nav">
+      <div class="brand">
+        <div class="brand-seal">
+          <svg viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="21" stroke="#e8b04c" stroke-width="1.5"/>
+            <circle cx="22" cy="22" r="17" stroke="#e8b04c" stroke-width="0.8" opacity="0.5"/>
+            <path d="M22 8v28M8 22h28" stroke="#4a9bf5" stroke-width="1" opacity="0.3"/>
+            <!-- 蛇杖 -->
+            <path d="M22 12 C19 14 19 18 22 20 C25 22 25 26 22 28 C19 30 19 34 22 36" stroke="#e8b04c" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <circle cx="22" cy="12" r="2.5" fill="#e8b04c"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="cn">广西医科大学护理学院</span>
+          <span class="en">Nursing · Discipline LLM</span>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">首页</a>
+        <a href="chat.html" class="nav-link">智能对话</a>
+        <a href="knowledge.html" class="nav-link active">知识图谱</a>
+        <a href="cases.html" class="nav-link">病例智库</a>
+        <a href="exam.html" class="nav-link">备考中心</a>
+        <a href="skills.html" class="nav-link">技能实训</a>
+      </div>
+      <div class="user-avatar">护</div>
+    </nav>
+
+    <!-- 知识图谱子页面 -->
+    <section class="sub-page">
+      <!-- 子页面头部 -->
+      <div class="sub-header">
+        <div class="breadcrumb fade-up d1"><a href="index.html">首页</a> / 知识图谱</div>
+        <h1 class="fade-up d2">护理知识图谱</h1>
+        <p class="sub-desc fade-up d3">以可视化图谱呈现护理学科知识体系，关联基础理论、临床实践与专科护理领域，点击任意节点探索知识脉络与核心要点。</p>
+      </div>
+
+      <!-- 图谱 + 详情面板 -->
+      <div class="kg-layout">
+        <!-- 左：图谱画布 -->
+        <div class="kg-canvas fade-up d2">
+          <svg class="kg-svg" viewBox="0 0 800 560" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <radialGradient id="goldGrad" cx="35%" cy="30%">
+                <stop offset="0%" stop-color="#f5c860"/>
+                <stop offset="60%" stop-color="#e8b04c"/>
+                <stop offset="100%" stop-color="#d99836"/>
+              </radialGradient>
+              <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#4a9bf5"/>
+                <stop offset="100%" stop-color="#1a5cc4"/>
+              </linearGradient>
+              <radialGradient id="leafGrad" cx="50%" cy="50%">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.16)"/>
+                <stop offset="100%" stop-color="rgba(74,155,245,0.06)"/>
+              </radialGradient>
+              <radialGradient id="centerAura" cx="50%" cy="50%">
+                <stop offset="0%" stop-color="rgba(232,176,76,0.28)"/>
+                <stop offset="60%" stop-color="rgba(232,176,76,0.08)"/>
+                <stop offset="100%" stop-color="rgba(232,176,76,0)"/>
+              </radialGradient>
+              <filter id="nodeGlow" x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="3.5" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <!-- 中心光晕 -->
+            <ellipse cx="400" cy="280" rx="130" ry="130" fill="url(#centerAura)"/>
+
+            <!-- 装饰轨道环 -->
+            <ellipse cx="400" cy="280" rx="210" ry="52" stroke="#4a9bf5" stroke-width="0.6" opacity="0.12" fill="none" transform="rotate(-10 400 280)"/>
+            <ellipse cx="400" cy="280" rx="175" ry="42" stroke="#e8b04c" stroke-width="0.6" opacity="0.10" fill="none" transform="rotate(12 400 280)"/>
+            <!-- 分支引导环 -->
+            <circle cx="400" cy="280" r="140" stroke="rgba(255,255,255,0.06)" stroke-width="1" fill="none" stroke-dasharray="3 7"/>
+
+            <!-- 中心 → 分支 连线（金色弧线） -->
+            <g stroke="#e8b04c" stroke-width="1.5" fill="none" opacity="0.3">
+              <path d="M400,280 Q412,210 400,140"/>
+              <path d="M400,280 Q467,255 521,210"/>
+              <path d="M400,280 Q455,326 521,350"/>
+              <path d="M400,280 Q388,350 400,420"/>
+              <path d="M400,280 Q334,305 279,350"/>
+              <path d="M400,280 Q346,235 279,210"/>
+            </g>
+
+            <!-- 分支 → 叶节点 连线（蓝色弧线） -->
+            <g stroke="#4a9bf5" stroke-width="1.2" fill="none" opacity="0.22">
+              <!-- 基础护理学 -->
+              <path d="M400,140 Q382,99 353,65"/>
+              <path d="M400,140 Q407,96 400,52"/>
+              <path d="M400,140 Q429,106 447,65"/>
+              <!-- 内科护理学 -->
+              <path d="M521,210 Q548,174 562,132"/>
+              <path d="M521,210 Q563,194 597,166"/>
+              <path d="M521,210 Q565,219 609,213"/>
+              <!-- 外科护理学 -->
+              <path d="M521,350 Q564,361 609,358"/>
+              <path d="M521,350 Q541,390 572,422"/>
+              <!-- 妇产科护理 -->
+              <path d="M400,420 Q418,461 447,495"/>
+              <path d="M400,420 Q371,454 353,495"/>
+              <!-- 儿科护理 -->
+              <path d="M279,350 Q248,382 229,422"/>
+              <path d="M279,350 Q234,347 191,358"/>
+              <!-- 急危重症护理 -->
+              <path d="M279,210 Q235,205 191,213"/>
+              <path d="M279,210 Q245,182 203,166"/>
+              <path d="M279,210 Q265,168 238,132"/>
+            </g>
+
+            <!-- ============ 中心节点 ============ -->
+            <g class="kg-node active" data-title="护理学" data-desc="护理学是一门研究维护、促进、恢复人类健康的护理理论、知识、技能及其发展规律的综合应用科学。" data-points="基础理论体系|临床实践技能|护理伦理与法规|护理管理与教育">
+              <circle cx="400" cy="280" r="42" fill="url(#goldGrad)" stroke="#f5c860" stroke-width="2" filter="url(#nodeGlow)"/>
+              <text x="400" y="280" style="font-size:17px;font-weight:700" fill="#0a1530" dominant-baseline="central">护理学</text>
+            </g>
+
+            <!-- ============ 分支节点 ============ -->
+            <g class="kg-node" data-title="基础护理学" data-desc="基础护理学是护理学的基础学科，研究护理学的基本理论、基本知识和基本技能，涵盖患者的生活护理、病情观察与基础操作技术。" data-points="生命体征监测|舒适与卧位护理|医院感染控制|饮食与营养护理|给药基本技术">
+              <circle cx="400" cy="140" r="30" fill="url(#blueGrad)" stroke="#4a9bf5" stroke-width="1.2"/>
+              <text x="400" y="140" style="font-size:11px;font-weight:600" dominant-baseline="central">基础护理学</text>
+            </g>
+            <g class="kg-node" data-title="内科护理学" data-desc="内科护理学研究内科疾病患者的护理规律，涵盖呼吸、循环、消化、泌尿、血液及内分泌等系统疾病的护理评估与干预。" data-points="呼吸系统疾病护理|循环系统疾病护理|消化系统疾病护理|泌尿系统疾病护理|内分泌系统疾病护理">
+              <circle cx="521" cy="210" r="30" fill="url(#blueGrad)" stroke="#4a9bf5" stroke-width="1.2"/>
+              <text x="521" y="210" style="font-size:11px;font-weight:600" dominant-baseline="central">内科护理学</text>
+            </g>
+            <g class="kg-node" data-title="外科护理学" data-desc="外科护理学研究外科疾病患者围术期的护理，包括手术前后护理、创伤救护、外科感染及常见外科疾病护理。" data-points="围术期护理|创伤与急救护理|外科感染护理|手术室护理配合|麻醉后护理">
+              <circle cx="521" cy="350" r="30" fill="url(#blueGrad)" stroke="#4a9bf5" stroke-width="1.2"/>
+              <text x="521" y="350" style="font-size:11px;font-weight:600" dominant-baseline="central">外科护理学</text>
+            </g>
+            <g class="kg-node" data-title="妇产科护理" data-desc="妇产科护理学涵盖孕产妇护理、妇科疾病护理及新生儿护理，关注女性各期健康与生殖健康保障。" data-points="妊娠期护理|分娩期护理|产褥期护理|妇科疾病护理|新生儿护理">
+              <circle cx="400" cy="420" r="30" fill="url(#blueGrad)" stroke="#4a9bf5" stroke-width="1.2"/>
+              <text x="400" y="420" style="font-size:11px;font-weight:600" dominant-baseline="central">妇产科护理</text>
+            </g>
+            <g class="kg-node" data-title="儿科护理" data-desc="儿科护理学研究儿童生长发育规律及儿科疾病护理，涵盖新生儿至青春期各阶段的健康促进与疾病护理。" data-points="儿童生长发育|新生儿护理|儿科常见疾病|儿童营养与喂养|儿童保健">
+              <circle cx="279" cy="350" r="30" fill="url(#blueGrad)" stroke="#4a9bf5" stroke-width="1.2"/>
+              <text x="279" y="350" style="font-size:11px;font-weight:600" dominant-baseline="central">儿科护理</text>
+            </g>
+            <g class="kg-node" data-title="急危重症护理" data-desc="急危重症护理学研究急危重症患者的救护理论与技能，包括院前急救、急诊科护理与重症监护技术。" data-points="院前急救|急诊分诊与护理|心肺复苏术|重症监护技术|常用急救技术">
+              <circle cx="279" cy="210" r="30" fill="url(#blueGrad)" stroke="#4a9bf5" stroke-width="1.2"/>
+              <text x="279" y="210" style="font-size:11px;font-weight:600" dominant-baseline="central">急危重症护理</text>
+            </g>
+
+            <!-- ============ 叶节点 ============ -->
+            <!-- 基础护理学 子节点 -->
+            <g class="kg-node" data-title="生命体征" data-desc="生命体征是评估患者生命活动质量的重要指标，包括体温、脉搏、呼吸、血压，是临床护理观察的基础。" data-points="体温测量与记录|脉搏评估|呼吸观察|血压监测|异常体征识别">
+              <circle cx="353" cy="65" r="22" fill="url(#leafGrad)" stroke="rgba(232,176,76,0.45)" stroke-width="1"/>
+              <text x="353" y="103">生命体征</text>
+            </g>
+            <g class="kg-node" data-title="舒适护理" data-desc="舒适护理通过环境、卧位、清洁等干预，提升患者身心舒适度，促进康复进程。" data-points="卧位安置|口腔护理|皮肤护理|床单位整理|疼痛舒适管理">
+              <circle cx="400" cy="52" r="22" fill="url(#leafGrad)" stroke="rgba(232,176,76,0.45)" stroke-width="1"/>
+              <text x="400" y="90">舒适护理</text>
+            </g>
+            <g class="kg-node" data-title="感染控制" data-desc="医院感染控制是保障患者与医务人员安全的核心环节，贯穿于所有护理操作全过程。" data-points="手卫生|无菌技术|隔离技术|消毒灭菌|医疗废物处理">
+              <circle cx="447" cy="65" r="22" fill="url(#leafGrad)" stroke="rgba(232,176,76,0.45)" stroke-width="1"/>
+              <text x="447" y="103">感染控制</text>
+            </g>
+
+            <!-- 内科护理学 子节点 -->
+            <g class="kg-node" data-title="呼吸系统" data-desc="呼吸系统疾病护理涵盖肺炎、慢阻肺、哮喘、呼吸衰竭等疾病的评估与护理干预。" data-points="肺炎护理|COPD护理|哮喘护理|呼吸衰竭护理|氧疗护理">
+              <circle cx="562" cy="132" r="22" fill="url(#leafGrad)" stroke="rgba(232,176,76,0.45)" stroke-width="1"/>
+              <text x="562" y="170">呼吸系统</text>
+            </g>
+            <g class="kg-node" data-title="循环系统" data-desc="循环系统疾病护理涉及心力衰竭、冠心病、高血压、心律失常等患者的护理管理。" data-points="心力衰竭护理|冠心病护理|高血压护理|心律失常护理|心血管用药护理">
+              <circle cx="597" cy="166" r="22" fill="url(#leafGrad)" stroke="rgba(232,176,76,0.45)" stroke-width="1"/>
+              <text x="597" y="204">循环系统</text>
+            </g>
+            <g class="kg-node" data-title="消化系统" data-desc="消化系统疾病护理包括消化性溃疡、肝硬化、上消化道出血等疾病的护理。" data-points="消化性溃疡护理|肝硬化护理|上消化道出血护理|胃肠减压护理|肠造口护理">
+              <circle cx="609" cy="213" r="22" fill="url(#leafGrad)" stroke="rgba(232,176,76,0.45)" stroke-width="1"/>
+              <text x="609" y="251">消化系统</text>
+            </g>
+
+            <!-- 外科护理学 子节点 -->
+            <g class="kg-node" data-title="围术期护理" data-desc="围术期护理贯穿手术前、中、后三个阶段，是外科护理的核心内容与质量关键。" data-points="术前评估与准备|术前心理护理|术中配合|术后病情观察|术后并发症预防">
+              <circle cx="609" cy="358" r="22" fill="url(#leafGrad)" stroke="rgba(232,176,76,0.45)" stroke-width="1"/>
+              <text x="609" y="396">围术期护理</text>
+            </g>
+            <g class="kg-node" data-title="创伤护理" data-desc="创伤护理研究各类创伤患者的救护，包括伤口评估、清创换药与并发症观察护理。" data-points="伤口评估|清创术配合|换药技术|伤口引流护理|创伤并发症观察">
+              <circle cx="572" cy="422" r="22" fill="url(#leafGrad)" stroke="rgba(232,176,76,0.45)" stroke-width="1"/>
+              <text x="572" y="460">创伤护理</text>
+            </g>
+
+            <!-- 妇产科护理 子节点 -->
+            <g class="kg-node" data-title="产科护理" data-desc="产科护理涵盖妊娠、分娩、产褥各期母婴护理，保障孕产妇与新生儿安全。" data-points="产前检查|妊娠期护理|分娩期护理|产褥期护理|高危妊娠管理">
+              <circle cx="447" cy="495" r="22" fill="url(#leafGrad)" stroke="rgba(232,176,76,0.45)" stroke-width="1"/>
+              <text x="447" y="533">产科护理</text>
+            </g>
+            <g class="kg-node" data-title="新生儿护理" data-desc="新生儿护理关注出生后28天内的婴儿护理，包括新生儿评估、喂养与常见问题处理。" data-points="新生儿评估|新生儿喂养|新生儿沐浴|黄疸护理|早产儿护理">
+              <circle cx="353" cy="495" r="22" fill="url(#leafGrad)" stroke="rgba(232,176,76,0.45)" stroke-width="1"/>
+              <text x="353" y="533">新生儿护理</text>
+            </g>
+
+            <!-- 儿科护理 子节点 -->
+            <g class="kg-node" data-title="儿童保健" data-desc="儿童保健致力于儿童生长发育监测、疾病预防与健康促进，是儿科护理的重要组成。" data-points="生长发育监测|计划免疫|营养指导|心理行为评估|意外伤害预防">
+              <circle cx="229" cy="422" r="22" fill="url(#leafGrad)" stroke="rgba(232,176,76,0.45)" stroke-width="1"/>
+              <text x="229" y="460">儿童保健</text>
+            </g>
+            <g class="kg-node" data-title="儿科疾病" data-desc="儿科常见疾病护理包括小儿肺炎、腹泻、高热惊厥等疾病的护理评估与干预。" data-points="小儿肺炎护理|小儿腹泻护理|高热惊厥护理|营养不良护理|先心病护理">
+              <circle cx="191" cy="358" r="22" fill="url(#leafGrad)" stroke="rgba(232,176,76,0.45)" stroke-width="1"/>
+              <text x="191" y="396">儿科疾病</text>
+            </g>
+
+            <!-- 急危重症护理 子节点 -->
+            <g class="kg-node" data-title="急诊救护" data-desc="急诊救护是急危重症护理的首要环节，强调快速评估、分诊与生命支持。" data-points="急诊分诊|生命支持|创伤急救|中毒救护|急诊护患沟通">
+              <circle cx="191" cy="213" r="22" fill="url(#leafGrad)" stroke="rgba(232,176,76,0.45)" stroke-width="1"/>
+              <text x="191" y="251">急诊救护</text>
+            </g>
+            <g class="kg-node" data-title="重症监护" data-desc="重症监护运用监护技术与生命支持手段，对危重患者进行持续观察与救治。" data-points="血流动力学监测|呼吸机监护|意识瞳孔观察|ICU感染控制|多器官支持">
+              <circle cx="203" cy="166" r="22" fill="url(#leafGrad)" stroke="rgba(232,176,76,0.45)" stroke-width="1"/>
+              <text x="203" y="204">重症监护</text>
+            </g>
+            <g class="kg-node" data-title="心肺复苏" data-desc="心肺复苏是抢救心搏骤停患者的关键技术，要求护理人员熟练掌握标准流程。" data-points="基础生命支持|高级心血管支持|心肺复苏后护理|电除颤技术|复苏后监护">
+              <circle cx="238" cy="132" r="22" fill="url(#leafGrad)" stroke="rgba(232,176,76,0.45)" stroke-width="1"/>
+              <text x="238" y="170">心肺复苏</text>
+            </g>
+          </svg>
+
+          <!-- 图例 -->
+          <div style="position:absolute; bottom:14px; left:18px; display:flex; gap:18px; font-size:11px; color:var(--text-muted); letter-spacing:0.05em;">
+            <span style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#f5c860,#d99836);box-shadow:0 0 6px rgba(232,176,76,0.5);"></span>核心学科</span>
+            <span style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#4a9bf5,#1a5cc4);"></span>分支领域</span>
+            <span style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(232,176,76,0.45);"></span>知识节点</span>
+          </div>
+          <!-- 操作提示 -->
+          <div style="position:absolute; top:16px; right:20px; display:flex; align-items:center; gap:6px; font-size:11px; color:var(--gold); letter-spacing:0.08em;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            点击节点查看详情
+          </div>
+        </div>
+
+        <!-- 右：详情面板 -->
+        <div class="kg-detail active fade-up d3" id="kgDetail">
+          <div class="kg-detail-label">KNOWLEDGE NODE</div>
+          <div class="kg-detail-title">护理学</div>
+          <div class="kg-detail-desc">护理学是一门研究维护、促进、恢复人类健康的护理理论、知识、技能及其发展规律的综合应用科学。</div>
+          <ul class="kg-detail-list">
+            <li>基础理论体系</li>
+            <li>临床实践技能</li>
+            <li>护理伦理与法规</li>
+            <li>护理管理与教育</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 知识分类导航 -->
+      <section class="agents-section container reveal">
+        <div class="section-title">
+          <span class="label">KNOWLEDGE DOMAINS</span>
+          <h2>学科体系 · 知识分类导航</h2>
+          <p class="sub">四大知识域，构建系统化护理认知</p>
+        </div>
+        <div class="agents-grid">
+          <a href="chat.html" class="glass-card fade-up d1">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#f5c860" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <div class="card-title">护理理论体系</div>
+            <div class="card-en">Nursing Theoretical System</div>
+            <div class="card-desc">南丁格尔护理理论、奥伦自理理论、罗伊适应模式等核心护理理论体系，构建学科知识根基。</div>
+            <div class="card-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f5c860" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+
+          <a href="chat.html" class="glass-card fade-up d2">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#f5c860" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 4h6a1 1 0 011 1v1a1 1 0 01-1 1H9a1 1 0 01-1-1V5a1 1 0 011-1z"/>
+                <path d="M8 6H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V8a2 2 0 00-2-2h-2"/>
+                <path d="M9 14l2 2 4-4"/>
+              </svg>
+            </div>
+            <div class="card-title">护理操作规范</div>
+            <div class="card-en">Nursing Procedure Standards</div>
+            <div class="card-desc">50+项护理操作标准流程，涵盖无菌技术、给药、急救等核心操作规范与考核要点。</div>
+            <div class="card-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f5c860" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+
+          <a href="chat.html" class="glass-card fade-up d3">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#f5c860" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="9" width="20" height="6" rx="3" transform="rotate(-45 12 12)"/>
+                <path d="M8.5 8.5l7 7"/>
+              </svg>
+            </div>
+            <div class="card-title">护理药理学</div>
+            <div class="card-en">Nursing Pharmacology</div>
+            <div class="card-desc">常用药物分类、给药途径、剂量计算、不良反应观察及高危药品管理知识体系。</div>
+            <div class="card-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f5c860" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+
+          <a href="chat.html" class="glass-card fade-up d4">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#f5c860" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3v18M5 7h14M5 7l-3 6a3 3 0 006 0L5 7zM19 7l-3 6a3 3 0 006 0L19 7zM8 21h8"/>
+              </svg>
+            </div>
+            <div class="card-title">护理伦理学</div>
+            <div class="card-en">Nursing Ethics</div>
+            <div class="card-desc">护理伦理原则、患者权利、知情同意、临终关怀及医患沟通中的伦理决策与法规。</div>
+            <div class="card-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f5c860" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        </div>
+      </section>
+    </section>
+
+    <!-- 底部信息 -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <span class="text-gold">护理学科大模型</span> · NURSING LLM
+        </div>
+        <div class="footer-info">
+          广西医科大学护理学院 · 建于1934 · 厚德励志 博学弘医
+        </div>
+        <div class="footer-copy">
+          健康所系 · 性命相托 · 守护生命之光
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- 底部快捷栏 -->
+  <div class="bottom-dock">
+    <a href="chat.html" class="dock-item">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
+      <span class="dock-label">智能对话</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="knowledge.html" class="dock-item active">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg>
+      </div>
+      <span class="dock-label">知识图谱</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="cases.html" class="dock-item">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+      </div>
+      <span class="dock-label">病例智库</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="exam.html" class="dock-item">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      </div>
+      <span class="dock-label">备考中心</span>
+    </a>
+    <div class="dock-divider"></div>
+    <a href="skills.html" class="dock-item">
+      <div class="dock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+      </div>
+      <span class="dock-label">技能实训</span>
+    </a>
+  </div>
+
+  <script src="js/common.js"></script>
+</body>
+</html>
