@@ -1,0 +1,357 @@
+@keyframes lineIcon {
+  from {
+    left: -30%;
+  }
+
+  to {
+    left: 110%;
+  }
+}
+
+.report-info-root {
+  width: 11.07rem;
+  height: 9.25rem;
+  position: relative;
+  box-shadow: 0 0 0.1rem #d8e2f0;
+  background: #f3f7ff;
+  border-radius: 0.2rem;
+  margin-bottom: 0.4rem;
+}
+
+/* 标题 */
+.report-title-container {
+  width: 10.48rem;
+  margin: 0.21rem auto 0.28rem auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.detail-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.detail-title-container {
+  height: 0.31rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.detail-title-container object{
+  height: 0.31rem !important;
+}
+.detaile-title {
+  width: 2.33rem;
+  height: 0.53rem;
+  cursor: pointer;
+  font-size: 0.28rem;
+  font-weight: bold;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  background: url("../images/index/practice-advice-default.png");
+  background-size: 100% 100%;
+}
+.detaile-title:hover {
+  background: url("../images/index/practice-advice-active.png");
+  background-size: 100% 100%;
+}
+
+.detail-icon {
+  width: 0.3rem;
+}
+.detail-title {
+  margin-left: 0.1rem;
+}
+
+/* 得分&等级 */
+.score-level-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 0.87rem;
+  width: 2.91rem;
+  height: 0.6rem;
+  background-image: url("../images/index/score-bg.png");
+  background-size: 100% 100%;
+}
+
+.score {
+  font-size: 0.32rem;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.score-value {
+  font-family: HuXiaoBoNanShenTi;
+  font-size: 0.45rem;
+  color: #fecf14;
+}
+
+.level-container {
+  font-size: 0.28rem;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+}
+
+.levle-icon-container {
+  position: relative;
+}
+
+.level-icon {
+  width: 0.61rem;
+  vertical-align: middle;
+  margin-right: 0.05rem;
+}
+
+.line-contianer {
+  display: inline-flex;
+  width: 0.48rem;
+  height: 0.48rem;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0.05rem;
+  overflow: hidden;
+}
+
+.line-contianer ::after {
+  position: absolute;
+  left: -30%;
+  content: "";
+  width: 25%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-45deg);
+  animation: lineIcon 1.5s linear infinite;
+}
+
+/* 分割线 */
+.title-line {
+  width: 10.48rem;
+  height: 0.09rem;
+}
+
+/* 问题数据 */
+.question-container {
+  width: 10.8rem;
+  margin: 0 auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 83%;
+  padding: 0 0.1rem 0 0.15rem;
+}
+.practice-advice-box {
+  width: 100%;
+  height: 100%;
+  /* display: none; */
+  padding: 0 0.1rem;
+  position: relative;
+  background: url("../images/index/inner-box-bg.png");
+  background-size: 100% 100%;
+}
+.practice-advice-title {
+  width: 1.2rem;
+  height: 0.3rem;
+  font-size: 0.3rem;
+  font-weight: 400;
+  color: #ffffff;
+  line-height: 0.25rem;
+  position: relative;
+  left: 0.22rem;
+  top: 0.4rem;
+}
+.practice-advice-detail {
+  width: 100%;
+  height: 4.65rem;
+  padding: 0 0.5rem;
+  position: relative;
+  top: 1rem;
+}
+.practice-advice-item {
+  width: 100%;
+  height: 0.9rem;
+  margin-top: 0.3rem;
+  position: relative;
+}
+.advice-detail-title {
+  width: 1.97rem;
+  height: 0.38rem;
+  top: -0.2rem;
+  text-align: center;
+  font-size: 0.24rem;
+  font-weight: bold;
+  color: #ffffff;
+  line-height: 0.32rem;
+  position: absolute;
+  background: url("../images/index/category-title-bg.png");
+  background-size: 100% 100%;
+  z-index: 1;
+}
+.advice-detail-content {
+  width: 100%;
+  min-height: 0.9rem;
+  font-size: 0.26rem;
+  font-weight: 500;
+  color: #333333;
+  display: flex;
+  padding: 0.25rem 0.39rem 0 0.44rem;
+  justify-content: flex-start;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  background: url("../images/index/category-detail-bg.png");
+  background-size: 100% 100%;
+}
+@keyframes myAnimation {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(10deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(-10deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+.horn-container {
+  position: absolute;
+  animation: myAnimation 2s linear infinite;
+  top: 0.05rem;
+  right: -0.11rem;
+}
+.horn-container > img {
+  width: 2.28rem;
+  height: 2.2rem;
+}
+.answer-detail-box {
+  width: 100%;
+  height: 100%;
+}
+.answer-detail-table {
+  width: 100%;
+  height: 100%;
+}
+.table-item-row {
+  border-collapse: collapse;
+  width: 100%;
+  min-height: 0.7rem;
+  display: flex;
+  justify-content: space-between;
+}
+.table-item-row .table-head {
+  background: #d8e6fe;
+  font-size: 0.28rem;
+  font-weight: bold;
+  color: #5773c5;
+}
+.table-column-one {
+  justify-content: flex-start;
+  width: 60%;
+}
+.table-column-two {
+  width: 18%;
+}
+.table-item-row .table-column-three {
+  border-right: 0.01rem solid #a4bbf0;
+  width: 22%;
+}
+
+.score-item {
+  min-height: 0.7rem;
+  margin: 0rem -0.01rem -0.01rem 0rem;
+  border: 0.01rem solid #a4bbf0;
+  border-right: none;
+  font-size: 0.26rem;
+  font-weight: 500;
+  color: #333333;
+  padding: 0.25rem 0.15rem 0.25rem 0.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.questin-list {
+  width: 100%;
+  height: 100%;
+  list-style: none;
+  padding: 0rem 0.1rem;
+  overflow-y: auto;
+}
+/* 滚动条样式 */
+.questin-list::-webkit-scrollbar {
+  width: 0.06rem;
+  height: 0.12rem;
+  border-radius: 0.03rem;
+}
+.questin-list::-webkit-scrollbar-corner,
+.questin-list::-webkit-scrollbar-track {
+  background-color: #cde0ef;
+}
+
+.questin-list::-webkit-scrollbar-thumb {
+  background-color: #289dee;
+  border-radius: 0.03rem;
+}
+
+.questin-list::-webkit-scrollbar-thumb:hover {
+  /* background-color: #1c799f */
+  background-color: #2b80cb;
+}
+
+.question-item-container {
+  margin-bottom: 0.29rem;
+}
+
+.question-item-container :last-of-type {
+  margin-bottom: 0;
+}
+
+/* 题干 */
+.question-title {
+  font-size: 0.28rem;
+  font-weight: 550;
+  color: #333333;
+  line-height: 0.3rem;
+  margin-bottom: 0.1rem;
+  display: block;
+}
+
+/* 学生答案 */
+.my-answer {
+  font-size: 0.28rem;
+  color: #6d67c2;
+  font-weight: 400;
+  /* margin-left: 0.15rem; */
+  margin-bottom: 0.1rem;
+  display: block;
+}
+
+/* 参考答案 */
+.right-answer {
+  font-size: 0.28rem;
+  color: #259073;
+  font-weight: 400;
+  /* margin-left: 0.15rem; */
+  display: block;
+}
+
+
+

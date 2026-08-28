@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content=" minimum-scale = 1.0 , initial-scale= 1" />
+<title>封面</title>
+
+<link rel="stylesheet" href="trivantis.css" type="text/css" />
+
+<link rel="stylesheet" href="trivantis-player.css" type="text/css" />
+<style type="text/css">
+  @media print {body { display:none; }}
+  html, body, div, span, applet, object, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video, article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, ins, del, form, input, textarea, select, button, option, optgroup, hr, br {
+    -webkit-touch-callout: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  :not(input):not(textarea){
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+  }
+  .trivInputLL { margin : 0px 0px 0px 9px; padding : 0px; display : inline-block; vertical-align : middle; }
+  .trivInputLR { margin : 0px 9px 0px 3px; padding : 0px; display : inline-block; vertical-align : middle; }
+  .trivInputNL { margin : 0px 0px 0px 3px; padding : 0px; display : inline-block; vertical-align : middle; }
+</style>
+
+<script src="trivantis.js"></script>
+<script src="trivantis-timedate.js"></script>
+<script src="es6-promise-2.0.0.min.js"></script>
+<script src="jquery-3.4.1.min.js"></script>
+<script src="trivantis-cookie.js"></script>
+<script src="trivantis-button.js"></script>
+<script src="trivantis-image.js"></script>
+<script src="trivantis-inline.js"></script>
+<script src="mediaelement-and-player.js"></script>
+<script src="trivantis-media.js"></script>
+<script src="trivantis-trans.js"></script>
+<script src="trivantis-pagetracking.js"></script>
+<script src="device_desktop/page362.js"></script>
+<script src="device_tablet/page362.js"></script>
+<script src="device_phone/page362.js"></script>
+<script src="trivantis-strings.js"></script>
+<script src="apiwrapper11.js"></script>
+<script src="scofunctions.js"></script>
+<script src="hammer.js"></script>
+<script>
+
+<!-- 
+
+var hmr = null;
+function initGEV(){
+   hmr = new Hammer(getDisplayDocument().getElementById(GetCurrentPageID()));
+}
+
+var trivPageScope = {};
+var pgID = 'page362';
+trivProtected = true;
+trivWeb20Popups = true;
+var trivPlayer = null;
+var bPageLoaded = false;
+var pageScale = 1;
+var bDisableBrowserResize = true;
+var bScaleToWindow = true;
+var bFitToWidth = false;
+var bFitToMobile = true;
+var iScaleMaxWidth = 0;
+var pageHeight = 1080;
+var bLoadedVariables = false;
+
+var arObjs = [];
+
+if(bDisableBrowserResize && !is.isMobile.any()){
+	var bTrivResponsive = false;
+	saveResponsiveData("Desktop",eval("DesktopResponsive"));
+}
+else{
+	var bTrivResponsive = true;
+	saveResponsiveData("Desktop",eval("DesktopResponsive"));
+	saveResponsiveData("Tablet",eval("TabletResponsive"));
+	saveResponsiveData("Phone",eval("PhoneResponsive"));
+}
+	var viewOverrideMap = {};
+	viewOverrideMap["TabletPortrait"] = "Desktop";
+ 	viewOverrideMap["TabletLandscape"] = "Desktop";
+ if( !is.min )
+  document.write( '<div class="noti" style="margin: 15px 0; box-shadow: 0 0 8px #888; background: #FFF4F4; text-align: center; padding: 2px;width: 750px;margin: auto;text-align: left;position: relative;clear: both;margin-bottom: 25px; font-family: &apos;Open Sans&apos;, sans-serif"><div class="whatnow" style="text-align: center; margin: 13px 25px; font-size: 20px; font-weight: 400;"><p style="margin: 13px 10px;">您的浏览器已经过时了。<p><p style="margin: 13px 10px;">请下载以下最新，免费和出色的浏览器之一，以查看此学习对象：</p></div><table class="logos" id="browserlist" style="width: 100%; border: none;"><tbody><tr><td class="b" style="vertical-align: top;padding: 10px;border: none;background: none;width: 25%;"><a class="l" style="display: block;padding: 4px;background-repeat: no-repeat;background-size: 110px auto;background-position: center 4px;text-decoration: underline;text-align: center;border: 2px solid transparent;position: relative;font-size: 1.8em" href="https://www.microsoft.com/en-us/windows/microsoft-edge" target="_blank" rel="noopener" title="从Microsoft官方网站下载更新的Edge Web浏览器！">Edge</a></td><td class="b" style="vertical-align: top;padding: 10px;border: none;background: none;width: 25%;"><a class="l" style="display: block;padding: 4px;background-repeat: no-repeat;background-size: 110px auto;background-position: center 4px;text-decoration: underline;text-align: center;border: 2px solid transparent;position: relative;font-size: 1.8em" href="https://www.mozilla.org/firefox/" target="_blank" rel="noopener" title="从Mozilla Foundation官方网站下载更新的Firefox Web浏览器！">Firefox</a></td><td class="b" style="vertical-align: top;padding: 10px;border: none;background: none;width: 25%;"><a class="l" style="display: block;padding: 4px;background-repeat: no-repeat;background-size: 110px auto;background-position: center 4px;text-decoration: underline;text-align: center;border: 2px solid transparent;position: relative;font-size: 1.8em" href="https://www.google.com/chrome/browser/desktop/" target="_blank" rel="noopener" title="从Google官方网站下载更新的Chrome网络浏览器！">Chrome</a></td><td class="b" style="vertical-align: top;padding: 10px;border: none;background: none;width: 25%;"><a class="l" style="display: block;padding: 4px;background-repeat: no-repeat;background-size: 110px auto;background-position: center 4px;text-decoration: underline;text-align: center;border: 2px solid transparent;position: relative;font-size: 1.8em" href="https://support.apple.com/downloads/safari" target="_blank" rel="noopener" title="从Apple官方网站下载更新的Safari Web浏览器">Safari</a></td></tr></tbody></table><div class="whatnow" style="text-align: center;margin: 13px 25px;font-size: 20px;font-weight: 400;"><p>更高的安全性，速度和舒适性</p></div><div class="whatnow-small" style="font-size: 15px;margin: 13px;text-align: center;font-weight: 300;"><p>可从供应商的官方网站下载该文件。</p></div></div><br /><br />' )
+
+var pageLayer = null
+var winW = getDisplayWindow().screen.width
+var winH = getDisplayWindow().screen.height
+var transformScale = 1
+
+function findWH(){	//echo LD-769
+	if (is.ie9) {
+	var vScrollAdj =  (is.ns ? 16 : 20);
+	winW = (is.ns) ? window.innerWidth - vScrollAdj : document.body.offsetWidth;
+	winH = (is.ns) ? window.innerHeight : document.body.offsetHeight;
+	}
+	else if (is.ie) {
+   winW = Math.max(Math.max(getDisplayDocument().body.scrollWidth, getDisplayDocument().documentElement.scrollWidth)-16,
+					  Math.max(getDisplayDocument().body.offsetWidth, getDisplayDocument().documentElement.offsetWidth)-16,
+					  Math.max(getDisplayDocument().body.clientWidth, getDisplayDocument().documentElement.clientWidth)-16 );
+   winH = Math.max(Math.max(getDisplayDocument().body.scrollHeight, getDisplayDocument().documentElement.scrollHeight)-16,
+					  Math.max(getDisplayDocument().body.offsetHeight, getDisplayDocument().documentElement.offsetHeight)-16,
+					  Math.max(getDisplayDocument().body.clientHeight, getDisplayDocument().documentElement.clientHeight)-16 );
+	}
+	else
+	{
+   winW =  getDisplayDocument().documentElement.clientWidth ? getDisplayDocument().documentElement.clientWidth : getDisplayDocument().body.clientWidth;
+   if(is.iOS && (navigator.userAgent.indexOf('CellCast-iPad') != -1 || navigator.userAgent.indexOf('CellCast-iPhone') != -1) )
+		 winW =  getScreenWidth();
+   winH =  getDisplayDocument().documentElement.clientHeight ? getDisplayDocument().documentElement.clientHeight : getDisplayDocument().body.clientHeight;
+	}
+}
+
+trivSetupPage();
+
+ if( isSppCapable() && window.trivPlayer === null ) setTimeout( function() { var objScrollTo =  trivGetScrollObj(window.location.href); window.location.replace("a001index.html?jmptopg=page362.html#" + objScrollTo);}, 100)
+ function ReFlow() {
+  findWH()
+  var pageEleWidth = pageLayer.ele.clientWidth;
+  if (  (is.ieAny || is.edge )  && pageLayer.ele.clientWidth == 0 && isSinglePagePlayerAvail()) pageEleWidth = parseFloat(GetPageWidth()) ;
+  if (pageLayer)
+  {
+     if(bTrivResponsive){
+    var left = (winW > pageEleWidth) ? (winW-pageEleWidth)/2 : 0
+    bReviewLink = window.myTop.document.getElementById('vBodyFrame');
+    transformScale = (winW > pageEleWidth) ? 1 : (winW/pageEleWidth) 
+    if(is.isMobile.any() || bReviewLink && typeof(getDisplayWindow().myTop)!='undefined' && getDisplayWindow().myTop._respView != 'Desktop')
+			left = 0
+    if(is.iOS && isInIframe( getDisplayWindow() , 0))
+			transformScale = (getScreenWidth() > pageEleWidth) ? 1 : (getScreenWidth()/pageEleWidth) 
+    var transSty = calculateScale();
+    pageLayer.moveTo( left, 0 );
+    pageLayer.hasMoved = true;
+    pageLayer.newX = left;
+    pageLayer.newY = 0;
+    if(CanScale()){
+       pageLayer.styObj.transform =  transSty;
+       pageLayer.styObj.webkitTransform =  transSty;
+    }else
+       transformScale = 1;
+    pageLayer.styObj.transformOrigin =  '0 0';
+     }
+    if(bDisableBrowserResize && !is.isMobile.any()){
+       var left = (winW > pageEleWidth) ? (winW-pageEleWidth)/2 : 0
+       bReviewLink = window.myTop.document.getElementById('vBodyFrame');
+       if(is.isMobile.any() || bReviewLink && typeof(getDisplayWindow().myTop)!='undefined' && getDisplayWindow().myTop._respView != 'Desktop')
+			left = 0
+       pageLayer.moveTo( left, 0 );
+       pageLayer.hasMoved = true;
+       pageLayer.newX = left;
+       pageLayer.newY = 0;
+    }
+    fillBrowser();
+    adjustAllObjectsForFixedPosition();
+    setfixed();
+  }
+}
+
+var bInitSCORM = loadPage()
+var startDate = readVariable( 'TrivantisSCORMTimer', 0 )
+var arVariables = [];
+
+AICC_Student_ID = new Variable( 'AICC_Student_ID', '', 0, 0, 'scorm', null, 'waishangshixuexingxiuke' )
+AICC_Student_Name = new Variable( 'AICC_Student_Name', '', 0, 0, 'scorm', null, 'waishangshixuexingxiuke' )
+AICC_Lesson_Location = new Variable( 'AICC_Lesson_Location', '', 0, 0, 'scorm', null, 'waishangshixuexingxiuke' )
+AICC_Course_ID = new Variable( 'AICC_Course_ID', '课程 ID', 0, 0, 'scorm', null, 'waishangshixuexingxiuke' )
+AICC_Lesson_ID = new Variable( 'AICC_Lesson_ID', 'A001', 0, 0, 'scorm', null, 'waishangshixuexingxiuke' )
+VarElapsedTime = new Variable( 'VarElapsedTime', null, 4, 0, null, null, 'waishangshixuexingxiuke' )
+VarTrivSelCap = new Variable( 'VarTrivSelCap', 'none', 0, 0, null, null, 'waishangshixuexingxiuke', true )
+
+onload = responsiveInit
+detect();
+if( is.webkit && !is.iOSSafari )
+  onbeforeunload = finish
+else
+  onunload = finish
+
+function responsiveInit() {
+  pageLayer = new ObjLayer(GetCurrentPageID());
+  SaveStyles();
+  init();
+  adjustResponsivePage();
+  ReFlow();
+}
+
+function init() {
+  init11();
+}
+
+function init11() {
+  findWH()
+  if( is.min ){
+    var titleMgr = getTitleMgrHandle()
+    if( titleMgr ) {
+      if( !titleMgr.loadTest( '_tobj40', 'test40', 'page362.html' )) {
+        var gotoPage = titleMgr.cancelTest( 'test40' )
+        if( gotoPage && gotoPage != '' ) trivExitPage( gotoPage, false )
+      }
+    }
+    trivPageTracking.InitPageTracking();
+    if( parent.document != document) parent.document.title=document.title
+    PreloadResources(new Array(anim253,audio309,image2739,webwidget2768,button2433))
+    pageLayer.show(true);
+    anim253.init()
+    audio309.init()
+    image2739.init()
+    webwidget2768.init()
+    button2433.init()
+    anim253.activate()
+    audio309.activate()
+    image2739.activate()
+    webwidget2768.activate()
+    button2433.activate()
+     var objToScroll = trivGetScrollObj(window.location.href) ;
+     trivScrollTo(window, objToScroll);
+    var titleManagerIndexWindow = (window && window.parent && window.parent.bIsTitleManagerIndexFile) ? window.parent : null;
+    if(titleManagerIndexWindow)  trivScrollTo(titleManagerIndexWindow, objToScroll);
+    if(!isSinglePagePlayerAvail()) postPageShowAction();
+    if( location.hash )
+    {
+      var newHash
+      if( location.hash.charAt(0) == '#' )
+        newHash = location.hash.slice( 1 )
+      else
+        newHash = location.hash
+      location.hash = newHash
+      if((typeof(bTrivRunView) != 'undefined'  && bTrivRunView) || (typeof(bTrivOffline) != 'undefined' && bTrivOffline)) window.scrollTo(0 , getTopofObj(document.getElementById(newHash)));
+    }
+    setTimeout( 'trivUpdateTOC( 1 )', 100 )
+    bPageLoaded = true;
+    ReFlow();
+    if(!isSinglePagePlayerAvail())
+       loadActions();
+  }
+  try {initGEV();} catch(e){}
+}
+  window.bLoadedVariables = true;
+function loadActions(){
+    if((window.bPageLoaded && window.bLoadedVariables && getDisplayWindow().pagePlayer &&
+	getDisplayWindow().pagePlayer.arLoadedPages && getDisplayWindow().pagePlayer.arLoadedPages.length == 1) || (window.bPageLoaded && window.bLoadedVariables && !isSinglePagePlayerAvail() )){
+       if(typeof(updateFLVPlayer) !== 'undefined') updateFLVPlayer();
+       postPageShowAction();
+    }
+    else
+      setTimeout(loadActions, 100);
+}
+function postPageShowAction(){
+  if ( trivPageTracking.GetRangeStatus(362) == 'notstarted' ) trivPageTracking.SetRangeStatus(362,2);
+}  
+
+var trivGoToPage = null
+var trivCompleteCnt = 1;
+var hasProcessedExitActions = false;
+var trivActFBCnt = 0;
+var currFeedbackIdx = 0;
+var trivPageExited = false;
+var trivInTest = true;
+
+function finish() {
+    VarElapsedTime.uDT()
+    unloadPage(0, 'waishangshixuexingxiuke')
+}
+
+function trivOnFocus() {
+    if( trivPageExited ) return
+}
+
+function checkLeavePage() {
+    if( trivPageExited ) return
+    if( trivActFBCnt == 0 )
+    {
+        currFeedbackIdx++;
+        if( currFeedbackIdx > -1)
+        {
+            trivLeavePage();
+          return;
+        }
+        else if( !checkQuestions( true ))
+          return;
+    }
+    setTimeout( 'checkLeavePage()', 100)
+}
+
+function trivExitPage( newPage, bFeedback ) {
+    if( newPage.indexOf( "ObjLayerAction" ) >= 0 || newPage.indexOf( "javascript:app." ) >= 0 || newPage.indexOf( ".action" ) >= 0 || newPage.indexOf( "history.back()" ) >= 0) trivGoToPage = newPage
+    else trivGoToPage = 'ObjLayerActionGoTo("' + newPage + '")'
+    if( !hasProcessedExitActions ) {
+        findWH()
+        if( !checkQuestions( bFeedback ))
+          return
+        hasProcessedExitActions = true
+        setTimeout( 'checkLeavePage()', 100)
+    }
+}
+
+function trivLeavePage() {
+    trivCompleteCnt--
+    if( trivCompleteCnt <= 0 ) {
+        saveVariable( 'TrivantisEPS', 'T')
+        hasProcessedExitActions = false
+        if( trivGoToPage != null )
+        {
+			eval( trivGoToPage )
+			trivGoToPage = null;
+			if( window.closed ) trivPageExited = true;
+        }
+    }
+}
+
+function disableRC(e) {
+    var key;
+    if(is.ie) key = event.button;
+    else key = e.which;
+    if (key == 2 || key == 3) {
+        return false;
+    }
+}
+if(getDisplayDocument().layers) getDisplayDocument().captureEvents(Event.MOUSEDOWN);
+getDisplayDocument().onmousedown=disableRC;
+getDisplayDocument().oncontextmenu=new Function("return false");
+
+function disableCtrlK(e){
+    var arrKeys = new Array("a", "c", "u", "p");
+    var iCharCode;
+    var bCombo = false;
+    var bAllowPrint = false;
+    if(is.ie) { iCharCode = event.keyCode; e = event;}
+    else iCharCode = e.charCode;
+    if( e.keyCode == 45 ) bCombo = true;
+    var sChar = String.fromCharCode(iCharCode).toLowerCase();
+    if(e.ctrlKey) {
+        for( i = 0; i < arrKeys.length ;i++) {
+            if(bAllowPrint && arrKeys[i] == "p") continue;
+            if(arrKeys[i].toLowerCase() == sChar || bCombo) {
+                if(is.ie) e.returnValue = false;
+                else return false;
+            }
+        }
+    }
+}
+if(document.layers) document.captureEvents(Event.KEYPRESS | Event.KEYDOWN);
+if(is.ie) document.onkeydown=disableCtrlK
+else document.onkeypress=disableCtrlK
+
+document.onselectstart=new Function ("return false");
+
+trivProtected = true;
+
+function trivPrevPage() {
+}
+
+function trivNextPage() {
+    trivExitPage( 'page3605.html', true )
+}
+
+function trivUpdateTOC( bRecurse ) {
+    var i
+}
+
+function trivUpdateEntry() {
+}
+
+function trivResetEntry(entFld) {
+}
+
+function checkQuestions( bFeedback, bForce, bNotLeavingPage ) {
+  var onAfterFBAction = ( bNotLeavingPage ? (function(){trivActFBCnt--;}) : (function(){trivActFBCnt--;window.checkLeavePage();}) );
+  if( !bFeedback ) currFeedbackIdx = 0;
+
+  return 1
+}
+
+function OnDeviceRotate() {
+
+}
+
+function action2440(fn){
+    audio309.actionPlay(); 
+    if(fn && typeof(fn) == 'string' ) eval(fn);
+    else if(fn && typeof(fn) == 'function' ) fn();
+}
+
+function action2827(fn){
+    trivExitPage('page3605.html',true); 
+    if(fn && typeof(fn) == 'string' ) eval(fn);
+    else if(fn && typeof(fn) == 'function' ) fn();
+}
+
+function button2433onUp() {
+  action2440();action2827();
+}
+
+if( is.min ){
+anim253 = new ObjImage('anim253','images/hengpingts.gif',null,30,-78,53,52,1,16,'div',null, 0 )
+anim253.addIe8Attr(30, -78, 53, 52, 0, 0)
+anim253.build()
+
+audio309 = new ObjMedia('audio309',null,146,88,1,1,0,2,'media/music_click.mp3',0,0,0,0,1,0.800000,0,'div',0, 0 );
+audio309.BuildMediaString()
+audio309.build()
+
+image2739 = new ObjImage('image2739','images/fengmian.jpg',null,0,0,1920,1080,1,3,'div',null, 0 )
+image2739.initRotateAngle(0,0,0,0,0,0,0)
+image2739.initHasShadow(0)
+image2739.initHasReflection(0)
+image2739.addIe8Attr(0, 0, 1920, 1080, 0, 0)
+image2739.initImageMap(1,'0,0,1920,0,1920,1080,0,1080,0,0','M 0 0 L 1920 0 L 1920 1080 L 0 1080 L 0 0 z')
+image2739.addBorder(0)
+image2739.addOpacity(100)
+image2739.build()
+
+webwidget2768 = new ObjInline('webwidget2768',null,0,0,1920,1080,1,4,-2,'div', null, 0 , 0)
+webwidget2768.build()
+
+button2433 = new ObjButton('button2433', null,91,728,358.000000,118.000000,1,5,'div','',1,0)
+button2433.setUseSvgFile(1)
+button2433.setFillStyle(17)
+button2433.setUniqueFillID('page362_button2433')
+button2433.initRotateAngle(0,0,0,-0.000000,-0.000000,357,117)
+button2433.initHasShadow(0)
+button2433.initHasReflection(0)
+button2433.setImages({"disabledState":"images/button2433_disabled.png","downState":"images/button2433_down.png","normalState":"images/button2433.png","overState":"images/button2433_over.png"});
+button2433.setStateOpacity({"disabledState":0.60000002384185791,"downState":1,"normalState":1,"overState":1});
+button2433.addOpacity(100)
+button2433.initImageMap('0,0,357,0,357,117,0,117,0,0','M 0.000000 0.000000 L 357.000000 0.000000 L 357.000000 117.000000 L 0.000000 117.000000 L 0.000000 0.000000 z')
+button2433.setFills({"disabledState":{"fillInfo":"","stylePath":"fill:none;\""},"downState":{"fillInfo":"","stylePath":"fill:none;\""},"normalState":{"fillInfo":"","stylePath":"fill:none;\""},"overState":{"fillInfo":"","stylePath":"fill:none;\""}});
+button2433.setImgFillVal({"disabledState":{"B64":"images/kaishixuexi.png","fill":"                <pattern id=\"Picture_page362_button2433_disabledState\" x=\"0\" y=\"0\" width=\"358.000000\" height=\"118.000000\" patternUnits=\"userSpaceOnUse\">                <image xlink:href=\"images/kaishixuexi.png\" x=\"0\" y=\"0\" width=\"358.000000\" height=\"118.000000\"  preserveAspectRatio=\"none\"/>           </pattern>       ","style":"fill:url(#Picture_page362_button2433_disabledState)"},"downState":{"B64":"images/kaishixuexi_dj.png","fill":"                <pattern id=\"Picture_page362_button2433_downState\" x=\"0\" y=\"0\" width=\"358.000000\" height=\"118.000000\" patternUnits=\"userSpaceOnUse\">                <image xlink:href=\"images/kaishixuexi_dj.png\" x=\"0\" y=\"0\" width=\"358.000000\" height=\"118.000000\"  preserveAspectRatio=\"none\"/>           </pattern>       ","style":"fill:url(#Picture_page362_button2433_downState)"},"normalState":{"B64":"images/kaishixuexi.png","fill":"                <pattern id=\"Picture_page362_button2433\" x=\"0\" y=\"0\" width=\"358.000000\" height=\"118.000000\" patternUnits=\"userSpaceOnUse\">                <image xlink:href=\"images/kaishixuexi.png\" x=\"0\" y=\"0\" width=\"358.000000\" height=\"118.000000\"  preserveAspectRatio=\"none\"/>           </pattern>       ","style":"fill:url(#Picture_page362_button2433)"},"overState":{"B64":"images/kaishixuexi_dj.png","fill":"                <pattern id=\"Picture_page362_button2433_overState\" x=\"0\" y=\"0\" width=\"358.000000\" height=\"118.000000\" patternUnits=\"userSpaceOnUse\">                <image xlink:href=\"images/kaishixuexi_dj.png\" x=\"0\" y=\"0\" width=\"358.000000\" height=\"118.000000\"  preserveAspectRatio=\"none\"/>           </pattern>       ","style":"fill:url(#Picture_page362_button2433_overState)"}});
+button2433.initLineWeight('0')
+button2433.onUp = button2433onUp
+button2433.hasOnUp = true
+button2433.capture=4
+button2433.build()
+
+arObjs.push(anim253);
+arObjs.push(audio309);
+arObjs.push(image2739);
+arObjs.push(webwidget2768);
+arObjs.push(button2433);
+
+
+writeStyleSheets(arObjs);}
+// -->
+
+</script>
+</head>
+
+<body onfocus="trivOnFocus()" onResize="ReFlow()">
+
+    <DIV style="visibility:hidden;" id="pageDIV" class="pageDIV">
+<div id="webwidget2768"><a id="webwidget2768anc">
+
+<iframe width="1920" height="1080" src="extern/webwin2768/fengm.html" scrolling="no" allowTransparency="true" style="border:0px; overflow:hidden; background-color:transparent; " id="webwidget2768iframe"></iframe>
+</a></div>
+
+   </DIV>
+<script>
+if( is.min ){
+    findWH()
+    var left = (winW > 1920) ? (winW-1920)/2 : 0
+    document.write('<style type="text/css">.pageDIV { position: absolute; top:0px; left: ' + left + 'px; width:1920px; height:1080px; clip:rect(0px 1920px 1080px 0px); overflow:hidden;' )
+    if(is.iOS)
+		document.write('-webkit-text-size-adjust:100%;')
+    document.write('} </style>')
+}
+</script>
+
+<script>
+if( is.min ){
+    appendElement(anim253, null, null);
+    appendElement(audio309, null, null);
+    appendElement(image2739, null, null);
+    appendElement(button2433, null, null);
+}
+</script>
+
+</body>
+</html>

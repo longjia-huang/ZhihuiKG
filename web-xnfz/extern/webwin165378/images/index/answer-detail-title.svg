@@ -1,0 +1,17 @@
+<svg id="标题" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="31px" viewBox="0 0 185 31">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 32px;
+        fill: #6d67c2;
+        font-family: "Source Han Sans CN";
+        font-weight: 700;
+      }
+    </style>
+  </defs>
+  <text id="答题详情_" data-name="答题详情：" class="cls-1" x="39.999" y="28">答题详情：</text>
+  <g id="图标">
+    <image id="图层_606" data-name="图层 606" x="5" y="10" width="22" height="13" xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAANCAYAAACtpZ5jAAAAZ0lEQVQ4jc2RsQ2AMAwEz1EKJKhYjIkZhgEoaRMaLKWgeCIs+MaFz9bJtm1ddmAACjACBtSmHkC6enIyMN/A1tTpyUJP6hlSkhu7VxNqXERrZyQ+dZxC4n/1vO+Nq8i6qcSHGccsBk75hAs0tZTzQwAAAABJRU5ErkJggg=="/>
+    <image id="书_" data-name="书 " y="1" width="32" height="30" xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeCAYAAABNChwpAAAA20lEQVRIiWOcPvXlfQYGBnkGBgZGBtIAuvr/SDQIM2Ex7R+a+HsWBgYGBRItRrcQHTDi8Qy6owSxuZKugAWL68kNAUYkMVzRw4jGxxpPdAWUOIARDaMDDgYGhhRChqBHAbWAMQMDwxGoI8QGwgGnkdJEKz6FtEoDsOiRh+Z9ujvgBJR+zMDAcHEgHGCJxDbCp5DaaQBXOYKzfBnS5cCoA0YdMOqAUQeMOmDUAcPDAejtAVy9HWwAV9ufIgeQAsiyEJsDNjAwMOgxMDDwEGpCUxG8Y2Bg+MHAwPAEAF54HChWKSqsAAAAAElFTkSuQmCC"/>
+  </g>
+</svg>

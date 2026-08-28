@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="renderer" content="webkit" />
+  <meta name="referrer" content="no-referrer" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,minimal-ui" />
+  <title>资源加载</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden
+    }
+
+    #load_num {
+      position: absolute;
+      top: 50%;
+      margin-top: 20px;
+      left: 2px;
+      width: 100%;
+      text-align: center;
+      color: #000;
+      font-size: 13px;
+      font-family: 'Microsoft YaHei UI Light', 'Microsoft YaHei UI', Geneva, Arial, Helvetica, sans-serif
+    }
+  </style>
+  <script>
+    var preloadList
+  </script>
+</head>
+<body>
+<div id='preload_div' style='display: inline-block; height:100%; width: 100%; vertical-align:middle;position:absolute;left:0;top:0;text-align: center;'>
+  <span style='display: inline-block; height: 100%; vertical-align: middle;'></span>
+  <img alt="" src='images/_preloader.gif' style='vertical-align: middle; max-height: 100%' />
+  <span id="load_num">0%</span>
+</div>
+<script src='./preload.js'></script>
+<script>
+  var load_num = document.getElementById('load_num')
+
+  function init() {
+    if (preloadList) {
+      var max_task = 5 // 最大任务数量，测试限制300
+      var load_index = 0 // 已加载数
+      var load_next = 0 // 下一个文件序号
+      var load_len = preloadList.length // 总数
+      console.log('找到资源列表：' + load_len)
+
+      function changeProgress() {
+        load_index++
+        var num = (load_index / load_len) * 100 >> 0
+        num = num > 100 ? 100 : (num < 0 ? 0 : num)
+        load_num.innerHTML = num + '%'
+        // console.log('加载进度：' + num + '%',load_index + '/' + load_len);
+
+        if (load_next < load_len) {
+          loadFile(preloadList[load_next])
+        }
+        if (load_index < load_len) {
+          // console.log(load_index,load_next, load_len);
+        } else {
+          // console.log(load_index, load_len, '加载完成');
+          // 跳转下一页
+          window.parent.trivNextPage()
+        }
+      }
+
+      function loadImg(src) {
+        var img = new Image()
+        img.src = src
+        img.onload = img.onerror = function () {
+          changeProgress()
+        }
+      }
+
+      function loadAudio(src) {
+        var ajax = new XMLHttpRequest()
+        ajax.open('get', '' + src)
+        ajax.setRequestHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9')
+        ajax.setRequestHeader('Cache-Control', 'max-age=0')
+        ajax.responseType = 'blob'
+        ajax.send()
+        ajax.onreadystatechange = function () {
+          if (ajax.readyState === 4) {
+            // ajax.status === 200
+            changeProgress()
+          }
+        }
+      }
+
+      function loadFile(item) {
+        load_next++
+        var type = typeof item
+        var isString = type === 'string'
+        if (type === 'object' && item.type === 'audio') {
+          loadAudio(item.path)
+        } else if ((type === 'object' && item.type === 'image') || isString) {
+          loadImg(isString ? item : item.path)
+        }
+      }
+
+      preloadList.slice(0, max_task).forEach(loadFile)
+    } else {
+      console.log('未找到加载资源列表')
+      // 跳转下一页
+      window.parent.trivNextPage()
+    }
+  }
+
+  window.onload = function () {
+    init()
+  }
+</script>
+</body>
+</html>

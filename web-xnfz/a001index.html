@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content=" minimum-scale = 1.0 , initial-scale= 1" />
+<title>Trivantis Player</title>
+
+<link rel="stylesheet" href="trivantis-player.css" type="text/css" />
+
+<script type='text/javascript' src='trivantis-pageplayer.js'></script>
+
+<script type='text/javascript' src='trivantis-opautils.js'></script>
+
+<script type='text/javascript' src='trivantis.js'></script>
+
+<script type='text/javascript' src='es6-promise-2.0.0.min.js'></script>
+
+<script type='text/javascript' src='trivantis-cookie.js'></script>
+<script type='text/javascript' src="jquery-3.4.1.min.js"></script>
+<script type='text/javascript' src="mediaelement-and-player.js"></script>
+<script type='text/javascript' src='trivantis-media.js'></script>
+<script type='text/javascript' src='trivantis-strings.js' charset='UTF-8'></script>
+<style type="text/css">
+  @media print {body { display:none; }}
+  html, body, div, span, applet, object, h1, h2, h3, h4, h5, 		h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, 		q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, 		fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, 		canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, 		summary, time, mark, audio, video, article, aside, details, figcaption, figure, footer, header, hgroup, 		menu, nav, section, ins, del, form, input, textarea, select, button, option, optgroup, hr, br {
+			-webkit-touch-callout: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			}
+			:not(input):not(textarea){
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			}
+</style>
+
+<link rel="stylesheet" href="dialog.css" type="text/css" />
+<style type='text/css'>
+@media print {body { display:none; }}
+body { background-color:#ffffff; }
+</style>
+<script src="trivantis-strings.js" charset="UTF-8"></script>
+<script src="enc.js"></script>
+<script src="trivantis-titlemgr.js"></script>
+<script src="trivantis-titlemgr-interact.js"></script>
+<script src="trivantis-dialog.js"></script>
+<script src="aria-utils.js"></script>
+<script src="apiwrapper11.js"></script>
+<script src="scofunctions.js"></script>
+<script>
+
+<!-- 
+
+VarTrivSelCap = new Variable( 'VarTrivSelCap', 'none', 0, 0, null, null, 'waishangshixuexingxiuke', true )
+var pagePlayer = null;
+var bHasAutoStart = true;
+var audioPoolCount = 8;
+var videoPoolCount = 0;
+var bAutoStartOnFirstPage = false;
+if( is.ieMac )
+  document.write( '<font size=4>（注意：用于 Macintosh 的 Internet Explorer 上支持 JavaScript 访问小程序/AJAX。这是一种浏览器限制，上是课程材料的缺陷。因此，Macintosh IE 5 用户上能访问包含 JavaScript/AJAX 功能的课程材料。请尝试从非 Macintosh 计算机或 Macintosh 上的非 IE 浏览器访问该课程材料。</font><br /><br />' )
+else if( !is.min )
+  document.write( '<div class="noti" style="margin: 15px 0; box-shadow: 0 0 8px #888; background: #FFF4F4; text-align: center; padding: 2px;width: 750px;margin: auto;text-align: left;position: relative;clear: both;margin-bottom: 25px; font-family: &apos;Open Sans&apos;, sans-serif"><div class="whatnow" style="text-align: center; margin: 13px 25px; font-size: 20px; font-weight: 400;"><p style="margin: 13px 10px;">您的浏览器已经过时了。<p><p style="margin: 13px 10px;">请下载以下最新，免费和出色的浏览器之一，以查看此学习对象：</p></div><table class="logos" id="browserlist" style="width: 100%; border: none;"><tbody><tr><td class="b" style="vertical-align: top;padding: 10px;border: none;background: none;width: 25%;"><a class="l" style="display: block;padding: 4px;background-repeat: no-repeat;background-size: 110px auto;background-position: center 4px;text-decoration: underline;text-align: center;border: 2px solid transparent;position: relative;font-size: 1.8em" href="https://www.microsoft.com/en-us/windows/microsoft-edge" target="_blank" rel="noopener" title="从Microsoft官方网站下载更新的Edge Web浏览器！">Edge</a></td><td class="b" style="vertical-align: top;padding: 10px;border: none;background: none;width: 25%;"><a class="l" style="display: block;padding: 4px;background-repeat: no-repeat;background-size: 110px auto;background-position: center 4px;text-decoration: underline;text-align: center;border: 2px solid transparent;position: relative;font-size: 1.8em" href="https://www.mozilla.org/firefox/" target="_blank" rel="noopener" title="从Mozilla Foundation官方网站下载更新的Firefox Web浏览器！">Firefox</a></td><td class="b" style="vertical-align: top;padding: 10px;border: none;background: none;width: 25%;"><a class="l" style="display: block;padding: 4px;background-repeat: no-repeat;background-size: 110px auto;background-position: center 4px;text-decoration: underline;text-align: center;border: 2px solid transparent;position: relative;font-size: 1.8em" href="https://www.google.com/chrome/browser/desktop/" target="_blank" rel="noopener" title="从Google官方网站下载更新的Chrome网络浏览器！">Chrome</a></td><td class="b" style="vertical-align: top;padding: 10px;border: none;background: none;width: 25%;"><a class="l" style="display: block;padding: 4px;background-repeat: no-repeat;background-size: 110px auto;background-position: center 4px;text-decoration: underline;text-align: center;border: 2px solid transparent;position: relative;font-size: 1.8em" href="https://support.apple.com/downloads/safari" target="_blank" rel="noopener" title="从Apple官方网站下载更新的Safari Web浏览器">Safari</a></td></tr></tbody></table><div class="whatnow" style="text-align: center;margin: 13px 25px;font-size: 20px;font-weight: 400;"><p>更高的安全性，速度和舒适性</p></div><div class="whatnow-small" style="font-size: 15px;margin: 13px;text-align: center;font-weight: 300;"><p>可从供应商的官方网站下载该文件。</p></div></div><br /><br />' )
+
+trivProtected = true;
+trivWeb20Popups = true;
+trivSetupPage();
+
+onload = init
+
+
+function init() {
+	 pagePlayer = new jsPagePlayer();
+  var titleMgr = getTitleMgrHandle()
+  if( titleMgr ) {
+    var redirPage = null
+    titleMgr.bIntActs = true
+    titleMgr.bSCORM = true
+    titleMgr.bAddTimeStamp = false
+    titleMgr.scVers = 1
+    titleMgr.loadTest( '_tobj40', 'test40', null )
+    redirPage = 'page362.html';
+var jumpToPage = getQueryParams().jmptopg;
+    redirPage = jumpToPage ? jumpToPage : redirPage;
+    function cont() { pagePlayer.gotoPage(' ' + redirPage + ' '); }
+	 window.bAutoStartOnPage = bAutoStartOnFirstPage;
+	 enableAutoStart ( cont , t); 
+  }
+}
+// -->
+
+</script>
+</head>
+
+<body>
+<div id='mediaPool' style='z-index: 0; visibility: hidden;'></div>
+<audio id="mp3" autoplay="autoplay" loop="loop"><source src="bg.mp3" type="audio/mpeg"></audio>
+<audio id="mp3_2" loop="loop"><source src="bg2.mp3" type="audio/mpeg"></audio>
+<script>
+var mp3 = document.getElementById("mp3");
+var mp3_2 = document.getElementById("mp3_2");
+
+mp3_2.volume = 0.8;
+mp3.volume = 0.8;
+
+var playPromise = mp3.play();
+if (playPromise !== undefined) {
+  playPromise.catch(function(e) { /* autoplay blocked, will play on user interaction */ });
+}
+var mp3_check=1;
+function play_mp3(){
+if(mp3_check){
+ mp3_check=0;
+ mp3.play()
+ mp3_2.play();
+ mp3_2.pause();
+ }
+}
+window.addEventListener('mousedown',play_mp3);
+document.body.addEventListener('mousedown',play_mp3);
+document.addEventListener('mousedown',play_mp3);
+</script>
+</body>
+</html>
