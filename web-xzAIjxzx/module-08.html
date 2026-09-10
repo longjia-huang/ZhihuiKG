@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模块 08 · 智能体构建与情景模板</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="back-btn" href="index.html">← 返回总览</a>
+  <div class="topbar-title" id="topbar-title">模块 08 · 智能体构建与情景模板</div>
+  <div class="topbar-meta" id="topbar-meta"></div>
+  <div class="step-nav">
+    <button class="step-btn" id="btn-prev"></button>
+    <button class="step-btn" id="btn-next"></button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="content">
+    <div class="page-head">
+      <span class="requirement-tag">▲ 响应项 8 · 专属智能体</span>
+      <h1>智能体构建与情景模板</h1>
+      <p class="sub">支持<b>结合课程内容自动构建专属智能体</b>，也支持选择<b>对话情景模板</b>（如辩论赛场、临床问诊室等）快速创建，按课程生命周期形成智能体部署生态；支持设置<b>场景对话模板</b>与<b>考核评分标准</b>，对话界面可<b>自定义对话框颜色及背景</b>并实时预览。</p>
+    </div>
+
+    <!-- 情景模板 -->
+    <div class="card">
+      <div class="card-head"><h2>对话情景模板</h2><button class="btn btn-soft btn-sm" onclick="autoBuild()">🤖 结合课程内容自动构建</button></div>
+      <div class="grid grid-4" id="template-grid"></div>
+    </div>
+
+    <div class="grid" style="grid-template-columns: 1fr 1fr; align-items:start;">
+      <!-- 配置 -->
+      <div class="card">
+        <div class="card-head"><h2>智能体配置</h2><span class="badge badge-blue" id="agent-name">辩论赛场</span></div>
+
+        <div class="field">
+          <label>场景对话模板（角色与开场白）</label>
+          <textarea class="textarea" id="f-scene" style="min-height:90px;"></textarea>
+        </div>
+
+        <div class="field">
+          <label>考核评分标准</label>
+          <div id="score-dims"></div>
+          <button class="btn btn-outline btn-sm mt-8" onclick="addDim()">＋ 添加评分维度</button>
+        </div>
+
+        <div class="field">
+          <label>对话框颜色</label>
+          <div class="color-dots" id="color-picker"></div>
+        </div>
+
+        <div class="field">
+          <label>对话框背景</label>
+          <div class="color-dots" id="bg-picker"></div>
+        </div>
+
+        <button class="btn btn-primary btn-block" onclick="saveAgent()">💾 保存智能体</button>
+      </div>
+
+      <!-- 预览 -->
+      <div class="card">
+        <div class="card-head"><h2>对话界面预览</h2><span class="badge badge-green">实时预览</span></div>
+        <div class="preview-chat" id="preview">
+          <div class="pc-head">
+            <div class="avatar-d" style="width:42px;height:42px;font-size:20px;">🤖</div>
+            <div><div style="font-weight:700;font-size:14px;" id="pv-name">辩论赛场智能体</div><div class="small muted">课程专属 · 情景对话</div></div>
+          </div>
+          <div class="pc-body" id="pv-body"></div>
+          <div class="pc-foot"><input class="input" placeholder="输入对话内容…" disabled><button class="btn btn-primary btn-sm" disabled>发送</button></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+/* ---------- 模块8：智能体构建与情景模板 ---------- */
+var templates = [
+  { name: '辩论赛场', icon: '⚔️', desc: '围绕课程议题开展正反方辩论', scene: '你是一位辩论赛评委智能体，请就「人工智能是否会取代多数人类工作」组织正反双方辩论，并对双方论点、逻辑与表达进行点评。', dims: [{ n: '论点清晰度', score: 30 }, { n: '逻辑严密性', score: 30 }, { n: '表达感染力', score: 20 }, { n: '临场应变', score: 20 }] },
+  { name: '临床问诊室', icon: '🩺', desc: '模拟医患问诊对话训练', scene: '你扮演一位门诊医生，请模拟「慢性咳嗽」的临床问诊流程，通过系统化提问收集病史并给出初步诊断建议。', dims: [{ n: '问诊完整性', score: 40 }, { n: '专业术语运用', score: 30 }, { n: '沟通亲和力', score: 30 }] },
+  { name: '客服咨询台', icon: '🎧', desc: '模拟客户服务与投诉处理', scene: '你是一位电商客服智能体，请针对「订单延迟发货」的客户投诉进行沟通，安抚情绪并给出解决方案。', dims: [{ n: '问题解决', score: 40 }, { n: '服务态度', score: 30 }, { n: '响应效率', score: 30 }] },
+  { name: '面试模拟官', icon: '💼', desc: '模拟技术面试问答', scene: '你是一位技术面试官，请针对「前端开发」岗位开展模拟面试，考察基础知识、项目经验与问题解决能力。', dims: [{ n: '专业能力', score: 40 }, { n: '项目经验', score: 30 }, { n: '沟通表达', score: 30 }] }
+];
+var currentTemplate = templates[0];
+var colors = ['#4f46e5', '#0ea5e9', '#16a34a', '#d97706', '#dc2626', '#7c3aed', '#0f172a', '#64748b'];
+var bgs = ['#ffffff', '#f5f7ff', '#eef9ff', '#ecfdf5', '#fff7ed', '#fdf2f8', '#1e293b', '#fefce8'];
+
+function renderTemplates() {
+  var box = document.getElementById('template-grid');
+  box.innerHTML = templates.map(function (t, i) {
+    return '<div class="module-card" style="padding:16px;cursor:pointer;' + (t === currentTemplate ? 'border-color:#6366f1;box-shadow:var(--shadow-sm);' : '') + '" onclick="selectTemplate(' + i + ')">'
+      + '<div class="mc-icon">' + t.icon + '</div><h3>' + t.name + '</h3><p>' + t.desc + '</p></div>';
+  }).join('');
+}
+
+function selectTemplate(i) {
+  currentTemplate = templates[i];
+  renderTemplates();
+  loadForm();
+  renderPreview();
+}
+
+function renderColors() {
+  document.getElementById('color-picker').innerHTML = colors.map(function (c) {
+    return '<div class="color-dot" style="background:' + c + ';" data-c="' + c + '" onclick="pickColor(\'' + c + '\')"></div>';
+  }).join('');
+  document.getElementById('bg-picker').innerHTML = bgs.map(function (c) {
+    return '<div class="color-dot" style="background:' + c + ';" data-b="' + c + '" onclick="pickBg(\'' + c + '\')"></div>';
+  }).join('');
+}
+
+function renderDims() {
+  var box = document.getElementById('score-dims');
+  box.innerHTML = currentTemplate.dims.map(function (d, i) {
+    return '<div class="var-item" style="display:flex;gap:8px;margin-bottom:8px;align-items:center;">'
+      + '<input class="input" style="flex:1;" value="' + esc(d.n) + '" data-dim="' + i + '">'
+      + '<input class="input" type="number" min="0" max="100" style="width:80px;" value="' + d.score + '" data-score="' + i + '">'
+      + '<span class="small muted">分</span>'
+      + '<button class="btn btn-danger btn-sm" onclick="delDim(' + i + ')">删除</button></div>';
+  }).join('');
+  box.querySelectorAll('[data-dim]').forEach(function (el) { el.addEventListener('input', function () { currentTemplate.dims[+el.dataset.dim].n = el.value; }); });
+  box.querySelectorAll('[data-score]').forEach(function (el) { el.addEventListener('input', function () { currentTemplate.dims[+el.dataset.score].score = +el.value || 0; }); });
+}
+function addDim() { currentTemplate.dims.push({ n: '新评分维度', score: 10 }); renderDims(); }
+function delDim(i) { currentTemplate.dims.splice(i, 1); renderDims(); }
+
+var pickedColor = colors[0];
+var pickedBg = bgs[0];
+function pickColor(c) { pickedColor = c; renderColors(); document.querySelector('[data-c="' + c + '"]').classList.add('active'); renderPreview(); }
+function pickBg(c) { pickedBg = c; renderColors(); document.querySelector('[data-b="' + c + '"]').classList.add('active'); renderPreview(); }
+
+function loadForm() {
+  document.getElementById('agent-name').textContent = currentTemplate.name;
+  document.getElementById('f-scene').value = currentTemplate.scene;
+  renderDims();
+}
+
+function renderPreview() {
+  var p = document.getElementById('preview');
+  p.style.background = pickedBg;
+  var head = p.querySelector('.pc-head'); var foot = p.querySelector('.pc-foot');
+  head.style.background = pickedBg; foot.style.background = pickedBg;
+  document.getElementById('pv-name').textContent = currentTemplate.name + '智能体';
+  document.getElementById('pv-body').innerHTML =
+    '<div class="chat-msg bot" style="background:' + pickedColor + ';color:#fff;border:none;">' + esc(currentTemplate.scene.slice(0, 40)) + '…</div>'
+    + '<div class="chat-msg user">我准备好开始对话了。</div>';
+}
+
+function saveAgent() {
+  currentTemplate.scene = document.getElementById('f-scene').value;
+  toast('智能体「' + currentTemplate.name + '」已保存', 'success');
+}
+function autoBuild() {
+  toast('已结合课程内容自动构建专属智能体（演示）', 'success');
+  renderPreview();
+}
+
+function onModuleReady() { renderTemplates(); renderColors(); loadForm(); renderPreview(); }
+</script>
+</body>
+</html>

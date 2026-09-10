@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模块 01 · 课程能力目标编辑</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="back-btn" href="index.html">← 返回总览</a>
+  <div class="topbar-title" id="topbar-title">模块 01 · 课程能力目标编辑</div>
+  <div class="topbar-meta" id="topbar-meta"></div>
+  <div class="step-nav">
+    <button class="step-btn" id="btn-prev"></button>
+    <button class="step-btn" id="btn-next"></button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="content">
+    <div class="page-head">
+      <span class="requirement-tag">※ 响应项 1 · 课程能力目标</span>
+      <h1>课程能力目标编辑</h1>
+      <p class="sub">支持编辑课程能力目标，设置能力目标时可针对「能力目标名称」「能力目标描述」「子能力目标名称」「子能力目标描述」进行编辑，并支持添加<b>关联问题</b>与<b>知识点</b>。</p>
+    </div>
+
+    <div class="grid" style="grid-template-columns: 1.15fr .85fr; align-items:start;">
+      <!-- 左：能力目标列表 -->
+      <div>
+        <div class="card">
+          <div class="card-head">
+            <div><h2>能力目标列表</h2><div class="hint">点击任意目标可在右侧编辑，或新建目标</div></div>
+            <button class="btn btn-primary" onclick="newGoal()">＋ 新建能力目标</button>
+          </div>
+          <div id="goal-list"></div>
+        </div>
+      </div>
+
+      <!-- 右：编辑面板 -->
+      <div>
+        <div class="card" id="edit-card">
+          <div class="card-head"><h2 id="edit-title">编辑能力目标</h2><span class="badge badge-blue" id="edit-id-badge">目标 #1</span></div>
+
+          <div class="field"><label>能力目标名称 <span class="req">*</span></label><input class="input" id="f-name" placeholder="例如：掌握面向对象程序设计"></div>
+          <div class="field"><label>能力目标描述 <span class="req">*</span></label><textarea class="textarea" id="f-desc" placeholder="描述该能力目标希望达成的结果…"></textarea></div>
+
+          <div class="divider"></div>
+          <div class="flex-between mb-14">
+            <h3 style="margin:0;">子能力目标</h3>
+            <button class="btn btn-outline btn-sm" onclick="addSub()">＋ 添加子能力目标</button>
+          </div>
+          <div id="sub-list"></div>
+
+          <div class="divider"></div>
+          <div class="flex-between mb-14">
+            <h3 style="margin:0;">关联问题</h3>
+            <button class="btn btn-outline btn-sm" onclick="addRelated('q')">＋ 添加关联问题</button>
+          </div>
+          <div id="rel-q-list"></div>
+
+          <div class="divider"></div>
+          <div class="flex-between mb-14">
+            <h3 style="margin:0;">关联知识点</h3>
+            <button class="btn btn-outline btn-sm" onclick="addRelated('k')">＋ 添加关联知识点</button>
+          </div>
+          <div id="rel-k-list"></div>
+
+          <div class="mt-20 flex" style="gap:10px;">
+            <button class="btn btn-primary grow" onclick="saveGoal()">💾 保存能力目标</button>
+            <button class="btn btn-outline" onclick="resetForm()">重置</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+/* ---------- 模块1：课程能力目标编辑 ---------- */
+var goals = [
+  {
+    id: 1,
+    name: '掌握面向对象程序设计',
+    desc: '能够理解并运用类、对象、继承与多态等核心概念，完成小型业务系统的设计与实现。',
+    subs: [
+      { name: '类的定义与实例化', desc: '能够定义类并创建、使用对象' },
+      { name: '继承与多态', desc: '能够通过继承复用代码并实现多态调用' }
+    ],
+    questions: ['什么是多态？它在程序中如何体现？'],
+    points: ['面向对象', '继承', '多态']
+  },
+  {
+    id: 2,
+    name: '具备数据分析与可视化能力',
+    desc: '能够使用常用工具对数据进行清洗、统计分析，并输出可视化图表以辅助决策。',
+    subs: [
+      { name: '数据清洗', desc: '能够识别并处理缺失值与异常值' }
+    ],
+    questions: [],
+    points: ['数据可视化', '数据清洗']
+  },
+  {
+    id: 3,
+    name: '具备数据库设计与优化能力',
+    desc: '能够完成数据库概念模型与逻辑模型设计，并对常用查询进行性能优化。',
+    subs: [],
+    questions: ['如何为高频查询建立索引？'],
+    points: ['数据库设计', '索引优化']
+  }
+];
+var currentId = goals[0].id;
+
+function renderList() {
+  var box = document.getElementById('goal-list');
+  var html = '';
+  goals.forEach(function (g) {
+    var active = g.id === currentId ? ' style="border-color:#6366f1;box-shadow:var(--shadow-sm);"' : '';
+    html += '<div class="list-item"' + active + ' onclick="selectGoal(' + g.id + ')">'
+      + '<div class="li-ico">🎯</div>'
+      + '<div class="li-main">'
+      + '<div class="li-title">' + esc(g.name) + '</div>'
+      + '<div class="li-desc">' + esc(g.desc) + '</div>'
+      + '<div class="mt-8" style="display:flex;gap:6px;flex-wrap:wrap;">'
+      + '<span class="badge badge-gray">子目标 ' + g.subs.length + '</span>'
+      + '<span class="badge badge-blue">问题 ' + g.questions.length + '</span>'
+      + '<span class="badge badge-green">知识点 ' + g.points.length + '</span>'
+      + '</div></div>'
+      + '<button class="btn btn-danger btn-sm" onclick="event.stopPropagation();delGoal(' + g.id + ')">删除</button>'
+      + '</div>';
+  });
+  if (!html) html = '<div class="empty"><div class="ico">📭</div>暂无能力目标，点击右上角新建</div>';
+  box.innerHTML = html;
+}
+
+function findGoal(id) { return goals.find(function (g) { return g.id === id; }); }
+
+function selectGoal(id) {
+  currentId = id;
+  loadForm();
+  renderList();
+}
+
+function loadForm() {
+  var g = findGoal(currentId);
+  if (!g) return;
+  document.getElementById('edit-id-badge').textContent = '目标 #' + g.id;
+  document.getElementById('f-name').value = g.name;
+  document.getElementById('f-desc').value = g.desc;
+  renderSubs();
+  renderRel();
+}
+
+function renderSubs() {
+  var g = findGoal(currentId);
+  var box = document.getElementById('sub-list');
+  var html = '';
+  g.subs.forEach(function (s, i) {
+    html += '<div class="list-item" style="padding:10px 12px;">'
+      + '<div class="li-main">'
+      + '<input class="input" style="margin-bottom:6px;" value="' + esc(s.name) + '" placeholder="子能力目标名称" data-sub-name="' + i + '">'
+      + '<textarea class="textarea" style="min-height:44px;" placeholder="子能力目标描述" data-sub-desc="' + i + '">' + esc(s.desc) + '</textarea>'
+      + '</div>'
+      + '<button class="btn btn-danger btn-sm" onclick="delSub(' + i + ')">移除</button>'
+      + '</div>';
+  });
+  if (!html) html = '<div class="empty" style="padding:14px;">暂无子能力目标</div>';
+  box.innerHTML = html;
+  box.querySelectorAll('[data-sub-name]').forEach(function (el) {
+    el.addEventListener('input', function () { var g = findGoal(currentId); g.subs[+el.dataset.subName].name = el.value; });
+  });
+  box.querySelectorAll('[data-sub-desc]').forEach(function (el) {
+    el.addEventListener('input', function () { var g = findGoal(currentId); g.subs[+el.dataset.subDesc].desc = el.value; });
+  });
+}
+
+function addSub() {
+  findGoal(currentId).subs.push({ name: '', desc: '' });
+  renderSubs();
+}
+function delSub(i) {
+  findGoal(currentId).subs.splice(i, 1);
+  renderSubs();
+}
+
+function renderRel() {
+  var g = findGoal(currentId);
+  var qbox = document.getElementById('rel-q-list');
+  var kbox = document.getElementById('rel-k-list');
+  var qh = '';
+  g.questions.forEach(function (q, i) {
+    qh += '<div class="list-item" style="padding:8px 12px;">'
+      + '<span class="li-main small">' + esc(q) + '</span>'
+      + '<button class="btn btn-danger btn-sm" onclick="delRel(\'q\',' + i + ')">移除</button></div>';
+  });
+  qbox.innerHTML = qh || '<div class="empty" style="padding:12px;">暂无关联问题</div>';
+  var kh = '';
+  g.points.forEach(function (p, i) {
+    kh += '<span class="tag" style="margin:3px;">' + esc(p) + '<i onclick="delRel(\'k\',' + i + ')">✕</i></span>';
+  });
+  kbox.innerHTML = kh || '<div class="empty" style="padding:12px;">暂无关联知识点</div>';
+}
+
+function addRelated(type) {
+  var g = findGoal(currentId);
+  var label = type === 'q' ? '关联问题' : '关联知识点';
+  var val = prompt('请输入' + label + '内容：');
+  if (val && val.trim()) {
+    if (type === 'q') g.questions.push(val.trim());
+    else g.points.push(val.trim());
+    renderRel();
+  }
+}
+function delRel(type, i) {
+  var g = findGoal(currentId);
+  if (type === 'q') g.questions.splice(i, 1); else g.points.splice(i, 1);
+  renderRel();
+}
+
+function saveGoal() {
+  var g = findGoal(currentId);
+  var name = document.getElementById('f-name').value.trim();
+  var desc = document.getElementById('f-desc').value.trim();
+  if (!name) { toast('请填写能力目标名称', 'warn'); return; }
+  g.name = name;
+  g.desc = desc || '（未填写描述）';
+  renderList();
+  toast('能力目标「' + name + '」已保存', 'success');
+}
+
+function newGoal() {
+  var id = goals.length ? Math.max.apply(null, goals.map(function (g) { return g.id; })) + 1 : 1;
+  goals.push({ id: id, name: '新建能力目标', desc: '请编辑目标名称与描述', subs: [], questions: [], points: [] });
+  currentId = id;
+  renderList();
+  loadForm();
+  toast('已新建能力目标，请在右侧编辑', 'success');
+}
+
+function delGoal(id) {
+  if (!confirm('确认删除该能力目标？')) return;
+  goals = goals.filter(function (g) { return g.id !== id; });
+  if (goals.length === 0) { currentId = null; document.getElementById('f-name').value = ''; document.getElementById('f-desc').value = ''; document.getElementById('sub-list').innerHTML = ''; document.getElementById('rel-q-list').innerHTML = ''; document.getElementById('rel-k-list').innerHTML = ''; }
+  else if (currentId === id) { currentId = goals[0].id; loadForm(); }
+  renderList();
+  toast('能力目标已删除', 'success');
+}
+
+function resetForm() {
+  var g = findGoal(currentId);
+  if (g) { g.subs = []; g.questions = []; g.points = []; }
+  loadForm();
+  toast('已重置子目标与关联项', 'success');
+}
+
+function onModuleReady() { renderList(); loadForm(); }
+</script>
+</body>
+</html>

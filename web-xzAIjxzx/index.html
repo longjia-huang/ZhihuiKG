@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 智慧教学平台 · 功能演示总览</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="logo">智</span><span>AI 智慧教学平台 · 功能演示</span></div>
+  <div class="topbar-meta" id="topbar-meta"></div>
+</header>
+
+<div class="layout" style="display:block;">
+  <div class="content" style="max-width:1240px; margin:0 auto;">
+    <div class="hero">
+      <h1>AI 智慧教学平台 · 十大核心功能演示</h1>
+      <p>本演示严格依据《响应 demo 项》文档中的 10 项功能需求构建，逐项以「产品界面 + 文字说明 + 可交互操作」的方式呈现，覆盖能力目标、知识二维码、AI 伴学、特色指令、AI 出题、建设进度、举手提问、智能体构建、测评任务与题库管理等全部功能项。</p>
+      <div class="hero-stats">
+        <div class="hs"><div class="n">10</div><div class="t">功能模块</div></div>
+        <div class="hs"><div class="n">100%</div><div class="t">文档需求覆盖</div></div>
+        <div class="hs"><div class="n">原生</div><div class="t">HTML+CSS+JS 实现</div></div>
+        <div class="hs"><div class="n">0</div><div class="t">外部框架依赖</div></div>
+      </div>
+    </div>
+
+    <h2 style="margin-bottom:16px;">功能模块目录（按文档顺序）</h2>
+    <div class="module-grid" id="module-grid"></div>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+var GRID_DESC = [
+  '支持编辑课程能力目标，设置名称、描述、子能力目标，并可关联问题与知识点。',
+  '自动构建课程与章节知识点二维码/链接，免登录完成知识学习，手机扫码即可学习。',
+  '基于课程知识库训练大语言模型，提供智能答疑、知识点讲解、学情分析等伴学能力。',
+  '教师可创建个人专属课程特色指令，支持简单指令与复杂指令两种模式，并可对学生开放。',
+  '支持按知识点与参考内容两种模式 AI 出题，覆盖单选、多选、判断、填空四种题型。',
+  '根据知识点建设实际生成建设进度清单，以 0%–100% 维度呈现完成度与统计。',
+  '学生对视频内容举手提问，自动截取画面发送 AI 学伴，支持语音播放、点赞点踩等操作。',
+  '结合课程内容自动构建专属智能体，支持情景模板创建、评分标准与对话界面自定义。',
+  '开设智能体测评任务，支持班级发布、起止时间、计分评级，并查看学生完成详情。',
+  '题目支持重新生成与加入题库，可编辑题干、答案、解析、类型、难度、知识点与标签。'
+];
+(function () {
+  var grid = document.getElementById('module-grid');
+  var html = '';
+  MODULES.forEach(function (m, i) {
+    html += '<a class="module-card" href="' + m.file + '" style="color:inherit;">'
+      + '<div class="mc-top"><span class="mc-num">模块 ' + m.id + ' / 10</span><span class="mc-icon">' + m.icon + '</span></div>'
+      + '<h3>' + m.title + '</h3>'
+      + '<p>' + GRID_DESC[i] + '</p>'
+      + '<span class="mc-go">进入模块 →</span>'
+      + '</a>';
+  });
+  grid.innerHTML = html;
+  document.getElementById('topbar-meta').textContent = '共 ' + MODULES.length + ' 个功能模块';
+})();
+</script>
+</body>
+</html>

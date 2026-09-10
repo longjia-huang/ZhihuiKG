@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模块 02 · 知识二维码生成</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="back-btn" href="index.html">← 返回总览</a>
+  <div class="topbar-title" id="topbar-title">模块 02 · 知识二维码生成</div>
+  <div class="topbar-meta" id="topbar-meta"></div>
+  <div class="step-nav">
+    <button class="step-btn" id="btn-prev"></button>
+    <button class="step-btn" id="btn-next"></button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="content">
+    <div class="page-head">
+      <span class="requirement-tag">※ 响应项 2 · 知识二维码</span>
+      <h1>知识二维码生成</h1>
+      <p class="sub">系统自动构建课程知识点与章节知识点<b>二维码 / 链接</b>，可<b>免登录</b>完成知识学习；学习内容包含<b>动态知识图谱、知识点资源、知识点简介、知识点结构关系</b>，资源可直接通过手机学习（如微信扫码）。</p>
+    </div>
+
+    <div class="grid" style="grid-template-columns: .9fr 1.1fr; align-items:start;">
+      <!-- 左：章节知识点 -->
+      <div class="card">
+        <div class="card-head"><h2>课程章节与知识点</h2><span class="badge badge-blue">点击生成</span></div>
+        <div id="knode-list"></div>
+      </div>
+
+      <!-- 右：二维码 + 免登录学习预览 -->
+      <div>
+        <div class="card">
+          <div class="card-head"><h2>生成二维码 / 链接</h2><span class="badge badge-green" id="cur-node">未选择</span></div>
+          <div class="flex" style="gap:20px; flex-wrap:wrap;">
+            <div class="qr-box" id="qr-box"></div>
+            <div class="grow">
+              <div class="field"><label>知识链接（免登录）</label><input class="input" id="k-link" readonly></div>
+              <div class="flex" style="gap:8px; flex-wrap:wrap;">
+                <button class="btn btn-primary" onclick="copyLink()">复制链接</button>
+                <button class="btn btn-outline" onclick="regenerate()">重新生成二维码</button>
+              </div>
+              <div class="hint mt-8">演示二维码由前端脚本按知识点实时生成，实际产品由系统自动构建并支持微信扫码直达。</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 手机预览 -->
+        <div class="card">
+          <div class="card-head"><h2>免登录学习页 · 手机预览</h2><span class="badge badge-blue">动态知识图谱</span></div>
+          <div class="grid" style="grid-template-columns: 1fr 1fr; gap:16px;">
+            <div>
+              <h3>知识点简介</h3>
+              <div class="small muted" id="k-intro" style="min-height:70px;">请先在左侧选择一个知识点。</div>
+              <div class="divider"></div>
+              <h3>知识点结构关系</h3>
+              <div id="k-struct" class="small muted">—</div>
+            </div>
+            <div>
+              <h3>动态知识图谱</h3>
+              <svg id="k-graph" viewBox="0 0 320 200" style="width:100%; border:1px solid var(--border); border-radius:10px; background:#f8fafc;"></svg>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <h3>知识点资源（手机可直接学习）</h3>
+          <div id="k-resources"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+/* ---------- 模块2：知识二维码生成 ---------- */
+var nodes = [
+  { id: 'k1', name: '第一章 · 面向对象基础', type: 'chapter', children: ['k1-1', 'k1-2', 'k1-3'] },
+  { id: 'k1-1', name: '知识点：类与对象', type: 'kp', parent: '第一章' },
+  { id: 'k1-2', name: '知识点：继承', type: 'kp', parent: '第一章' },
+  { id: 'k1-3', name: '知识点：多态', type: 'kp', parent: '第一章' },
+  { id: 'k2', name: '第二章 · 数据可视化', type: 'chapter', children: ['k2-1', 'k2-2'] },
+  { id: 'k2-1', name: '知识点：图表类型', type: 'kp', parent: '第二章' },
+  { id: 'k2-2', name: '知识点：数据清洗', type: 'kp', parent: '第二章' }
+];
+
+var nodeMeta = {
+  'k1-1': { intro: '类（Class）是面向对象编程的核心，对象（Object）是类的实例。本知识点讲解类的定义、构造方法、成员变量与成员方法的使用。', struct: '上级：第一章 面向对象基础 → 本级：类与对象 → 下级：无', resources: ['《类与对象》微课视频（8 分钟）', '图文讲义：类的定义', '随堂测验：对象的创建', '拓展阅读：this 关键字'] },
+  'k1-2': { intro: '继承（Inheritance）允许一个类复用另一个类的属性和方法，是代码复用的重要机制。', struct: '上级：第一章 面向对象基础 → 本级：继承 → 下级：方法重写', resources: ['《继承机制》微课视频（6 分钟）', '案例：学生/教师类继承', '课后练习：方法重写'] },
+  'k1-3': { intro: '多态（Polymorphism）指同一接口在不同对象上呈现不同行为，是面向对象三大特性之一。', struct: '上级：第一章 面向对象基础 → 本级：多态 → 下级：抽象类与接口', resources: ['《多态与接口》微课视频（10 分钟）', '案例：动物叫声模拟', '测验：向上转型与向下转型'] },
+  'k2-1': { intro: '图表类型讲解常见可视化图表（柱状图、折线图、饼图、散点图）的适用场景与选择原则。', struct: '上级：第二章 数据可视化 → 本级：图表类型 → 下级：图表美化', resources: ['《图表选择》微课视频（7 分钟）', '示例：销售数据图表', '练习：为数据集选择图表'] },
+  'k2-2': { intro: '数据清洗是数据分析的前置步骤，包括缺失值处理、异常值识别与数据去重。', struct: '上级：第二章 数据可视化 → 本级：数据清洗 → 下级：缺失值插补', resources: ['《数据清洗》微课视频（9 分钟）', '案例：电商订单清洗', '练习：处理缺失值'] }
+};
+
+var current = null;
+
+function renderNodes() {
+  var box = document.getElementById('knode-list');
+  var html = '';
+  nodes.forEach(function (n) {
+    var isChapter = n.type === 'chapter';
+    var active = current && current.id === n.id;
+    html += '<div class="list-item" style="padding:9px 12px;' + (active ? 'border-color:#6366f1;box-shadow:var(--shadow-sm);' : '') + '">'
+      + '<div class="li-ico" style="' + (isChapter ? 'background:#e0e7ff;' : '') + '">' + (isChapter ? '📁' : '📄') + '</div>'
+      + '<div class="li-main" onclick="selectNode(\'' + n.id + '\')" style="cursor:pointer;">'
+      + '<div class="li-title" style="font-size:13.5px;">' + esc(n.name) + '</div>'
+      + '</div></div>';
+  });
+  box.innerHTML = html;
+}
+
+function selectNode(id) {
+  var n = nodes.find(function (x) { return x.id === id; });
+  if (n.type === 'chapter') { toast('章节节点将聚合其下全部知识点', 'success'); }
+  current = n;
+  document.getElementById('cur-node').textContent = n.name;
+  document.getElementById('k-link').value = 'https://demo.ai-teach.cn/knowledge/' + n.id + '?open=1';
+  document.getElementById('qr-box').innerHTML = makeQR(n.id + '|' + n.name);
+  renderNodes();
+  // 预览
+  var meta = nodeMeta[n.id];
+  if (meta) {
+    document.getElementById('k-intro').textContent = meta.intro;
+    document.getElementById('k-struct').textContent = meta.struct;
+    document.getElementById('k-resources').innerHTML = meta.resources.map(function (r, i) {
+      return '<div class="list-item" style="padding:8px 12px;"><div class="li-ico" style="background:#dcfce7;">▶</div><div class="li-main"><div class="li-title" style="font-size:13px;">' + esc(r) + '</div><div class="li-desc">免登录 · 手机可播放</div></div></div>';
+    }).join('');
+    drawGraph(n.id);
+  } else {
+    // 章节：聚合子知识点
+    var kids = n.children.map(function (c) { return nodeMeta[c]; }).filter(Boolean);
+    document.getElementById('k-intro').textContent = n.name + ' 聚合以下知识点，扫码后可整体学习本章节内容。';
+    document.getElementById('k-struct').textContent = '本章节包含：' + n.children.map(function (c) { return nodes.find(function (x) { return x.id === c; }).name; }).join('、');
+    document.getElementById('k-resources').innerHTML = kids.flatMap(function (k) { return k.resources.slice(0, 1); }).map(function (r) {
+      return '<div class="list-item" style="padding:8px 12px;"><div class="li-ico" style="background:#dcfce7;">▶</div><div class="li-main"><div class="li-title" style="font-size:13px;">' + esc(r) + '</div><div class="li-desc">免登录 · 手机可播放</div></div></div>';
+    }).join('');
+    drawGraph(n.id, true);
+  }
+}
+
+function drawGraph(id, chapter) {
+  var svg = document.getElementById('k-graph');
+  var meta = nodeMeta[id];
+  var rootLabel = chapter ? nodes.find(function (x) { return x.id === id; }).name.split(' · ')[1] || '章节' : (meta ? id : '');
+  // 简单三层知识图谱
+  var nodesArr = [
+    { x: 160, y: 30, r: 30, label: rootLabel, c: '#4f46e5' },
+    { x: 70, y: 120, r: 22, label: '前置知识', c: '#0ea5e9' },
+    { x: 250, y: 120, r: 22, label: '核心概念', c: '#16a34a' },
+    { x: 160, y: 180, r: 20, label: '应用', c: '#d97706' }
+  ];
+  var edges = [[0,1],[0,2],[1,3],[2,3]];
+  var s = '';
+  edges.forEach(function (e) {
+    var a = nodesArr[e[0]], b = nodesArr[e[1]];
+    s += '<line x1="' + a.x + '" y1="' + a.y + '" x2="' + b.x + '" y2="' + b.y + '" stroke="#cbd5e1" stroke-width="1.5"/>';
+  });
+  nodesArr.forEach(function (n) {
+    s += '<circle cx="' + n.x + '" cy="' + n.y + '" r="' + n.r + '" fill="' + n.c + '" opacity="0.15"/>';
+    s += '<circle cx="' + n.x + '" cy="' + n.y + '" r="' + n.r + '" fill="none" stroke="' + n.c + '" stroke-width="2"/>';
+    s += '<text x="' + n.x + '" y="' + (n.y + 4) + '" text-anchor="middle" font-size="11" fill="#1e293b" font-weight="700">' + n.label + '</text>';
+  });
+  svg.innerHTML = s;
+}
+
+function copyLink() {
+  if (!current) { toast('请先选择一个知识点', 'warn'); return; }
+  copyText(document.getElementById('k-link').value, '知识链接已复制');
+}
+function regenerate() {
+  if (!current) { toast('请先选择一个知识点', 'warn'); return; }
+  document.getElementById('qr-box').innerHTML = makeQR(current.id + '|' + Date.now());
+  toast('二维码已重新生成', 'success');
+}
+
+function onModuleReady() { renderNodes(); selectNode('k1-1'); }
+</script>
+</body>
+</html>

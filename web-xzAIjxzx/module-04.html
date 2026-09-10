@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模块 04 · 教师特色指令创建</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.modal-mask { position:fixed; inset:0; background:rgba(15,23,42,.5); z-index:100; display:none; align-items:center; justify-content:center; padding:20px; }
+.modal-mask.show { display:flex; }
+.modal { background:#fff; border-radius:16px; width:100%; max-width:560px; box-shadow:var(--shadow-lg); padding:24px; }
+.var-item { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+.var-item label { width:80px; font-size:13px; font-weight:700; color:var(--primary-600); flex-shrink:0; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="back-btn" href="index.html">← 返回总览</a>
+  <div class="topbar-title" id="topbar-title">模块 04 · 教师特色指令创建</div>
+  <div class="topbar-meta" id="topbar-meta"></div>
+  <div class="step-nav">
+    <button class="step-btn" id="btn-prev"></button>
+    <button class="step-btn" id="btn-next"></button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="content">
+    <div class="page-head">
+      <span class="requirement-tag">※ 响应项 4 · 课程特色指令</span>
+      <h1>教师特色指令创建</h1>
+      <p class="sub">支持教师在各<b>指令分组</b>下创建个人专属课程特色指令，提供<b>简单指令</b>与<b>复杂指令</b>两种创建模式，并支持选择是否<b>对学生开放</b>使用，辅助学生问题导向性学习。</p>
+    </div>
+
+    <div class="grid" style="grid-template-columns: 1fr 1fr; align-items:start;">
+      <!-- 左：指令库 -->
+      <div>
+        <div class="card">
+          <div class="card-head"><h2>指令库</h2><span class="badge badge-gray" id="inst-count"></span></div>
+          <div id="group-list"></div>
+        </div>
+      </div>
+
+      <!-- 右：创建指令 -->
+      <div class="card">
+        <div class="card-head"><h2>创建个人专属指令</h2></div>
+        <div class="field">
+          <label>指令分组</label>
+          <select class="select" id="f-group"></select>
+        </div>
+        <div class="field">
+          <label>指令创建模式</label>
+          <div class="flex" style="gap:10px;">
+            <label class="list-item" style="flex:1;cursor:pointer;margin:0;" onclick="setMode('simple')">
+              <input type="radio" name="mode" id="mode-simple" checked> <span>简单指令</span>
+            </label>
+            <label class="list-item" style="flex:1;cursor:pointer;margin:0;" onclick="setMode('complex')">
+              <input type="radio" name="mode" id="mode-complex"> <span>复杂指令</span>
+            </label>
+          </div>
+        </div>
+        <div class="field"><label>指令标题 <span class="req">*</span></label><input class="input" id="f-title" placeholder="例如：请解释继承与多态的区别"></div>
+        <div class="field">
+          <label>指令内容描述 <span class="req">*</span></label>
+          <textarea class="textarea" id="f-desc" placeholder="输入指令内容；复杂指令可用 {{变量名}} 定义变量"></textarea>
+          <div class="hint mt-8" id="mode-hint">简单指令：形成标准化固定问题，引用时可直接点击发送提问。</div>
+        </div>
+        <div class="field">
+          <div class="switch-row">
+            <label class="switch"><input type="checkbox" id="f-open"><span class="slider"></span></label>
+            <span style="font-size:13.5px;font-weight:600;">对学生开放使用（辅助问题导向性学习）</span>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="saveInst()">＋ 创建指令</button>
+      </div>
+    </div>
+
+    <!-- 引用预览弹窗 -->
+    <div class="modal-mask" id="modal">
+      <div class="modal">
+        <div class="flex-between mb-14"><h2 id="ref-title">引用指令</h2><button class="btn btn-outline btn-sm" onclick="closeModal()">关闭</button></div>
+        <div class="hint" id="ref-type"></div>
+        <div id="var-area"></div>
+        <div class="field"><label>提问内容预览</label><div class="input" id="ref-preview" style="min-height:70px;white-space:pre-wrap;background:#f8fafc;"></div></div>
+        <div class="flex" style="gap:10px;">
+          <button class="btn btn-primary grow" onclick="sendRef()">发送提问</button>
+          <button class="btn btn-outline" onclick="copyRef()">复制</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+/* ---------- 模块4：教师特色指令创建 ---------- */
+var groups = ['课程学习', '实践训练', '考前冲刺'];
+var insts = [
+  { id: 1, group: '课程学习', title: '请解释继承与多态的区别', desc: '请结合示例，对比讲解继承与多态的区别，并说明各自适用场景。', type: 'simple', open: true },
+  { id: 2, group: '课程学习', title: '角色扮演式提问', desc: '请以{{角色}}的身份，用通俗语言向{{对象}}讲解{{知识点}}。', type: 'complex', open: true },
+  { id: 3, group: '实践训练', title: '代码调试引导', desc: '请引导学生排查{{编程语言}}中的{{错误类型}}问题，给出排查思路而非直接答案。', type: 'complex', open: false },
+  { id: 4, group: '考前冲刺', title: '考前自测', desc: '请围绕{{章节}}生成 3 道自测题并给出答案解析。', type: 'complex', open: true }
+];
+var refTarget = null;
+
+function setMode(m) {
+  document.getElementById('mode-simple').checked = (m === 'simple');
+  document.getElementById('mode-complex').checked = (m === 'complex');
+  document.getElementById('mode-hint').textContent = m === 'simple'
+    ? '简单指令：形成标准化固定问题，引用时可直接点击发送提问。'
+    : '复杂指令：在标准指令基础上增加变量（{{变量名}}），引用时可自定义替换变量后发送，形成半开放式引导性问题。';
+}
+
+function renderGroups() {
+  document.getElementById('f-group').innerHTML = groups.map(function (g) { return '<option>' + g + '</option>'; }).join('');
+  var box = document.getElementById('group-list');
+  var html = '';
+  groups.forEach(function (g) {
+    var list = insts.filter(function (i) { return i.group === g; });
+    html += '<h3 style="margin:14px 0 8px;display:flex;align-items:center;gap:8px;"><span>📁</span>' + g + '<span class="badge badge-gray">' + list.length + '</span></h3>';
+    if (!list.length) html += '<div class="hint">该分组暂无指令</div>';
+    list.forEach(function (i) {
+      var typeBadge = i.type === 'simple' ? '<span class="badge badge-blue">简单指令</span>' : '<span class="badge badge-green">复杂指令</span>';
+      var openBadge = i.open ? '<span class="badge badge-green">已开放</span>' : '<span class="badge badge-gray">未开放</span>';
+      html += '<div class="list-item">'
+        + '<div class="li-ico">🧩</div>'
+        + '<div class="li-main"><div class="li-title">' + esc(i.title) + '</div>'
+        + '<div class="li-desc">' + esc(i.desc) + '</div>'
+        + '<div class="mt-8" style="display:flex;gap:5px;flex-wrap:wrap;">' + typeBadge + openBadge + '</div></div>'
+        + '<div class="actions"><button class="btn btn-soft btn-sm" onclick="refInst(' + i.id + ')">引用</button>'
+        + '<button class="btn btn-danger btn-sm" onclick="delInst(' + i.id + ')">删除</button></div>'
+        + '</div>';
+    });
+  });
+  box.innerHTML = html;
+  document.getElementById('inst-count').textContent = '共 ' + insts.length + ' 条指令';
+}
+
+function saveInst() {
+  var title = document.getElementById('f-title').value.trim();
+  var desc = document.getElementById('f-desc').value.trim();
+  if (!title) { toast('请填写指令标题', 'warn'); return; }
+  if (!desc) { toast('请填写指令内容描述', 'warn'); return; }
+  var type = document.getElementById('mode-complex').checked ? 'complex' : 'simple';
+  var group = document.getElementById('f-group').value;
+  var open = document.getElementById('f-open').checked;
+  insts.unshift({ id: Date.now(), group: group, title: title, desc: desc, type: type, open: open });
+  document.getElementById('f-title').value = ''; document.getElementById('f-desc').value = '';
+  document.getElementById('f-open').checked = false;
+  renderGroups();
+  toast('指令「' + title + '」创建成功', 'success');
+}
+
+function delInst(id) {
+  insts = insts.filter(function (i) { return i.id !== id; });
+  renderGroups();
+}
+
+function extractVars(desc) {
+  var m = desc.match(/\{\{([^}]+)\}\}/g) || [];
+  return m.map(function (x) { return x.slice(2, -2).trim(); });
+}
+
+function refInst(id) {
+  refTarget = insts.find(function (i) { return i.id === id; });
+  var modal = document.getElementById('modal');
+  document.getElementById('ref-title').textContent = refTarget.title;
+  document.getElementById('ref-type').textContent = refTarget.type === 'simple' ? '简单指令 · 标准化固定问题，直接发送' : '复杂指令 · 半开放式引导性问题，可替换变量';
+  var vars = extractVars(refTarget.desc);
+  var va = document.getElementById('var-area');
+  if (vars.length) {
+    va.innerHTML = vars.map(function (v) {
+      return '<div class="var-item"><label>' + esc(v) + '</label><input class="input" data-var="' + esc(v) + '" placeholder="请输入 ' + esc(v) + '"></div>';
+    }).join('');
+    va.querySelectorAll('input').forEach(function (el) { el.addEventListener('input', updatePreview); });
+  } else {
+    va.innerHTML = '<div class="hint">该指令无变量，可直接发送。</div>';
+  }
+  updatePreview();
+  modal.classList.add('show');
+}
+
+function updatePreview() {
+  if (!refTarget) return;
+  var txt = refTarget.desc;
+  document.getElementById('var-area').querySelectorAll('input[data-var]').forEach(function (el) {
+    txt = txt.split('{{' + el.dataset.var + '}}').join(el.value || ('【' + el.dataset.var + '】'));
+  });
+  document.getElementById('ref-preview').textContent = txt;
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('show'); }
+
+function sendRef() {
+  toast('已发送提问：' + document.getElementById('ref-preview').textContent.slice(0, 20) + '…', 'success');
+  closeModal();
+}
+function copyRef() {
+  copyText(document.getElementById('ref-preview').textContent, '提问内容已复制');
+}
+
+function onModuleReady() { renderGroups(); setMode('simple'); }
+</script>
+</body>
+</html>

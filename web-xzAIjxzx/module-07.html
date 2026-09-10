@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模块 07 · 视频举手提问</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="back-btn" href="index.html">← 返回总览</a>
+  <div class="topbar-title" id="topbar-title">模块 07 · 视频举手提问</div>
+  <div class="topbar-meta" id="topbar-meta"></div>
+  <div class="step-nav">
+    <button class="step-btn" id="btn-prev"></button>
+    <button class="step-btn" id="btn-next"></button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="content">
+    <div class="page-head">
+      <span class="requirement-tag">▲ 响应项 7 · 视频举手提问</span>
+      <h1>视频举手提问</h1>
+      <p class="sub">学生对学习视频内不理解的内容直接<b>【举手】提问</b>，系统自动<b>截取当前视频页面</b>并发送给 AI 学伴；AI 学伴基于知识库答疑，支持<b>语音播放、重新生成、复制、点赞、点踩</b>等操作，其声音与形象均为<b>授课老师的数字人形象</b>。</p>
+    </div>
+
+    <div class="grid" style="grid-template-columns: 1.15fr .85fr; align-items:start;">
+      <!-- 左：视频 -->
+      <div>
+        <div class="card">
+          <div class="card-head"><h2>学习视频</h2><span class="badge badge-blue" id="video-time">00:00 / 15:00</span></div>
+          <div class="video-frame" id="video-frame">
+            <div class="vf-bg"></div>
+            <div class="vf-label">
+              <div class="play-btn" id="play-btn" onclick="togglePlay()">▶</div>
+              <div class="small mt-8" style="opacity:.8;" id="video-caption">面向对象程序设计 · 第 3 讲 多态</div>
+            </div>
+            <button class="hand-float" onclick="handUp()">🙋 举手提问</button>
+          </div>
+          <div class="flex mt-14" style="gap:10px; align-items:center;">
+            <button class="btn btn-outline btn-sm" onclick="togglePlay()" id="play-text">▶ 播放</button>
+            <div class="progress grow"><div class="bar" id="video-progress" style="width:0%;"></div></div>
+          </div>
+          <div class="hint mt-8" id="capture-hint">点击视频上的「举手提问」按钮，系统将自动截取当前画面。</div>
+        </div>
+      </div>
+
+      <!-- 右：AI 学伴 -->
+      <div class="card">
+        <div class="card-head"><h2>AI 学伴 · 数字人答疑</h2><span class="badge badge-green">授课老师数字人</span></div>
+        <div class="flex" style="gap:16px; align-items:center; margin-bottom:16px;">
+          <div class="avatar-d" id="avatar">👩‍🏫</div>
+          <div>
+            <div style="font-weight:700;">王老师（数字人）</div>
+            <div class="small muted">AI 学伴 · 基于课程知识库</div>
+          </div>
+        </div>
+        <div class="card" style="background:#f8fafc; box-shadow:none; margin-bottom:14px; min-height:110px;" id="answer-box">
+          <div class="small muted" id="answer-text">观看视频时如有疑问，点击「举手提问」，AI 学伴将为你答疑。</div>
+          <div class="small muted mt-8" id="answer-meta"></div>
+        </div>
+        <div class="flex wrap" style="gap:8px;">
+          <button class="btn btn-soft btn-sm" id="btn-voice" onclick="toggleVoice()">🔊 语音播放</button>
+          <button class="btn btn-outline btn-sm" onclick="regenAnswer()">重新生成</button>
+          <button class="btn btn-outline btn-sm" onclick="copyAnswer()">复制回答</button>
+          <button class="btn btn-outline btn-sm" id="btn-like" onclick="react('like')">👍 点赞 <span id="like-n">0</span></button>
+          <button class="btn btn-outline btn-sm" id="btn-dislike" onclick="react('dislike')">👎 点踩</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+/* ---------- 模块7：视频举手提问 ---------- */
+var playing = false;
+var elapsed = 0; // 秒
+var timer = null;
+var likeCount = 0;
+var disliked = false;
+var currentAnswer = '';
+
+var answerPool = [
+  '这里是「多态」知识点：多态指同一接口在不同对象上呈现不同行为。你看到的视频片段中，父类引用指向子类对象后调用重写方法，就是多态的典型体现。建议再结合「向上转型」理解运行时绑定。',
+  '关于这个片段：视频中演示的是通过继承实现方法重写。父类声明了 makeSound 方法，子类各自重写，调用时由实际对象决定执行哪个版本，这正是动态绑定的核心。',
+  '补充说明：多态与接口配合使用可以进一步解耦。你可以在练习中尝试用接口类型声明变量并赋值不同实现类，体会多态带来的灵活性。'
+];
+
+function togglePlay() {
+  playing = !playing;
+  var btn = document.getElementById('play-btn');
+  document.getElementById('play-text').textContent = playing ? '⏸ 暂停' : '▶ 播放';
+  btn.textContent = playing ? '⏸' : '▶';
+  if (playing) {
+    timer = setInterval(function () {
+      elapsed++;
+      if (elapsed >= 900) { elapsed = 900; stopPlay(); }
+      updateTime();
+    }, 1000);
+  } else { clearInterval(timer); }
+}
+function stopPlay() { playing = false; clearInterval(timer); document.getElementById('play-btn').textContent = '▶'; document.getElementById('play-text').textContent = '▶ 播放'; }
+function fmt(s) { var m = Math.floor(s / 60), ss = s % 60; return (m < 10 ? '0' + m : m) + ':' + (ss < 10 ? '0' + ss : ss); }
+function updateTime() {
+  document.getElementById('video-time').textContent = fmt(elapsed) + ' / 15:00';
+  document.getElementById('video-progress').style.width = (elapsed / 900 * 100) + '%';
+}
+
+function handUp() {
+  var t = fmt(elapsed);
+  document.getElementById('capture-hint').innerHTML = '✅ 已截取当前视频画面（' + t + '），已自动发送给 AI 学伴提问。';
+  // 数字人作答动画
+  var box = document.getElementById('answer-text');
+  box.textContent = '正在分析当前画面中的知识点…';
+  var av = document.getElementById('avatar');
+  av.classList.add('speaking');
+  setTimeout(function () {
+    currentAnswer = answerPool[Math.floor(Math.random() * answerPool.length)];
+    box.textContent = currentAnswer;
+    box.classList.remove('muted');
+    document.getElementById('answer-meta').textContent = '针对视频 ' + t + ' 画面的答疑 · 来自课程知识库';
+    av.classList.remove('speaking');
+    toast('AI 学伴已给出答疑', 'success');
+  }, 1200);
+}
+
+function toggleVoice() {
+  if (!currentAnswer) { toast('请先举手提问获取回答', 'warn'); return; }
+  var av = document.getElementById('avatar');
+  if (av.classList.contains('speaking')) {
+    av.classList.remove('speaking');
+    if (window.speechSynthesis) speechSynthesis.cancel();
+    return;
+  }
+  av.classList.add('speaking');
+  if (window.speechSynthesis) {
+    var u = new SpeechSynthesisUtterance(currentAnswer);
+    u.lang = 'zh-CN';
+    u.onend = function () { av.classList.remove('speaking'); };
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
+  } else {
+    setTimeout(function () { av.classList.remove('speaking'); }, 3000);
+  }
+  toast('正在播放数字人语音回答', 'success');
+}
+
+function regenAnswer() {
+  if (!currentAnswer) { toast('请先举手提问', 'warn'); return; }
+  currentAnswer = answerPool[Math.floor(Math.random() * answerPool.length)];
+  document.getElementById('answer-text').textContent = currentAnswer;
+  toast('回答已重新生成', 'success');
+}
+function copyAnswer() {
+  if (!currentAnswer) { toast('暂无回答可复制', 'warn'); return; }
+  copyText(currentAnswer, '回答已复制');
+}
+function react(type) {
+  if (type === 'like') {
+    likeCount++;
+    document.getElementById('like-n').textContent = likeCount;
+    toast('感谢你的点赞！', 'success');
+  } else {
+    disliked = !disliked;
+    toast(disliked ? '已点踩，我们将优化回答' : '已取消点踩', disliked ? 'warn' : 'success');
+  }
+}
+
+function onModuleReady() { updateTime(); }
+</script>
+</body>
+</html>

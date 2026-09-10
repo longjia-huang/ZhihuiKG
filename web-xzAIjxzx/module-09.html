@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模块 09 · 智能体测评任务</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="back-btn" href="index.html">← 返回总览</a>
+  <div class="topbar-title" id="topbar-title">模块 09 · 智能体测评任务</div>
+  <div class="topbar-meta" id="topbar-meta"></div>
+  <div class="step-nav">
+    <button class="step-btn" id="btn-prev"></button>
+    <button class="step-btn" id="btn-next"></button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="content">
+    <div class="page-head">
+      <span class="requirement-tag">▲ 响应项 9 · 智能体测评任务</span>
+      <h1>智能体测评任务</h1>
+      <p class="sub">支持开设智能体测评任务：选定智能体后设置<b>任务名称</b>、<b>发布班级</b>、<b>任务起止时间</b>；通知方式支持<b>小程序 / 短信 / 小程序和短信 / 不通知</b>；支持设置<b>重复练习次数</b>（可不限制）、<b>满分值与计分标准</b>，并支持<b>按分数评级</b>（自定义评分等级分数要求与评级名称）；可查看学生完成详情（已参与/未参与人数、每个学生的评测次数、成绩与评级）。</p>
+    </div>
+
+    <div class="grid" style="grid-template-columns: 1fr 1.1fr; align-items:start;">
+      <!-- 创建任务 -->
+      <div class="card">
+        <div class="card-head"><h2>开设测评任务</h2></div>
+
+        <div class="field"><label>选定智能体 <span class="req">*</span></label>
+          <select class="select" id="f-agent">
+            <option>辩论赛场智能体</option>
+            <option>临床问诊室智能体</option>
+            <option>客服咨询台智能体</option>
+            <option>面试模拟官智能体</option>
+          </select>
+        </div>
+        <div class="field"><label>任务名称 <span class="req">*</span></label><input class="input" id="f-task" placeholder="例如：辩论能力测评（第 3 周）"></div>
+        <div class="field"><label>发布班级</label>
+          <div class="flex wrap" style="gap:8px;" id="class-check"></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label>开始时间</label><input class="input" type="datetime-local" id="f-start"></div>
+          <div class="field"><label>结束时间</label><input class="input" type="datetime-local" id="f-end"></div>
+        </div>
+        <div class="field"><label>通知方式</label>
+          <div class="flex wrap" style="gap:8px;" id="notify-check"></div>
+        </div>
+        <div class="field"><label>允许重复练习次数</label>
+          <div class="flex-center">
+            <label class="list-item" style="margin:0;cursor:pointer;"><input type="radio" name="repeat" value="limited" checked onchange="toggleRepeat()"> 限制次数</label>
+            <input class="input" type="number" min="1" value="3" style="width:90px;" id="f-repeat-num">
+            <label class="list-item" style="margin:0;cursor:pointer;"><input type="radio" name="repeat" value="unlimited" onchange="toggleRepeat()"> 不限制次数</label>
+          </div>
+        </div>
+        <div class="field"><label>任务满分值</label><input class="input" type="number" min="1" value="100" id="f-full"></div>
+
+        <div class="field">
+          <label>计分标准与评级（按分数评级，可自定义）</label>
+          <div id="grade-list"></div>
+          <button class="btn btn-outline btn-sm mt-8" onclick="addGrade()">＋ 添加评分等级</button>
+        </div>
+
+        <button class="btn btn-primary btn-block" onclick="createTask()">📢 发布测评任务</button>
+      </div>
+
+      <!-- 任务列表 + 详情 -->
+      <div>
+        <div class="card">
+          <div class="card-head"><h2>测评任务列表</h2><span class="badge badge-gray" id="task-count">0 个任务</span></div>
+          <div id="task-list"><div class="empty"><div class="ico">📋</div>暂无测评任务</div></div>
+        </div>
+        <div class="card" id="detail-card" style="display:none;">
+          <div class="card-head"><h2>学生完成详情</h2><span class="badge badge-green" id="detail-title"></span></div>
+          <div class="grid grid-2" style="margin-bottom:14px;">
+            <div class="stat-card"><div class="label">已参与人数</div><div class="value" id="d-joined" style="color:var(--success);">0</div></div>
+            <div class="stat-card"><div class="label">未参与人数</div><div class="value" id="d-absent" style="color:var(--danger);">0</div></div>
+          </div>
+          <div class="table-wrap">
+            <table class="tbl">
+              <thead><tr><th>学生</th><th>班级</th><th>评测次数</th><th>成绩</th><th>评级</th></tr></thead>
+              <tbody id="detail-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+/* ---------- 模块9：智能体测评任务 ---------- */
+var classes = ['电商 2201 班', '电商 2202 班', '计应 2201 班', '软件 2201 班'];
+var notifies = ['小程序', '短信', '小程序和短信', '不通知'];
+var selectedClasses = [];
+var selectedNotify = '小程序';
+var grades = [
+  { min: 90, name: '优秀' }, { min: 75, name: '良好' }, { min: 60, name: '合格' }, { min: 0, name: '不合格' }
+];
+var tasks = [];
+var students = [
+  { name: '张小明', cls: '电商 2201 班' }, { name: '李华', cls: '电商 2201 班' }, { name: '王芳', cls: '电商 2202 班' },
+  { name: '刘强', cls: '计应 2201 班' }, { name: '陈静', cls: '软件 2201 班' }, { name: '赵磊', cls: '电商 2202 班' },
+  { name: '孙悦', cls: '计应 2201 班' }, { name: '周杰', cls: '软件 2201 班' }
+];
+
+function renderClassCheck() {
+  document.getElementById('class-check').innerHTML = classes.map(function (c) {
+    return '<label class="tag" style="padding:6px 12px;cursor:pointer;"><input type="checkbox" value="' + c + '" onchange="toggleClass(this)"> ' + c + '</label>';
+  }).join('');
+}
+function toggleClass(el) {
+  var i = selectedClasses.indexOf(el.value);
+  if (i >= 0) selectedClasses.splice(i, 1); else selectedClasses.push(el.value);
+}
+function renderNotify() {
+  document.getElementById('notify-check').innerHTML = notifies.map(function (n) {
+    return '<label class="list-item" style="flex:1;margin:0;padding:8px;cursor:pointer;"><input type="radio" name="notify" value="' + n + '" ' + (n === selectedNotify ? 'checked' : '') + ' onchange="selectedNotify=this.value"> ' + n + '</label>';
+  }).join('');
+}
+function renderGrades() {
+  var box = document.getElementById('grade-list');
+  box.innerHTML = grades.map(function (g, i) {
+    return '<div class="flex" style="gap:8px;margin-bottom:8px;align-items:center;">'
+      + '<span class="small muted" style="width:60px;">≥</span>'
+      + '<input class="input" type="number" style="width:90px;" value="' + g.min + '" data-min="' + i + '">'
+      + '<span class="small muted">分评为</span>'
+      + '<input class="input" style="flex:1;" value="' + esc(g.name) + '" data-gname="' + i + '">'
+      + '<button class="btn btn-danger btn-sm" onclick="delGrade(' + i + ')">删除</button></div>';
+  }).join('');
+  box.querySelectorAll('[data-min]').forEach(function (el) { el.addEventListener('input', function () { grades[+el.dataset.min].min = +el.value || 0; }); });
+  box.querySelectorAll('[data-gname]').forEach(function (el) { el.addEventListener('input', function () { grades[+el.dataset.gname].name = el.value; }); });
+}
+function addGrade() { grades.push({ min: 0, name: '新等级' }); renderGrades(); }
+function delGrade(i) { grades.splice(i, 1); renderGrades(); }
+function toggleRepeat() {
+  var lim = document.querySelector('input[name="repeat"]:checked').value === 'limited';
+  document.getElementById('f-repeat-num').disabled = !lim;
+}
+
+function gradeOf(score) {
+  var sorted = grades.slice().sort(function (a, b) { return b.min - a.min; });
+  for (var i = 0; i < sorted.length; i++) { if (score >= sorted[i].min) return sorted[i].name; }
+  return '未评级';
+}
+
+function createTask() {
+  var name = document.getElementById('f-task').value.trim();
+  if (!name) { toast('请填写任务名称', 'warn'); return; }
+  if (selectedClasses.length === 0) { toast('请至少选择一个发布班级', 'warn'); return; }
+  var start = document.getElementById('f-start').value || '未设置';
+  var end = document.getElementById('f-end').value || '未设置';
+  var limited = document.querySelector('input[name="repeat"]:checked').value === 'limited';
+  var repeat = limited ? document.getElementById('f-repeat-num').value + ' 次' : '不限制';
+  var full = +document.getElementById('f-full').value || 100;
+  var agent = document.getElementById('f-agent').value;
+  var task = {
+    id: Date.now(), name: name, agent: agent, cls: selectedClasses.slice(), start: start, end: end,
+    notify: selectedNotify, repeat: repeat, full: full, grades: grades.map(function (g) { return { min: g.min, name: g.name }; })
+  };
+  tasks.unshift(task);
+  document.getElementById('f-task').value = '';
+  selectedClasses = [];
+  renderClassCheck();
+  renderTasks();
+  toast('测评任务「' + name + '」已发布', 'success');
+}
+
+function renderTasks() {
+  var box = document.getElementById('task-list');
+  document.getElementById('task-count').textContent = tasks.length + ' 个任务';
+  if (!tasks.length) { box.innerHTML = '<div class="empty">暂无测评任务</div>'; return; }
+  box.innerHTML = tasks.map(function (t, i) {
+    return '<div class="list-item">'
+      + '<div class="li-ico">📋</div>'
+      + '<div class="li-main"><div class="li-title">' + esc(t.name) + '</div>'
+      + '<div class="li-desc">' + esc(t.agent) + ' · ' + t.cls.join('、') + ' · 通知：' + t.notify + ' · 重复：' + t.repeat + '</div></div>'
+      + '<button class="btn btn-soft btn-sm" onclick="showDetail(' + i + ')">查看详情</button></div>';
+  }).join('');
+}
+
+function showDetail(i) {
+  var t = tasks[i];
+  document.getElementById('detail-card').style.display = 'block';
+  document.getElementById('detail-title').textContent = t.name;
+  // 模拟学生完成情况
+  var joined = students.filter(function (s) { return t.cls.indexOf(s.cls) >= 0; });
+  var absent = students.filter(function (s) { return t.cls.indexOf(s.cls) < 0; });
+  document.getElementById('d-joined').textContent = joined.length;
+  document.getElementById('d-absent').textContent = absent.length;
+  var body = document.getElementById('detail-body');
+  var html = '';
+  joined.forEach(function (s) {
+    var times = 1 + Math.floor(Math.random() * 5);
+    var score = 40 + Math.floor(Math.random() * 61);
+    var g = gradeOf(score);
+    html += '<tr><td><b>' + s.name + '</b></td><td>' + s.cls + '</td><td>' + times + '</td><td>' + score + '</td><td><span class="badge ' + (score >= 75 ? 'badge-green' : (score >= 60 ? 'badge-orange' : 'badge-red')) + '">' + g + '</span></td></tr>';
+  });
+  body.innerHTML = html || '<tr><td colspan="5"><div class="empty">暂无参与学生</div></td></tr>';
+  document.getElementById('detail-card').scrollIntoView({ behavior: 'smooth' });
+}
+
+function onModuleReady() { renderClassCheck(); renderNotify(); renderGrades(); renderTasks(); toggleRepeat(); }
+</script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模块 10 · 题目生成与题库管理</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.modal-mask { position:fixed; inset:0; background:rgba(15,23,42,.5); z-index:100; display:none; align-items:center; justify-content:center; padding:20px; }
+.modal-mask.show { display:flex; }
+.modal { background:#fff; border-radius:16px; width:100%; max-width:640px; box-shadow:var(--shadow-lg); padding:24px; max-height:90vh; overflow-y:auto; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="back-btn" href="index.html">← 返回总览</a>
+  <div class="topbar-title" id="topbar-title">模块 10 · 题目生成与题库管理</div>
+  <div class="topbar-meta" id="topbar-meta"></div>
+  <div class="step-nav">
+    <button class="step-btn" id="btn-prev"></button>
+    <button class="step-btn" id="btn-next"></button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="content">
+    <div class="page-head">
+      <span class="requirement-tag">▲ 响应项 10 · 题库管理</span>
+      <h1>题目重新生成与题库管理</h1>
+      <p class="sub">所有题目或单个题目均支持<b>重新生成</b>与<b>加入题库</b>；点击「加入题库」时可对<b>题干、答案、解析、类型、难度、相关知识点、标签</b>进行编辑或设置，并支持<b>跳过此题 / 保存并退出 / 保存并添加下一题</b>三种操作；题目支持<b>一键导出</b>与<b>二次编辑</b>。</p>
+    </div>
+
+    <div class="grid" style="grid-template-columns: 1.1fr .9fr; align-items:start;">
+      <!-- 题目列表 -->
+      <div>
+        <div class="card">
+          <div class="card-head">
+            <div><h2>题目列表</h2><div class="hint">由 AI 出题模块生成，可重新生成、加入题库、跳过</div></div>
+            <button class="btn btn-soft btn-sm" onclick="exportAll()">⬇ 一键导出</button>
+          </div>
+          <div id="q-list"></div>
+        </div>
+      </div>
+
+      <!-- 题库统计 -->
+      <div>
+        <div class="card">
+          <div class="card-head"><h2>题库概况</h2></div>
+          <div class="grid grid-2">
+            <div class="stat-card"><div class="label">题库总量</div><div class="value" id="bank-total">0</div></div>
+            <div class="stat-card"><div class="label">已加入本题组</div><div class="value" style="color:var(--success);" id="bank-added">0</div></div>
+          </div>
+          <div class="divider"></div>
+          <h3>已入题库题目</h3>
+          <div id="bank-list"><div class="empty" style="padding:14px;">暂无题目加入题库</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 编辑弹窗 -->
+    <div class="modal-mask" id="modal">
+      <div class="modal">
+        <div class="flex-between mb-14"><h2>编辑题目 · 加入题库</h2><button class="btn btn-outline btn-sm" onclick="closeModal()">关闭</button></div>
+        <div class="field"><label>题干 <span class="req">*</span></label><textarea class="textarea" id="e-stem"></textarea></div>
+        <div class="form-row">
+          <div class="field"><label>答案 <span class="req">*</span></label><input class="input" id="e-answer"></div>
+          <div class="field"><label>类型</label><select class="select" id="e-type"><option>单选题</option><option>多选题</option><option>判断题</option><option>填空题</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label>难度</label><select class="select" id="e-difficulty"><option>简单</option><option>中等</option><option>困难</option></select></div>
+          <div class="field"><label>相关知识点</label><input class="input" id="e-kp" placeholder="如：多态、继承（逗号分隔）"></div>
+        </div>
+        <div class="field"><label>解析</label><textarea class="textarea" id="e-analysis"></textarea></div>
+        <div class="field"><label>标签</label><input class="input" id="e-tags" placeholder="如：期中复习、高频考点（逗号分隔）"></div>
+        <div class="flex wrap" style="gap:8px;">
+          <button class="btn btn-outline" onclick="skipCurrent()">跳过此题</button>
+          <button class="btn btn-outline" onclick="saveAndExit()">保存并退出</button>
+          <button class="btn btn-primary grow" onclick="saveAndNext()">保存并添加下一题</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+/* ---------- 模块10：题目生成与题库管理 ---------- */
+var questions = [
+  { id: 1, type: '单选题', stem: '关于「多态」的说法正确的是（　）。', answer: 'A', analysis: '多态指同一接口在不同对象上呈现不同行为。', difficulty: '中等', kp: '多态', tags: '高频考点', inBank: false },
+  { id: 2, type: '多选题', stem: '以下属于面向对象三大特性的有（　）。', answer: 'ABC', analysis: '封装、继承、多态。', difficulty: '简单', kp: '面向对象', tags: '基础', inBank: true },
+  { id: 3, type: '判断题', stem: '继承可以通过 extends 关键字实现（　）。', answer: '正确', analysis: 'Java 中使用 extends 实现继承。', difficulty: '简单', kp: '继承', tags: '基础', inBank: false },
+  { id: 4, type: '填空题', stem: '数据清洗中的缺失值处理方式之一是______。', answer: '插补', analysis: '缺失值可删除或插补。', difficulty: '中等', kp: '数据清洗', tags: '实践', inBank: false },
+  { id: 5, type: '单选题', stem: '数据库索引的作用是（　）。', answer: 'B', analysis: '索引用于加速查询。', difficulty: '困难', kp: '索引优化', tags: '进阶', inBank: true }
+];
+var editIndex = null;
+
+var typeColor = { '单选题': 'badge-blue', '多选题': 'badge-green', '判断题': 'badge-orange', '填空题': 'badge-gray' };
+
+function renderList() {
+  var box = document.getElementById('q-list');
+  box.innerHTML = questions.map(function (q, i) {
+    return '<div class="card" style="padding:15px;margin-bottom:11px;">'
+      + '<div class="flex-between" style="margin-bottom:7px;"><span class="badge ' + (typeColor[q.type] || 'badge-gray') + '">' + q.type + '</span>'
+      + (q.inBank ? '<span class="badge badge-green">已入题库</span>' : '<span class="badge badge-gray">未入题库</span>') + '</div>'
+      + '<div style="font-weight:600;margin-bottom:6px;">' + esc(q.stem) + '</div>'
+      + '<div class="small muted" style="margin-bottom:8px;">答案：' + esc(q.answer) + ' · 难度：' + q.difficulty + ' · 知识点：' + esc(q.kp) + '</div>'
+      + '<div class="flex" style="gap:7px;flex-wrap:wrap;">'
+      + '<button class="btn btn-outline btn-sm" onclick="regen(' + i + ')">重新生成</button>'
+      + '<button class="btn btn-soft btn-sm" onclick="openEdit(' + i + ')">加入题库 / 编辑</button>'
+      + '<button class="btn btn-danger btn-sm" onclick="skip(' + i + ')">跳过此题</button>'
+      + '</div></div>';
+  }).join('');
+  renderBank();
+}
+
+function renderBank() {
+  var inBank = questions.filter(function (q) { return q.inBank; });
+  document.getElementById('bank-total').textContent = questions.length;
+  document.getElementById('bank-added').textContent = inBank.length;
+  var box = document.getElementById('bank-list');
+  if (!inBank.length) { box.innerHTML = '<div class="empty" style="padding:14px;">暂无题目加入题库</div>'; return; }
+  box.innerHTML = inBank.map(function (q) {
+    return '<div class="list-item" style="padding:9px 12px;">'
+      + '<div class="li-main"><div class="li-title" style="font-size:13px;">' + esc(q.stem) + '</div>'
+      + '<div class="li-desc">' + q.type + ' · ' + q.difficulty + ' · ' + esc(q.kp) + '</div></div>'
+      + '<button class="btn btn-outline btn-sm" onclick="reEdit(\'' + q.id + '\')">二次编辑</button></div>';
+  }).join('');
+}
+
+function regen(i) {
+  questions[i].stem = questions[i].stem + '（已重新生成）';
+  renderList();
+  toast('第 ' + (i + 1) + ' 题已重新生成', 'success');
+}
+function skip(i) {
+  toast('已跳过第 ' + (i + 1) + ' 题', 'success');
+}
+
+function openEdit(i) {
+  editIndex = i;
+  var q = questions[i];
+  document.getElementById('e-stem').value = q.stem;
+  document.getElementById('e-answer').value = q.answer;
+  document.getElementById('e-type').value = q.type;
+  document.getElementById('e-difficulty').value = q.difficulty;
+  document.getElementById('e-kp').value = q.kp;
+  document.getElementById('e-analysis').value = q.analysis;
+  document.getElementById('e-tags').value = q.tags;
+  document.getElementById('modal').classList.add('show');
+}
+function reEdit(id) {
+  var i = questions.findIndex(function (q) { return q.id === id; });
+  openEdit(i);
+}
+function closeModal() { document.getElementById('modal').classList.remove('show'); }
+
+function collectForm() {
+  questions[editIndex].stem = document.getElementById('e-stem').value.trim();
+  questions[editIndex].answer = document.getElementById('e-answer').value.trim();
+  questions[editIndex].type = document.getElementById('e-type').value;
+  questions[editIndex].difficulty = document.getElementById('e-difficulty').value;
+  questions[editIndex].kp = document.getElementById('e-kp').value.trim();
+  questions[editIndex].analysis = document.getElementById('e-analysis').value.trim();
+  questions[editIndex].tags = document.getElementById('e-tags').value.trim();
+  questions[editIndex].inBank = true;
+}
+
+function skipCurrent() { closeModal(); toast('已跳过此题', 'success'); }
+function saveAndExit() {
+  if (!document.getElementById('e-stem').value.trim()) { toast('请填写题干', 'warn'); return; }
+  collectForm(); closeModal(); renderList(); toast('题目已保存并加入题库', 'success');
+}
+function saveAndNext() {
+  if (!document.getElementById('e-stem').value.trim()) { toast('请填写题干', 'warn'); return; }
+  collectForm();
+  if (editIndex < questions.length - 1) { openEdit(editIndex + 1); toast('已保存，正在编辑下一题', 'success'); }
+  else { closeModal(); toast('已保存最后一题', 'success'); }
+  renderList();
+}
+
+function exportAll() {
+  var data = JSON.stringify(questions, null, 2);
+  var blob = new Blob([data], { type: 'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '题库导出.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('题库已一键导出', 'success');
+}
+
+function onModuleReady() { renderList(); }
+</script>
+</body>
+</html>

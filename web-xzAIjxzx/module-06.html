@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模块 06 · 知识点建设进度</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="back-btn" href="index.html">← 返回总览</a>
+  <div class="topbar-title" id="topbar-title">模块 06 · 知识点建设进度</div>
+  <div class="topbar-meta" id="topbar-meta"></div>
+  <div class="step-nav">
+    <button class="step-btn" id="btn-prev"></button>
+    <button class="step-btn" id="btn-next"></button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="content">
+    <div class="page-head">
+      <span class="requirement-tag">▲ 响应项 6 · 知识点建设进度</span>
+      <h1>知识点建设进度</h1>
+      <p class="sub">系统根据知识点建设的实际情况自动生成<b>建设进度</b>，并给出<b>建设清单</b>协助观测全部建设概况；基于知识点基本信息进行统计，计算<b>知识点填充完成度</b>，以 <b>0%–100%</b> 维度呈现。</p>
+    </div>
+
+    <!-- 统计概览 -->
+    <div class="grid grid-4">
+      <div class="stat-card"><div class="label">知识点总数</div><div class="value">24<small> 个</small></div></div>
+      <div class="stat-card"><div class="label">已建设完成</div><div class="value" style="color:var(--success);">16<small> 个</small></div></div>
+      <div class="stat-card"><div class="label">建设中</div><div class="value" style="color:var(--warning);">6<small> 个</small></div></div>
+      <div class="stat-card"><div class="label">整体填充完成度</div><div class="value" style="color:var(--primary);">73<small>%</small></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>建设清单</h2>
+        <div class="tabs" style="border:none;margin:0;" id="filter-tabs">
+          <button class="tab active" data-filter="all">全部</button>
+          <button class="tab" data-filter="done">已建设</button>
+          <button class="tab" data-filter="doing">建设中</button>
+          <button class="tab" data-filter="todo">未建设</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="tbl">
+          <thead><tr>
+            <th>知识点</th><th>所属章节</th><th>简介</th><th>资源</th><th>习题</th><th>图谱关系</th><th>填充完成度</th><th>状态</th>
+          </tr></thead>
+          <tbody id="progress-body"></tbody>
+        </table>
+      </div>
+      <div class="hint mt-8">完成度按「简介、资源、习题、图谱关系」等基本信息维度统计计算得出。</div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+/* ---------- 模块6：知识点建设进度 ---------- */
+var kpData = [
+  { name: '类与对象', chapter: '第一章', intro: true, res: true, ex: true, graph: true, rate: 100, status: 'done' },
+  { name: '继承', chapter: '第一章', intro: true, res: true, ex: true, graph: true, rate: 95, status: 'done' },
+  { name: '多态', chapter: '第一章', intro: true, res: true, ex: true, graph: false, rate: 80, status: 'done' },
+  { name: '抽象类与接口', chapter: '第一章', intro: true, res: true, ex: false, graph: true, rate: 72, status: 'doing' },
+  { name: '图表类型', chapter: '第二章', intro: true, res: true, ex: true, graph: false, rate: 65, status: 'doing' },
+  { name: '数据清洗', chapter: '第二章', intro: true, res: true, ex: false, graph: true, rate: 68, status: 'doing' },
+  { name: '缺失值插补', chapter: '第二章', intro: true, res: false, ex: false, graph: false, rate: 35, status: 'doing' },
+  { name: '数据库设计', chapter: '第三章', intro: true, res: true, ex: true, graph: true, rate: 88, status: 'done' },
+  { name: '索引优化', chapter: '第三章', intro: true, res: false, ex: false, graph: false, rate: 30, status: 'doing' },
+  { name: '事务管理', chapter: '第三章', intro: false, res: false, ex: false, graph: false, rate: 12, status: 'doing' },
+  { name: '机器学习入门', chapter: '第四章', intro: false, res: false, ex: false, graph: false, rate: 0, status: 'todo' },
+  { name: '神经网络基础', chapter: '第四章', intro: false, res: false, ex: false, graph: false, rate: 0, status: 'todo' }
+];
+var currentFilter = 'all';
+
+function renderTable() {
+  var body = document.getElementById('progress-body');
+  var list = kpData.filter(function (k) { return currentFilter === 'all' || k.status === currentFilter; });
+  var html = '';
+  list.forEach(function (k) {
+    var cls = k.rate >= 80 ? 'bar-green' : (k.rate >= 50 ? 'bar-orange' : (k.rate > 0 ? 'bar-red' : ''));
+    var badge = k.status === 'done' ? '<span class="badge badge-green">已建设</span>' : (k.status === 'doing' ? '<span class="badge badge-orange">建设中</span>' : '<span class="badge badge-gray">未建设</span>');
+    var cell = function (v) { return v ? '<span style="color:var(--success);font-weight:700;">✓</span>' : '<span style="color:var(--danger);">✗</span>'; };
+    html += '<tr><td><b>' + k.name + '</b></td><td>' + k.chapter + '</td><td>' + cell(k.intro) + '</td>'
+      + '<td>' + cell(k.res) + '</td><td>' + cell(k.ex) + '</td><td>' + cell(k.graph) + '</td>'
+      + '<td style="min-width:150px;"><div class="flex-center"><div class="progress ' + cls + '" style="flex:1;"><div class="bar" style="width:' + k.rate + '%;"></div></div><span class="small muted" style="width:38px;text-align:right;">' + k.rate + '%</span></div></td>'
+      + '<td>' + badge + '</td></tr>';
+  });
+  if (!html) html = '<tr><td colspan="8"><div class="empty">该分类下暂无知识点</div></td></tr>';
+  body.innerHTML = html;
+}
+
+function initFilter() {
+  var tabs = document.getElementById('filter-tabs').querySelectorAll('.tab');
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      tabs.forEach(function (x) { x.classList.remove('active'); });
+      t.classList.add('active');
+      currentFilter = t.getAttribute('data-filter');
+      renderTable();
+    });
+  });
+}
+
+function onModuleReady() { initFilter(); renderTable(); }
+</script>
+</body>
+</html>

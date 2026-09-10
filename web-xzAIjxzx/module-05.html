@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模块 05 · AI 出题功能</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="back-btn" href="index.html">← 返回总览</a>
+  <div class="topbar-title" id="topbar-title">模块 05 · AI 出题功能</div>
+  <div class="topbar-meta" id="topbar-meta"></div>
+  <div class="step-nav">
+    <button class="step-btn" id="btn-prev"></button>
+    <button class="step-btn" id="btn-next"></button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="content">
+    <div class="page-head">
+      <span class="requirement-tag">※ 响应项 5 · AI 出题</span>
+      <h1>AI 出题功能</h1>
+      <p class="sub">支持<b>根据知识点</b>与<b>根据参考内容</b>两种出题模式；知识点出题最多可选择 <b>3 个知识点</b>，并支持<b>普通模式 / 知识库模式</b>；两种模式均支持<b>单选题、多选题、判断题、填空题</b>四种题型下的单一题型及混合式出题。</p>
+    </div>
+
+    <div class="grid" style="grid-template-columns: 1fr 1.2fr; align-items:start;">
+      <!-- 出题配置 -->
+      <div class="card">
+        <div class="tabs">
+          <button class="tab active" data-tab="mode-kp">知识点出题</button>
+          <button class="tab" data-tab="mode-ref">参考内容出题</button>
+        </div>
+
+        <div class="tab-panel active" id="mode-kp">
+          <div class="field">
+            <label>选择知识点（最多 3 个）<span class="req">*</span></label>
+            <div id="kp-check"></div>
+            <div class="hint mt-8" id="kp-count">已选 0 / 3 个知识点</div>
+          </div>
+          <div class="field">
+            <label>出题模式</label>
+            <div class="flex" style="gap:10px;">
+              <label class="list-item" style="flex:1;margin:0;cursor:pointer;"><input type="radio" name="kp-mode" value="普通模式" checked> 普通模式</label>
+              <label class="list-item" style="flex:1;margin:0;cursor:pointer;"><input type="radio" name="kp-mode" value="知识库模式"> 知识库模式</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>题型</label>
+            <div class="flex wrap" style="gap:8px;" id="qtype-kp"></div>
+          </div>
+          <div class="field"><label>题目数量</label><select class="select" id="kp-num"><option>3</option><option>5</option><option>10</option></select></div>
+          <button class="btn btn-primary btn-block" onclick="genKp()">⚡ 生成题目</button>
+        </div>
+
+        <div class="tab-panel" id="mode-ref">
+          <div class="field">
+            <label>自定义文本描述</label>
+            <textarea class="textarea" id="ref-text" placeholder="输入参考文本，AI 将基于该内容生成题目…" style="min-height:100px;"></textarea>
+          </div>
+          <div class="field">
+            <label>或上传参考资料</label>
+            <input type="file" class="input" id="ref-file" accept=".txt,.doc,.docx,.pdf" onchange="filePicked(this)">
+          </div>
+          <div class="field">
+            <label>题型</label>
+            <div class="flex wrap" style="gap:8px;" id="qtype-ref"></div>
+          </div>
+          <button class="btn btn-primary btn-block" onclick="genRef()">⚡ 生成题目</button>
+        </div>
+      </div>
+
+      <!-- 生成结果 -->
+      <div>
+        <div class="card">
+          <div class="card-head">
+            <div><h2>生成结果</h2><div class="hint">AI 依据所选内容生成的题目</div></div>
+            <div class="flex" style="gap:8px;">
+              <button class="btn btn-outline btn-sm" onclick="regenerateAll()">重新生成</button>
+              <button class="btn btn-soft btn-sm" onclick="addAllBank()">全部加入题库</button>
+            </div>
+          </div>
+          <div id="question-list"><div class="empty"><div class="ico">📝</div>完成左侧配置后点击「生成题目」</div></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+/* ---------- 模块5：AI 出题功能 ---------- */
+var kps = ['类与对象', '继承', '多态', '数据清洗', '图表类型', '数据库设计'];
+var qtypes = [
+  { v: '单选题', icon: '①' }, { v: '多选题', icon: '②' },
+  { v: '判断题', icon: '③' }, { v: '填空题', icon: '④' }, { v: '混合题型', icon: '✚' }
+];
+var selectedKps = [];
+var generated = [];
+
+function renderKpCheck() {
+  var box = document.getElementById('kp-check');
+  box.innerHTML = kps.map(function (k) {
+    return '<label class="tag" style="margin:4px;cursor:pointer;padding:6px 12px;font-size:13px;" onclick="toggleKp(\'' + k + '\')">'
+      + '<input type="checkbox" style="margin-right:5px;" ' + (selectedKps.indexOf(k) >= 0 ? 'checked' : '') + ' onchange="toggleKp(\'' + k + '\')">' + k + '</label>';
+  }).join('');
+  document.getElementById('kp-count').textContent = '已选 ' + selectedKps.length + ' / 3 个知识点';
+}
+
+function toggleKp(k) {
+  var i = selectedKps.indexOf(k);
+  if (i >= 0) selectedKps.splice(i, 1);
+  else {
+    if (selectedKps.length >= 3) { toast('一套题中最多选择 3 个知识点', 'warn'); return; }
+    selectedKps.push(k);
+  }
+  renderKpCheck();
+}
+
+function renderQTypes() {
+  var a = document.getElementById('qtype-kp');
+  var b = document.getElementById('qtype-ref');
+  var html = qtypes.map(function (t, i) {
+    return '<label class="list-item" style="flex:1;margin:0;padding:8px;cursor:pointer;"><input type="radio" name="qt-a" value="' + t.v + '" ' + (i === 0 ? 'checked' : '') + '> ' + t.icon + ' ' + t.v + '</label>';
+  }).join('');
+  a.innerHTML = html;
+  b.innerHTML = html.replace(/qt-a/g, 'qt-b');
+}
+
+function selectedType(scope) {
+  var el = document.querySelector('input[name="' + scope + '"]:checked');
+  return el ? el.value : '单选题';
+}
+
+/* 生成题目（模拟） */
+var templates = {
+  '单选题': function (k) { return { type: '单选题', stem: '关于「' + k + '」，下列说法正确的是（　）。', options: ['A. 概念性描述一', 'B. 概念性描述二', 'C. 概念性描述三', 'D. 以上都不对'], answer: 'A' }; },
+  '多选题': function (k) { return { type: '多选题', stem: '以下属于「' + k + '」相关知识点的有（　）。', options: ['A. 要点一', 'B. 要点二', 'C. 要点三', 'D. 无关项'], answer: 'ABC' }; },
+  '判断题': function (k) { return { type: '判断题', stem: '判断：关于「' + k + '」的核心概念描述正确与否？（　）', options: ['A. 正确', 'B. 错误'], answer: 'A' }; },
+  '填空题': function (k) { return { type: '填空题', stem: '「' + k + '」的核心术语是______，请补充完整。', options: [], answer: '核心术语' }; }
+};
+
+function buildQuestions(types, sources) {
+  var out = [];
+  types.forEach(function (t, idx) {
+    var k = sources[idx % sources.length];
+    out.push(templates[t](k));
+  });
+  return out;
+}
+
+function resolveTypes(typeVal) {
+  if (typeVal === '混合题型') return ['单选题', '多选题', '判断题', '填空题'];
+  return [typeVal];
+}
+
+function genKp() {
+  if (selectedKps.length === 0) { toast('请至少选择 1 个知识点', 'warn'); return; }
+  var mode = document.querySelector('input[name="kp-mode"]:checked').value;
+  var num = +document.getElementById('kp-num').value;
+  var types = resolveTypes(selectedType('qt-a'));
+  generated = [];
+  for (var i = 0; i < num; i++) {
+    var t = types[i % types.length];
+    generated.push(templates[t](selectedKps[i % selectedKps.length]));
+  }
+  renderQuestions(mode + ' · ' + selectedKps.length + ' 个知识点');
+  toast('已生成 ' + num + ' 道题目', 'success');
+}
+
+function genRef() {
+  var text = document.getElementById('ref-text').value.trim();
+  var file = document.getElementById('ref-file').files[0];
+  if (!text && !file) { toast('请输入文本描述或上传参考资料', 'warn'); return; }
+  var src = file ? file.name : '参考文本';
+  var types = resolveTypes(selectedType('qt-b'));
+  generated = buildQuestions(types, [src, '参考资料', '课程内容']);
+  renderQuestions('参考内容 · ' + src);
+  toast('已生成题目', 'success');
+}
+
+function filePicked(input) {
+  if (input.files[0]) toast('已选择资料：' + input.files[0].name, 'success');
+}
+
+function renderQuestions(meta) {
+  var box = document.getElementById('question-list');
+  if (!generated.length) { box.innerHTML = '<div class="empty">暂无题目</div>'; return; }
+  var typeColor = { '单选题': 'badge-blue', '多选题': 'badge-green', '判断题': 'badge-orange', '填空题': 'badge-gray' };
+  var html = '<div class="hint mb-14">出题来源：' + esc(meta) + '</div>';
+  generated.forEach(function (q, i) {
+    html += '<div class="card" style="padding:16px;margin-bottom:12px;">'
+      + '<div class="flex-between" style="margin-bottom:8px;"><span class="badge ' + (typeColor[q.type] || 'badge-gray') + '">' + q.type + '</span>'
+      + '<span class="small muted">第 ' + (i + 1) + ' 题</span></div>'
+      + '<div style="font-weight:600;margin-bottom:8px;">' + esc(q.stem) + '</div>'
+      + (q.options.length ? '<div class="small" style="color:var(--text-2);margin-bottom:8px;">' + q.options.map(esc).join('　') + '</div>' : '')
+      + '<div class="small muted">参考答案：' + esc(q.answer) + '</div>'
+      + '<div class="flex mt-8" style="gap:8px;"><button class="btn btn-outline btn-sm" onclick="regenOne(' + i + ')">重新生成</button>'
+      + '<button class="btn btn-soft btn-sm" onclick="addBank(' + i + ')">加入题库</button></div></div>';
+  });
+  box.innerHTML = html;
+}
+
+function regenOne(i) {
+  var q = generated[i];
+  var src = selectedKps.length ? selectedKps[i % selectedKps.length] : '参考内容';
+  generated[i] = templates[q.type](src);
+  renderQuestions('重新生成');
+  toast('第 ' + (i + 1) + ' 题已重新生成', 'success');
+}
+function regenerateAll() {
+  if (!generated.length) { toast('请先生成题目', 'warn'); return; }
+  var types = generated.map(function (q) { return q.type; });
+  var srcs = selectedKps.length ? selectedKps : ['参考内容'];
+  generated = buildQuestions(types, srcs);
+  renderQuestions('全部重新生成');
+  toast('已重新生成全部题目', 'success');
+}
+function addBank(i) { toast('第 ' + (i + 1) + ' 题已加入题库', 'success'); }
+function addAllBank() { if (!generated.length) { toast('暂无题目', 'warn'); return; } toast(generated.length + ' 道题已全部加入题库', 'success'); }
+
+function onModuleReady() { renderKpCheck(); renderQTypes(); }
+</script>
+</body>
+</html>

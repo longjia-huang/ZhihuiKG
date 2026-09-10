@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模块 03 · AI 智能答疑伴学</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="back-btn" href="index.html">← 返回总览</a>
+  <div class="topbar-title" id="topbar-title">模块 03 · AI 智能答疑伴学</div>
+  <div class="topbar-meta" id="topbar-meta"></div>
+  <div class="step-nav">
+    <button class="step-btn" id="btn-prev"></button>
+    <button class="step-btn" id="btn-next"></button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="content">
+    <div class="page-head">
+      <span class="requirement-tag">※ 响应项 3 · 大语言模型伴学</span>
+      <h1>AI 智能答疑伴学</h1>
+      <p class="sub">基于<b>本课程知识库</b>训练大语言模型，实现<b>智能答疑</b>、<b>知识点讲解</b>、<b>学情分析</b>等伴学功能，为学生提供全天候学习助手。</p>
+    </div>
+
+    <div class="card">
+      <div class="tabs">
+        <button class="tab active" data-tab="panel-chat">💬 智能答疑</button>
+        <button class="tab" data-tab="panel-explain">📖 知识点讲解</button>
+        <button class="tab" data-tab="panel-report">📈 学情分析</button>
+      </div>
+
+      <!-- 智能答疑 -->
+      <div class="tab-panel active" id="panel-chat">
+        <div class="chat">
+          <div class="chat-body" id="chat-body"></div>
+          <div class="chat-input">
+            <input class="input" id="chat-input" placeholder="输入你的学习问题，AI 学伴将基于课程知识库作答…" onkeydown="if(event.key==='Enter')sendMsg();">
+            <button class="btn btn-primary" onclick="sendMsg()">发送</button>
+          </div>
+        </div>
+        <div class="flex wrap mt-8" id="quick-q" style="gap:8px;"></div>
+      </div>
+
+      <!-- 知识点讲解 -->
+      <div class="tab-panel" id="panel-explain">
+        <div class="grid" style="grid-template-columns:.9fr 1.1fr; align-items:start;">
+          <div class="card">
+            <h2>选择知识点</h2>
+            <div id="kp-select"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h2>AI 讲解</h2><span class="badge badge-blue" id="explain-topic">类与对象</span></div>
+            <div id="explain-body" class="small" style="line-height:1.9;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 学情分析 -->
+      <div class="tab-panel" id="panel-report">
+        <div class="grid grid-3" style="margin-bottom:16px;">
+          <div class="stat-card"><div class="label">知识掌握率</div><div class="value">78<small>%</small></div></div>
+          <div class="stat-card"><div class="label">已学知识点</div><div class="value">32<small> / 41</small></div></div>
+          <div class="stat-card"><div class="label">薄弱知识点</div><div class="value" style="color:var(--warning);">3<small> 个</small></div></div>
+        </div>
+        <div class="card">
+          <h2>知识点掌握情况</h2>
+          <div class="hint">基于答题、观看与提问行为综合计算</div>
+          <div id="mastery-list"></div>
+        </div>
+        <div class="card">
+          <h2>AI 学情建议</h2>
+          <div id="suggestion" class="small"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+/* ---------- 模块3：AI 智能答疑伴学 ---------- */
+var KB = {
+  '多态': '多态（Polymorphism）是面向对象的三大特性之一，指同一接口在不同对象上可以呈现不同的行为。实现多态主要通过方法重写与父类引用指向子类对象（向上转型）。例如：`Animal a = new Cat(); a.makeSound();` 会调用 Cat 重写后的 makeSound 方法，而具体调用哪个方法由运行时对象决定，这就是动态绑定。',
+  '继承': '继承（Inheritance）允许子类复用父类的成员变量和成员方法，关键字为 extends。子类可以重写父类方法，也可以新增自己的成员。继承体现了 is-a 关系，用于实现代码复用与层次化设计，但需要注意遵循里氏替换原则。',
+  '类与对象': '类（Class）是对象的模板，对象（Object）是类的实例。定义类时通常包含成员变量（属性）和成员方法（行为）。通过 new 关键字创建对象，例如：`Student s = new Student();`，然后可以通过对象引用访问其成员。',
+  '数据清洗': '数据清洗是数据分析前的关键步骤，主要包括：缺失值处理（删除或插补）、异常值识别（3σ 原则、箱线图）、重复值去重、格式统一等。高质量的数据清洗能显著提升后续分析与建模的准确性。'
+};
+
+var quickQuestions = ['什么是多态？', '继承和组合有什么区别？', '如何理解类和对象？', '数据清洗一般有哪些步骤？'];
+
+function addMsg(who, text) {
+  var body = document.getElementById('chat-body');
+  var div = document.createElement('div');
+  div.className = 'chat-msg ' + who;
+  var label = who === 'bot' ? '<div class="who">🤖 AI 学伴 · 基于课程知识库</div>' : '<div class="who" style="color:#fff;">👤 我</div>';
+  div.innerHTML = label + '<span>' + esc(text) + '</span>';
+  body.appendChild(div);
+  body.scrollTop = body.scrollHeight;
+  return div;
+}
+
+function botReply(q) {
+  var body = document.getElementById('chat-body');
+  var typing = document.createElement('div');
+  typing.className = 'chat-msg bot';
+  typing.innerHTML = '<div class="who">🤖 AI 学伴</div><div class="typing"><span></span><span></span><span></span></div>';
+  body.appendChild(typing);
+  body.scrollTop = body.scrollHeight;
+  setTimeout(function () {
+    typing.remove();
+    var ans = matchAnswer(q);
+    addMsg('bot', ans);
+  }, 900);
+}
+
+function matchAnswer(q) {
+  for (var key in KB) {
+    if (q.indexOf(key) >= 0 || key.indexOf(q.replace(/什么是|如何理解|怎么/g, '')) >= 0) {
+      return '【' + key + '】\n' + KB[key];
+    }
+  }
+  if (q.indexOf('继承') >= 0 && q.indexOf('组合') >= 0) return '继承强调 is-a 关系（子类是一种父类），通过 extends 复用父类实现；组合强调 has-a 关系（对象包含另一个对象），通过成员引用复用。组合通常比继承更灵活、耦合更低，优先考虑组合更符合面向对象设计原则。';
+  return '这是基于课程知识库给出的回答：' + q + ' —— 该问题已由大语言模型结合《' + '数字经济学院精品课程' + '》知识库进行语义检索与生成。建议同时结合「知识点讲解」页深入理解相关内容。';
+}
+
+function sendMsg() {
+  var input = document.getElementById('chat-input');
+  var v = input.value.trim();
+  if (!v) return;
+  addMsg('user', v);
+  input.value = '';
+  botReply(v);
+}
+
+function renderQuick() {
+  var box = document.getElementById('quick-q');
+  box.innerHTML = quickQuestions.map(function (q) {
+    return '<button class="btn btn-outline btn-sm" onclick="quickAsk(\'' + esc(q) + '\')">' + esc(q) + '</button>';
+  }).join('');
+}
+function quickAsk(q) { addMsg('user', q); botReply(q); }
+
+/* 知识点讲解 */
+var kps = ['类与对象', '继承', '多态', '数据清洗'];
+function renderKp() {
+  var box = document.getElementById('kp-select');
+  box.innerHTML = kps.map(function (k, i) {
+    return '<button class="btn ' + (i === 0 ? 'btn-primary' : 'btn-outline') + '" style="margin:0 8px 8px 0;" onclick="explain(\'' + k + '\')">' + k + '</button>';
+  }).join('');
+}
+function explain(k) {
+  document.getElementById('explain-topic').textContent = k;
+  document.getElementById('explain-body').innerHTML = '<p style="margin-bottom:10px;"><b>定义</b><br>' + esc(KB[k]) + '</p>'
+    + '<p style="margin-bottom:10px;"><b>学习建议</b><br>建议先观看对应微课视频，再完成随堂练习巩固，最后通过「AI 智能答疑」提出疑问。</p>'
+    + '<p><b>关联考点</b><br>' + esc(k) + ' 是课程核心考点，考试中常以选择题、简答题形式出现。</p>';
+}
+
+/* 学情分析 */
+var mastery = [
+  { name: '类与对象', rate: 92, status: 'good' },
+  { name: '继承', rate: 85, status: 'good' },
+  { name: '多态', rate: 58, status: 'weak' },
+  { name: '数据清洗', rate: 71, status: 'mid' },
+  { name: '图表类型', rate: 45, status: 'weak' },
+  { name: '数据库设计', rate: 66, status: 'mid' }
+];
+function renderMastery() {
+  var box = document.getElementById('mastery-list');
+  box.innerHTML = mastery.map(function (m) {
+    var cls = m.status === 'good' ? 'bar-green' : (m.status === 'mid' ? 'bar-orange' : 'bar-red');
+    var badge = m.status === 'good' ? '<span class="badge badge-green">良好</span>' : (m.status === 'mid' ? '<span class="badge badge-orange">一般</span>' : '<span class="badge badge-red">薄弱</span>');
+    return '<div class="mb-14"><div class="flex-between" style="margin-bottom:5px;"><span style="font-size:13.5px;font-weight:600;">' + m.name + '</span><span style="font-size:12.5px;color:var(--text-3);">' + m.rate + '% ' + badge + '</span></div>'
+      + '<div class="progress ' + cls + '"><div class="bar" style="width:' + m.rate + '%;"></div></div></div>';
+  }).join('');
+  document.getElementById('suggestion').innerHTML = '<ul style="padding-left:18px;line-height:2;">'
+    + '<li>薄弱知识点「多态」「图表类型」掌握率低于 60%，建议优先复习并完成专项练习。</li>'
+    + '<li>「继承」掌握良好，可进一步挑战综合案例巩固。</li>'
+    + '<li>建议每日通过 AI 学伴进行 1 次知识点问答，保持学习连续性。</li></ul>';
+}
+
+function onModuleReady() {
+  renderQuick(); renderKp(); renderMastery();
+  addMsg('bot', '你好！我是 AI 学伴，已基于本课程知识库完成训练。你可以直接问我课程相关问题，或点击下方快捷问题试试～');
+}
+</script>
+</body>
+</html>
