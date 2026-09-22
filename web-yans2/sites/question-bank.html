@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>题库管理 · 智能课程教学平台教学平台</title>
+<link rel="stylesheet" href="../assets/base.css" />
+<link rel="stylesheet" href="../assets/product.css" />
+<style>
+  /* 页面专属样式 */
+  .stem-cell { max-width: 560px; }
+  .stem-cell .stem { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .tbl tbody tr { cursor: pointer; }
+  .op-link { color: var(--accent); font-size: 13px; padding: 2px 6px; border-radius: 6px; }
+  .op-link:hover { background: rgba(10,132,255,.08); }
+  .op-link.danger { color: var(--red); }
+  .op-link.danger:hover { background: rgba(255,69,58,.14); }
+  .field .tag-list { display: flex; gap: 6px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <div>
+    <div class="ph-title">题库管理</div>
+    <div class="ph-sub">数据结构与算法 · 课程题库 · 题干、答案、解析、难度与标签的统一维护</div>
+  </div>
+  <div class="ph-actions">
+    <button class="btn btn-outline btn-sm" id="importBtn">导入题目</button>
+    <button class="btn btn-primary btn-sm" id="exportBtn">导出题库</button>
+    <input type="file" id="importFile" accept="application/json,.json" style="display:none" />
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-head">
+    <h3>题目列表</h3>
+    <span class="hint" id="listCount"></span>
+  </div>
+  <div class="panel-body" style="padding:16px 20px">
+    <div class="toolbar">
+      <input class="input" id="searchInput" type="text" placeholder="搜索题干、答案或标签…" style="max-width:280px" />
+      <select class="select" id="typeFilter" style="max-width:150px">
+        <option value="">全部题型</option>
+        <option value="单选">单选题</option>
+        <option value="多选">多选题</option>
+        <option value="判断">判断题</option>
+        <option value="填空">填空题</option>
+      </select>
+      <select class="select" id="diffFilter" style="max-width:150px">
+        <option value="">全部难度</option>
+        <option value="简单">简单</option>
+        <option value="中等">中等</option>
+        <option value="困难">困难</option>
+      </select>
+      <select class="select" id="kFilter" style="max-width:150px">
+        <option value="">全部知识点</option>
+        <option value="线性表">线性表</option>
+        <option value="栈与队列">栈与队列</option>
+        <option value="树与二叉树">树与二叉树</option>
+        <option value="图">图</option>
+        <option value="查找">查找</option>
+        <option value="排序">排序</option>
+      </select>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th style="width:46%">题干</th>
+          <th>题型</th>
+          <th>难度</th>
+          <th>知识点</th>
+          <th>更新时间</th>
+          <th style="width:110px">操作</th>
+        </tr>
+      </thead>
+      <tbody id="qBody"></tbody>
+    </table>
+  </div>
+  <div class="empty" id="emptyState" style="display:none">
+    <div class="e-icon">🔍</div>
+    <p>没有匹配的题目，调整筛选条件或导入新的题目。</p>
+  </div>
+  <div class="pagination">
+    <span class="info" id="pageInfo"></span>
+    <div class="pages" id="pageBtns"></div>
+  </div>
+</div>
+
+<!-- 题目详情编辑弹窗 -->
+<div class="modal-mask" id="qModal">
+  <div class="modal" style="max-width:680px">
+    <div class="modal-head">
+      <h3 id="modalTitle">题目详情</h3>
+      <button class="icon-btn" id="closeModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label><span class="req">题干</span></label>
+        <textarea class="textarea" id="fStem"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label><span class="req">答案</span></label>
+          <input class="input" id="fAnswer" type="text" placeholder="例如：A、ABC、正确、后进先出" />
+        </div>
+        <div class="field">
+          <label><span class="req">知识点</span></label>
+          <select class="select" id="fKnowledge">
+            <option>线性表</option><option>栈与队列</option><option>树与二叉树</option>
+            <option>图</option><option>查找</option><option>排序</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>解析</label>
+        <textarea class="textarea" id="fAnalysis" placeholder="填写答案解析，供学生查看…"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>题型</label>
+          <select class="select" id="fType">
+            <option value="单选">单选题</option>
+            <option value="多选">多选题</option>
+            <option value="判断">判断题</option>
+            <option value="填空">填空题</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>难度</label>
+          <select class="select" id="fDiff">
+            <option value="简单">简单</option>
+            <option value="中等">中等</option>
+            <option value="困难">困难</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>标签（逗号分隔）</label>
+        <input class="input" id="fTags" type="text" placeholder="例如：基础, 易错" />
+      </div>
+    </div>
+    <div class="modal-foot" style="justify-content:space-between">
+      <button class="btn btn-outline btn-sm" id="skipBtn">跳过</button>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-outline btn-sm" id="cancelBtn">取消</button>
+        <button class="btn btn-outline btn-sm" id="saveNextBtn">保存并添加下一题</button>
+        <button class="btn btn-primary btn-sm" id="saveBtn">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/shell.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var questions = [
+    { id: 1, type: '单选', difficulty: '简单', stem: '顺序存储的线性表支持以下哪种存取方式？', answer: 'A', analysis: '顺序表通过下标可直接定位元素，支持 O(1) 的随机存取。', knowledge: '线性表', tags: ['基础'], updated: '2026-09-18' },
+    { id: 2, type: '单选', difficulty: '中等', stem: '在长度为 n 的顺序表中删除第 i 个元素（1 ≤ i ≤ n），需要向前移动的元素个数是？', answer: 'B', analysis: '删除第 i 个元素后，其后的 n - i 个元素需依次前移一个位置。', knowledge: '线性表', tags: ['基础', '易错'], updated: '2026-09-15' },
+    { id: 3, type: '单选', difficulty: '简单', stem: '栈遵循的存取原则是？', answer: 'B', analysis: '栈只允许在一端插入和删除，遵循后进先出（LIFO）。', knowledge: '栈与队列', tags: ['基础'], updated: '2026-09-18' },
+    { id: 4, type: '单选', difficulty: '中等', stem: '一棵完全二叉树共有 1001 个结点，其叶子结点个数为？', answer: 'C', analysis: '由完全二叉树性质，n0 = (n + 1) / 2 = 501。', knowledge: '树与二叉树', tags: ['进阶'], updated: '2026-09-12' },
+    { id: 5, type: '单选', difficulty: '困难', stem: '具有 n 个顶点的有向完全图，其边数为？', answer: 'B', analysis: '有向完全图中任意两顶点之间都有两条方向相反的边，边数为 n(n-1)。', knowledge: '图', tags: ['进阶'], updated: '2026-09-10' },
+    { id: 6, type: '单选', difficulty: '简单', stem: '对有序表进行折半查找，其时间复杂度为？', answer: 'B', analysis: '折半查找每次将查找区间缩小一半，时间复杂度为 O(log n)。', knowledge: '查找', tags: ['基础'], updated: '2026-09-18' },
+    { id: 7, type: '单选', difficulty: '中等', stem: '快速排序在最好情况下的时间复杂度为？', answer: 'B', analysis: '划分较均衡时递归深度为 O(log n)，总时间复杂度为 O(n log n)。', knowledge: '排序', tags: ['进阶'], updated: '2026-09-11' },
+    { id: 8, type: '单选', difficulty: '中等', stem: '下列哪种排序算法是稳定的？', answer: 'C', analysis: '归并排序在合并时保持相同关键字的相对次序，是稳定排序。', knowledge: '排序', tags: ['易错'], updated: '2026-09-09' },
+
+    { id: 9, type: '多选', difficulty: '中等', stem: '以下关于栈和队列的说法正确的是？', answer: 'ABD', analysis: '栈为 LIFO、队列为 FIFO，二者都是受限的线性结构，可顺序或链式存储。', knowledge: '栈与队列', tags: ['基础'], updated: '2026-09-14' },
+    { id: 10, type: '多选', difficulty: '中等', stem: '下列属于二叉树遍历方式的是？', answer: 'ABC', analysis: '前序、中序、后序是二叉树的三种深度优先遍历方式。', knowledge: '树与二叉树', tags: ['基础'], updated: '2026-09-13' },
+    { id: 11, type: '多选', difficulty: '中等', stem: '下列属于图的遍历算法的是？', answer: 'AB', analysis: '图的遍历主要有深度优先搜索（DFS）和广度优先搜索（BFS）。', knowledge: '图', tags: ['基础'], updated: '2026-09-12' },
+    { id: 12, type: '多选', difficulty: '简单', stem: '下列属于稳定排序算法的是？', answer: 'ABC', analysis: '冒泡、插入、归并是稳定排序；快速排序和堆排序不稳定。', knowledge: '排序', tags: ['易错'], updated: '2026-09-10' },
+    { id: 13, type: '多选', difficulty: '困难', stem: '影响哈希表查找效率的因素包括？', answer: 'ABC', analysis: '哈希查找效率取决于哈希函数、装填因子与冲突处理方法。', knowledge: '查找', tags: ['进阶'], updated: '2026-09-08' },
+
+    { id: 14, type: '判断', difficulty: '简单', stem: '顺序存储的线性表支持随机存取。', answer: '正确', analysis: '顺序表通过下标可直接定位元素。', knowledge: '线性表', tags: ['基础'], updated: '2026-09-17' },
+    { id: 15, type: '判断', difficulty: '简单', stem: '队列遵循「先进先出」原则。', answer: '正确', analysis: '队列在队尾插入、队头删除，遵循 FIFO。', knowledge: '栈与队列', tags: ['基础'], updated: '2026-09-16' },
+    { id: 16, type: '判断', difficulty: '中等', stem: '二叉树的先序序列和中序序列可以唯一确定一棵二叉树。', answer: '正确', analysis: '由先序确定根、中序划分左右子树，可递归唯一确定。', knowledge: '树与二叉树', tags: ['进阶'], updated: '2026-09-11' },
+    { id: 17, type: '判断', difficulty: '中等', stem: '最小生成树一定唯一。', answer: '错误', analysis: '当图中存在权值相同的边时，最小生成树可能不唯一。', knowledge: '图', tags: ['易错'], updated: '2026-09-09' },
+    { id: 18, type: '判断', difficulty: '简单', stem: '折半查找要求查找表必须是有序的顺序存储结构。', answer: '正确', analysis: '折半查找要求顺序存储且关键字有序。', knowledge: '查找', tags: ['基础'], updated: '2026-09-15' },
+    { id: 19, type: '判断', difficulty: '中等', stem: '堆排序是稳定的排序算法。', answer: '错误', analysis: '堆排序在调整堆时会打乱相同关键字的相对次序，不稳定。', knowledge: '排序', tags: ['易错'], updated: '2026-09-08' },
+
+    { id: 20, type: '填空', difficulty: '简单', stem: '在单链表中，删除某结点前必须先找到它的 ______ 结点。', answer: '前驱', analysis: '单链表只能单向访问，删除结点需先定位其前驱。', knowledge: '线性表', tags: ['基础'], updated: '2026-09-14' },
+    { id: 21, type: '填空', difficulty: '中等', stem: '栈的两种典型应用包括递归调用和 ______ 求值。', answer: '表达式', analysis: '表达式求值、括号匹配、递归调用都是栈的典型应用。', knowledge: '栈与队列', tags: ['进阶'], updated: '2026-09-12' },
+    { id: 22, type: '填空', difficulty: '中等', stem: '哈夫曼树中，权值越大的叶子离根结点越 ______。', answer: '近', analysis: '哈夫曼树构造时权值大的结点路径更短。', knowledge: '树与二叉树', tags: ['进阶'], updated: '2026-09-10' },
+    { id: 23, type: '填空', difficulty: '中等', stem: 'Prim 算法和 Kruskal 算法都用于求解图的 ______ 问题。', answer: '最小生成树', analysis: '两者都是经典的最小生成树算法。', knowledge: '图', tags: ['进阶'], updated: '2026-09-09' },
+    { id: 24, type: '填空', difficulty: '中等', stem: '哈希表中，处理冲突的两种常用方法是开放定址法和 ______。', answer: '链地址法', analysis: '链地址法与开放定址法是两种主要的冲突处理方法。', knowledge: '查找', tags: ['易错'], updated: '2026-09-07' }
+  ];
+
+  var nextId = 25;
+  var pageSize = 8;
+  var currentPage = 1;
+  var editingId = null;
+
+  var qBody = document.getElementById('qBody');
+  var emptyState = document.getElementById('emptyState');
+  var listCount = document.getElementById('listCount');
+  var pageInfo = document.getElementById('pageInfo');
+  var pageBtns = document.getElementById('pageBtns');
+  var searchInput = document.getElementById('searchInput');
+  var typeFilter = document.getElementById('typeFilter');
+  var diffFilter = document.getElementById('diffFilter');
+  var kFilter = document.getElementById('kFilter');
+  var modal = document.getElementById('qModal');
+  var modalTitle = document.getElementById('modalTitle');
+
+  var fStem = document.getElementById('fStem');
+  var fAnswer = document.getElementById('fAnswer');
+  var fAnalysis = document.getElementById('fAnalysis');
+  var fType = document.getElementById('fType');
+  var fDiff = document.getElementById('fDiff');
+  var fKnowledge = document.getElementById('fKnowledge');
+  var fTags = document.getElementById('fTags');
+
+  function typeCls(t) { return t === '单选' ? 'blue' : t === '多选' ? 'purple' : t === '判断' ? 'green' : 'orange'; }
+  function diffCls(d) { return d === '简单' ? 'green' : d === '中等' ? 'orange' : 'red'; }
+
+  function filtered() {
+    var kw = searchInput.value.trim().toLowerCase();
+    var t = typeFilter.value, d = diffFilter.value, k = kFilter.value;
+    return questions.filter(function (q) {
+      if (kw && (q.stem + q.answer + q.tags.join(',')).toLowerCase().indexOf(kw) === -1) return false;
+      if (t && q.type !== t) return false;
+      if (d && q.difficulty !== d) return false;
+      if (k && q.knowledge !== k) return false;
+      return true;
+    });
+  }
+
+  function render() {
+    var list = filtered();
+    var totalPages = Math.max(1, Math.ceil(list.length / pageSize));
+    if (currentPage > totalPages) currentPage = totalPages;
+    var start = (currentPage - 1) * pageSize;
+    var pageList = list.slice(start, start + pageSize);
+
+    listCount.textContent = '共 ' + list.length + ' 题';
+    emptyState.style.display = list.length ? 'none' : 'block';
+    qBody.innerHTML = pageList.map(function (q) {
+      return '<tr data-id="' + q.id + '">' +
+        '<td class="stem-cell"><div class="cell-main stem">' + escapeHtml(q.stem) + '</div><div class="cell-sub">标签 · ' + escapeHtml(q.tags.join('、')) + '</div></td>' +
+        '<td><span class="badge ' + typeCls(q.type) + '">' + q.type + '</span></td>' +
+        '<td><span class="badge ' + diffCls(q.difficulty) + '">' + q.difficulty + '</span></td>' +
+        '<td><span class="tag blue">' + escapeHtml(q.knowledge) + '</span></td>' +
+        '<td>' + q.updated + '</td>' +
+        '<td><button class="op-link" data-edit="' + q.id + '">编辑</button><button class="op-link danger" data-del="' + q.id + '">删除</button></td>' +
+        '</tr>';
+    }).join('');
+
+    pageInfo.textContent = '共 ' + list.length + ' 题 · 第 ' + currentPage + ' / ' + totalPages + ' 页';
+    var btns = '';
+    btns += '<div class="page-btn" data-pg="' + (currentPage - 1) + '"' + (currentPage === 1 ? ' style="pointer-events:none;opacity:.4"' : '') + '>‹</div>';
+    for (var i = 1; i <= totalPages; i++) {
+      btns += '<div class="page-btn' + (i === currentPage ? ' active' : '') + '" data-pg="' + i + '">' + i + '</div>';
+    }
+    btns += '<div class="page-btn" data-pg="' + (currentPage + 1) + '"' + (currentPage === totalPages ? ' style="pointer-events:none;opacity:.4"' : '') + '>›</div>';
+    pageBtns.innerHTML = btns;
+  }
+
+  pageBtns.addEventListener('click', function (e) {
+    var b = e.target.closest('.page-btn');
+    if (!b) return;
+    var p = parseInt(b.getAttribute('data-pg'), 10);
+    var totalPages = Math.max(1, Math.ceil(filtered().length / pageSize));
+    if (p < 1 || p > totalPages) return;
+    currentPage = p;
+    render();
+  });
+
+  qBody.addEventListener('click', function (e) {
+    var edit = e.target.closest('[data-edit]');
+    var del = e.target.closest('[data-del]');
+    var tr = e.target.closest('tr[data-id]');
+    if (edit) { openModal(parseInt(edit.getAttribute('data-edit'), 10)); return; }
+    if (del) { removeQuestion(parseInt(del.getAttribute('data-del'), 10)); return; }
+    if (tr) { openModal(parseInt(tr.getAttribute('data-id'), 10)); }
+  });
+
+  function removeQuestion(id) {
+    var q = questions.find(function (x) { return x.id === id; });
+    if (!q) return;
+    questions = questions.filter(function (x) { return x.id !== id; });
+    render();
+    toast('已删除题目');
+  }
+
+  function openModal(id) {
+    var q = questions.find(function (x) { return x.id === id; });
+    if (!q) return;
+    editingId = id;
+    modalTitle.textContent = '题目详情 · #' + q.id;
+    fStem.value = q.stem;
+    fAnswer.value = q.answer;
+    fAnalysis.value = q.analysis;
+    fType.value = q.type;
+    fDiff.value = q.difficulty;
+    fKnowledge.value = q.knowledge;
+    fTags.value = q.tags.join(', ');
+    modal.classList.add('show');
+  }
+
+  function closeModal() { modal.classList.remove('show'); }
+
+  function save() {
+    if (editingId == null) return;
+    var q = questions.find(function (x) { return x.id === editingId; });
+    if (!q) return;
+    var stem = fStem.value.trim();
+    var answer = fAnswer.value.trim();
+    if (!stem) { toast('请填写题干'); return; }
+    if (!answer) { toast('请填写答案'); return; }
+    q.stem = stem;
+    q.answer = answer;
+    q.analysis = fAnalysis.value.trim();
+    q.type = fType.value;
+    q.difficulty = fDiff.value;
+    q.knowledge = fKnowledge.value;
+    q.tags = fTags.value.split(/[,，]/).map(function (s) { return s.trim(); }).filter(Boolean);
+    q.updated = '2026-09-21';
+    render();
+    toast('题目已保存');
+  }
+
+  function nextInList() {
+    var list = filtered();
+    var pos = list.findIndex(function (x) { return x.id === editingId; });
+    var next = list[(pos + 1) % list.length];
+    return next;
+  }
+
+  document.getElementById('saveBtn').addEventListener('click', function () { save(); closeModal(); });
+  document.getElementById('saveNextBtn').addEventListener('click', function () {
+    save();
+    var next = nextInList();
+    if (next && next.id !== editingId) openModal(next.id);
+    else closeModal();
+  });
+  document.getElementById('skipBtn').addEventListener('click', function () {
+    var next = nextInList();
+    if (next && next.id !== editingId) { openModal(next.id); toast('已跳过，切换到下一题'); }
+    else closeModal();
+  });
+  document.getElementById('cancelBtn').addEventListener('click', closeModal);
+  document.getElementById('closeModal').addEventListener('click', closeModal);
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+
+  document.getElementById('exportBtn').addEventListener('click', function () {
+    var payload = JSON.stringify(questions, null, 2);
+    var blob = new Blob([payload], { type: 'application/json;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'question-bank.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+    toast('已导出 question-bank.json（共 ' + questions.length + ' 题）');
+  });
+
+  document.getElementById('importBtn').addEventListener('click', function () { document.getElementById('importFile').click(); });
+  document.getElementById('importFile').addEventListener('change', function (e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var arr = JSON.parse(reader.result);
+        if (!Array.isArray(arr) || !arr.length) throw new Error('empty');
+        arr.forEach(function (item) {
+          questions.push({
+            id: nextId++,
+            type: item.type || '单选',
+            difficulty: item.difficulty || '简单',
+            stem: item.stem || '',
+            answer: item.answer || '',
+            analysis: item.analysis || '',
+            knowledge: item.knowledge || '线性表',
+            tags: item.tags || [],
+            updated: '2026-09-21'
+          });
+        });
+        render();
+        toast('已导入 ' + arr.length + ' 道题目');
+      } catch (err) {
+        toast('导入失败：文件格式不正确');
+      }
+      e.target.value = '';
+    };
+    reader.readAsText(file);
+  });
+
+  searchInput.addEventListener('input', function () { currentPage = 1; render(); });
+  typeFilter.addEventListener('change', function () { currentPage = 1; render(); });
+  diffFilter.addEventListener('change', function () { currentPage = 1; render(); });
+  kFilter.addEventListener('change', function () { currentPage = 1; render(); });
+
+  render();
+})();
+</script>
+</body>
+</html>

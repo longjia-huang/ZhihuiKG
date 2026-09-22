@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>知识二维码 · 智能课程教学平台教学平台</title>
+<link rel="stylesheet" href="../assets/base.css" />
+<link rel="stylesheet" href="../assets/product.css" />
+<style>
+  .qr-layout { display: grid; grid-template-columns: 300px 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 960px) { .qr-layout { grid-template-columns: 1fr; } }
+
+  .kp-search { margin-bottom: 12px; }
+  .kp-list { display: flex; flex-direction: column; gap: 6px; max-height: 560px; overflow-y: auto; }
+  .kp-item {
+    padding: 12px 14px; border-radius: 12px; cursor: pointer; border: 1px solid transparent; transition: background .13s;
+  }
+  .kp-item:hover { background: var(--bg-soft); }
+  .kp-item.active { background: rgba(10,132,255,.08); border-color: rgba(10,132,255,.22); }
+  .kp-item .k-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .kp-item .k-ch { font-size: 12px; color: var(--ink-4); margin-top: 3px; }
+  .kp-item .k-views { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
+
+  .qr-preview { text-align: center; }
+  .qr-stage {
+    width: 240px; height: 240px; margin: 0 auto 16px; display: grid; place-items: center;
+    border-radius: 18px; background: var(--bg-soft-2); border: 1px solid var(--line-soft);
+  }
+  .qr-stage canvas { width: 200px; height: 200px; border-radius: 10px; transition: transform .3s var(--ease), opacity .25s; }
+  .qr-stage canvas.gen { transform: scale(.92); opacity: .45; }
+  .qr-name { font-size: 17px; font-weight: 700; }
+  .qr-desc { font-size: 13px; color: var(--ink-3); margin-top: 5px; }
+  .qr-meta { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 12px; font-size: 13px; color: var(--ink-4); flex-wrap: wrap; }
+  .qr-actions { display: flex; justify-content: center; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .qr-link {
+    margin-top: 14px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--ink-3);
+    background: var(--bg-soft-2); border: 1px solid var(--line-soft); border-radius: 8px; padding: 8px 12px; word-break: break-all;
+  }
+  .thumb { width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--line-soft); background: var(--surface); }
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <div>
+    <div class="ph-title">知识二维码</div>
+    <div class="ph-sub">数据结构与算法 · 为知识点生成学习二维码，扫码直达免登录学习页</div>
+  </div>
+  <div class="ph-actions">
+    <button class="btn btn-outline btn-sm" onclick="batchGenerate()">批量生成</button>
+    <button class="btn btn-primary btn-sm" onclick="downloadAll()">下载全部</button>
+  </div>
+</div>
+
+<div class="qr-layout">
+  <div class="panel">
+    <div class="panel-head"><h3>知识点</h3><span class="hint" id="kpCount"></span></div>
+    <div class="panel-body">
+      <div class="kp-search">
+        <input class="input" id="kpSearch" type="text" placeholder="搜索知识点名称…" />
+      </div>
+      <div class="kp-list" id="kpList"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><h3>二维码预览</h3><span class="hint">点选左侧知识点实时重绘</span></div>
+    <div class="panel-body qr-preview">
+      <div class="qr-stage"><canvas id="qr" width="200" height="200"></canvas></div>
+      <div class="qr-name" id="qrName"></div>
+      <div class="qr-desc" id="qrDesc"></div>
+      <div class="qr-meta">
+        <span id="qrViews"></span>
+        <span id="qrStatus"></span>
+      </div>
+      <div class="qr-actions">
+        <button class="btn btn-outline btn-sm" onclick="copyLink()">复制链接</button>
+        <button class="btn btn-primary btn-sm" onclick="downloadQr()">下载二维码</button>
+      </div>
+      <div class="qr-link" id="qrLink"></div>
+    </div>
+  </div>
+</div>
+
+<div class="panel" style="margin-top:20px">
+  <div class="panel-head"><h3>已生成二维码</h3><span class="hint">共 <b id="totalCount">0</b> 条记录</span></div>
+  <div class="table-wrap">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th style="width:52px">二维码</th>
+          <th>知识点</th>
+          <th>章节</th>
+          <th>链接</th>
+          <th style="width:110px">累计访问</th>
+          <th style="width:100px">状态</th>
+          <th style="width:110px">操作</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script src="../assets/shell.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var kps = [
+    { id: 'ds-intro',    name: '数据结构基本概念', ch: '第 1 章 · 绪论',          desc: '逻辑结构、存储结构与抽象数据类型的定义。', views: 1284, status: 'active' },
+    { id: 'ds-linear',   name: '线性表与链表',     ch: '第 2 章 · 线性表',        desc: '顺序表与单链表、双链表的存储与基本操作。', views: 2316, status: 'active' },
+    { id: 'ds-stack',    name: '栈与队列',         ch: '第 3 章 · 栈和队列',      desc: '栈、队列、循环队列的特性与典型应用。', views: 1874, status: 'active' },
+    { id: 'ds-bintree',  name: '二叉树与遍历',     ch: '第 4 章 · 树与二叉树',    desc: '二叉树性质、三种遍历与二叉排序树。', views: 1529, status: 'active' },
+    { id: 'ds-heap',     name: '堆与优先队列',     ch: '第 4 章 · 树与二叉树',    desc: '堆的结构、调整操作与优先队列实现。', views: 663,  status: 'active' },
+    { id: 'ds-graph',    name: '图的存储与遍历',   ch: '第 5 章 · 图',            desc: '邻接矩阵、邻接表与深度广度优先遍历。', views: 912,  status: 'active' },
+    { id: 'ds-mst',      name: '最小生成树',       ch: '第 5 章 · 图',            desc: 'Prim 与 Kruskal 算法求解最小生成树。', views: 508,  status: 'draft' },
+    { id: 'ds-sort',     name: '排序算法',         ch: '第 6 章 · 排序',          desc: '快速、归并等经典排序算法与性能对比。', views: 2045, status: 'active' },
+    { id: 'ds-search',   name: '查找与散列表',     ch: '第 7 章 · 查找',          desc: '折半查找、散列函数与冲突处理。', views: 786,  status: 'active' },
+    { id: 'ds-complex',  name: '算法复杂度分析',   ch: '第 1 章 · 绪论',          desc: '时间复杂度、空间复杂度与大 O 记号。', views: 1042, status: 'active' }
+  ];
+
+  var currentIdx = 0;
+  var listEl = document.getElementById('kpList');
+  var tableBody = document.getElementById('tableBody');
+  var searchInput = document.getElementById('kpSearch');
+  var canvas = document.getElementById('qr');
+  var ctx = canvas.getContext('2d');
+
+  /* ---------- 确定性伪随机（种子） ---------- */
+  function hashSeed(str) {
+    var h = 2166136261;
+    for (var i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return h >>> 0;
+  }
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  /* ---------- 二维码绘制（三定位角 + 种子数据块） ---------- */
+  var N = 25;
+  function isReserved(r, c) {
+    if (r < 9 && c < 9) return true;
+    if (r < 9 && c >= N - 8) return true;
+    if (r >= N - 8 && c < 9) return true;
+    if (r === 6 || c === 6) return true;
+    return false;
+  }
+  function drawFinder(c, c0, r0, cell) {
+    c.fillStyle = '#1d1d1f';
+    c.fillRect(c0, r0, 7 * cell, 7 * cell);
+    c.fillStyle = '#fff';
+    c.fillRect(c0 + cell, r0 + cell, 5 * cell, 5 * cell);
+    c.fillStyle = '#1d1d1f';
+    c.fillRect(c0 + 2 * cell, r0 + 2 * cell, 3 * cell, 3 * cell);
+  }
+  function drawQR(c, size, id) {
+    var cell = size / (N + 8);
+    var pad = 4 * cell;
+    c.fillStyle = '#ffffff';
+    c.fillRect(0, 0, size, size);
+    c.fillStyle = '#1d1d1f';
+    var rng = mulberry32(hashSeed(id));
+    for (var r = 0; r < N; r++) {
+      for (var cc = 0; cc < N; cc++) {
+        if (isReserved(r, cc)) continue;
+        if (rng() > 0.5) c.fillRect(cc * cell + pad, r * cell + pad, cell, cell);
+      }
+    }
+    c.fillStyle = '#1d1d1f';
+    for (var t = 0; t < N; t++) {
+      if (!isReserved(6, t) && t % 2 === 0) c.fillRect(t * cell + pad, 6 * cell + pad, cell, cell);
+      if (!isReserved(t, 6) && t % 2 === 0) c.fillRect(6 * cell + pad, t * cell + pad, cell, cell);
+    }
+    drawFinder(c, pad, pad, cell);
+    drawFinder(c, pad, (N - 7) * cell + pad, cell);
+    drawFinder(c, (N - 7) * cell + pad, pad, cell);
+  }
+  function thumbDataUrl(id) {
+    var tc = document.createElement('canvas');
+    tc.width = 34; tc.height = 34;
+    drawQR(tc.getContext('2d'), 34, id);
+    return tc.toDataURL('image/png');
+  }
+
+  var kpUrl = function (k) { return 'https://zs.zhihuishu.com/k/' + k.id; };
+  function statusBadge(s) {
+    return s === 'active' ? '<span class="badge green">已发布</span>' : '<span class="badge gray">草稿</span>';
+  }
+
+  function renderList() {
+    var kw = searchInput.value.trim().toLowerCase();
+    var filtered = kps.map(function (k, i) { return { k: k, i: i }; }).filter(function (x) {
+      return !kw || x.k.name.toLowerCase().indexOf(kw) !== -1;
+    });
+    document.getElementById('kpCount').textContent = '共 ' + kps.length + ' 个知识点';
+    if (!filtered.length) {
+      listEl.innerHTML = '<div class="empty"><div class="e-icon">🔍</div><p>未找到匹配的知识点</p></div>';
+      return;
+    }
+    listEl.innerHTML = filtered.map(function (x) {
+      var k = x.k;
+      return '<div class="kp-item' + (x.i === currentIdx ? ' active' : '') + '" data-i="' + x.i + '">' +
+        '<div class="k-name">' + escapeHtml(k.name) + '</div>' +
+        '<div class="k-ch">' + escapeHtml(k.ch) + '</div>' +
+        '<div class="k-views">累计访问 ' + k.views.toLocaleString() + ' 次</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderPreview(animate) {
+    var k = kps[currentIdx];
+    drawQR(ctx, 200, k.id);
+    document.getElementById('qrName').textContent = k.name;
+    document.getElementById('qrDesc').textContent = k.desc;
+    document.getElementById('qrViews').textContent = '累计访问 ' + k.views.toLocaleString() + ' 次';
+    document.getElementById('qrStatus').innerHTML = statusBadge(k.status);
+    document.getElementById('qrLink').textContent = kpUrl(k);
+    if (animate) {
+      canvas.classList.add('gen');
+      setTimeout(function () { canvas.classList.remove('gen'); }, 280);
+    }
+  }
+
+  function renderTable() {
+    document.getElementById('totalCount').textContent = kps.length;
+    tableBody.innerHTML = kps.map(function (k, i) {
+      var url = kpUrl(k);
+      return '<tr' + (i === currentIdx ? ' style="background:var(--bg-soft-2)"' : '') + '>' +
+        '<td><img class="thumb" src="' + thumbDataUrl(k.id) + '" alt="" /></td>' +
+        '<td class="cell-main">' + escapeHtml(k.name) + '<div class="cell-sub">' + escapeHtml(k.desc) + '</div></td>' +
+        '<td>' + escapeHtml(k.ch) + '</td>' +
+        '<td style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--ink-3)">' + escapeHtml(url) + '</td>' +
+        '<td>' + k.views.toLocaleString() + '</td>' +
+        '<td>' + statusBadge(k.status) + '</td>' +
+        '<td><button class="btn-text" data-pick="' + i + '">预览</button><button class="btn-text" data-copy="' + i + '">复制</button></td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  function select(i) {
+    currentIdx = i;
+    renderList(); renderPreview(true); renderTable();
+  }
+
+  listEl.addEventListener('click', function (e) {
+    var it = e.target.closest('.kp-item');
+    if (it) select(+it.getAttribute('data-i'));
+  });
+  searchInput.addEventListener('input', renderList);
+
+  tableBody.addEventListener('click', function (e) {
+    var pick = e.target.closest('[data-pick]');
+    var copy = e.target.closest('[data-copy]');
+    if (pick) { select(+pick.getAttribute('data-pick')); document.querySelector('.qr-layout').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    if (copy) { copyToClipboard(kpUrl(kps[+copy.getAttribute('data-copy')])); }
+  });
+
+  function copyToClipboard(url) {
+    function done() { toast('链接已复制到剪贴板'); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(done, function () { fallbackCopy(url); done(); });
+    } else { fallbackCopy(url); done(); }
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  function triggerDownload(dataUrl, filename) {
+    var a = document.createElement('a');
+    a.href = dataUrl; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  }
+
+  window.copyLink = function () { copyToClipboard(kpUrl(kps[currentIdx])); };
+  window.downloadQr = function () {
+    triggerDownload(canvas.toDataURL('image/png'), kps[currentIdx].id + '-qr.png');
+    toast('二维码已下载');
+  };
+  window.batchGenerate = function () { renderTable(); toast('已为 ' + kps.length + ' 个知识点生成二维码'); };
+  window.downloadAll = function () { toast('已导出全部二维码包（PNG · ' + kps.length + ' 张）'); };
+
+  renderList(); renderPreview(false); renderTable();
+})();
+</script>
+</body>
+</html>

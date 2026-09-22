@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>课程指令 · 智能课程教学平台教学平台</title>
+<link rel="stylesheet" href="../assets/base.css" />
+<link rel="stylesheet" href="../assets/product.css" />
+<style>
+  /* 页面专属样式 */
+  .cmd-desc { font-size: 12px; color: var(--ink-4); margin-top: 3px; max-width: 360px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .op-link { color: var(--accent); font-size: 13px; padding: 2px 6px; border-radius: 6px; }
+  .op-link:hover { background: rgba(10,132,255,.08); }
+  .op-link.danger { color: var(--red); }
+  .op-link.danger:hover { background: rgba(255,69,58,.14); }
+  .var-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .var-bar .vlabel { font-size: 12px; color: var(--ink-4); }
+  .var-btn {
+    font-size: 12px; padding: 5px 11px; border-radius: 8px; cursor: pointer;
+    background: var(--grad-ai-soft); color: var(--accent);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    border: 1px solid rgba(10,132,255,.2); transition: transform .12s;
+  }
+  .var-btn:hover { transform: translateY(-1px); }
+  .toolbar .count-tip { font-size: 13px; color: var(--ink-4); }
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <div>
+    <div class="ph-title">课程指令</div>
+    <div class="ph-sub">数据结构与算法 · 面向学生的提问指令 · 支持简单指令与变量化复杂指令</div>
+  </div>
+  <div class="ph-actions">
+    <button class="btn btn-primary btn-sm" id="newBtn">＋ 新建指令</button>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-head">
+    <h3>指令列表</h3>
+    <span class="hint" id="listCount"></span>
+  </div>
+  <div class="panel-body" style="padding:16px 20px">
+    <div class="toolbar">
+      <input class="input" id="searchInput" type="text" placeholder="搜索指令名称或描述…" style="max-width:260px" />
+      <select class="select" id="groupFilter" style="max-width:180px"></select>
+      <select class="select" id="statusFilter" style="max-width:150px">
+        <option value="">全部状态</option>
+        <option value="open">已开放</option>
+        <option value="closed">未开放</option>
+      </select>
+      <div class="spacer"></div>
+      <span class="count-tip">变更后即时生效，学生端同步可见</span>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>指令名称</th>
+          <th>类型</th>
+          <th>所属分组</th>
+          <th>对学生开放</th>
+          <th>引用次数</th>
+          <th>创建时间</th>
+          <th style="width:120px">操作</th>
+        </tr>
+      </thead>
+      <tbody id="cmdBody"></tbody>
+    </table>
+  </div>
+  <div class="empty" id="emptyState" style="display:none">
+    <div class="e-icon">🔍</div>
+    <p>没有匹配的课程指令，调整筛选条件或新建一条指令。</p>
+  </div>
+</div>
+
+<!-- 新建 / 编辑指令弹窗 -->
+<div class="modal-mask" id="cmdModal">
+  <div class="modal" style="max-width:620px">
+    <div class="modal-head">
+      <h3 id="modalTitle">新建指令</h3>
+      <button class="icon-btn" id="closeModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="tabs" id="modeTabs">
+        <div class="tab active" data-mode="simple">简单指令</div>
+        <div class="tab" data-mode="complex">复杂指令</div>
+      </div>
+
+      <div class="field">
+        <label><span class="req">指令名称</span></label>
+        <input class="input" id="fName" type="text" placeholder="例如：请用自己的话解释栈与队列的区别" />
+      </div>
+
+      <div class="field">
+        <label><span class="req">指令描述</span></label>
+        <textarea class="textarea" id="fDesc" placeholder="描述指令内容，引导学生思考…"></textarea>
+        <div class="help">复杂指令可使用变量占位符，发布后由学生端自动替换为各自的知识点与章节。</div>
+      </div>
+
+      <div class="field" id="varField" style="display:none">
+        <label>插入变量</label>
+        <div class="var-bar">
+          <span class="vlabel">点选插入：</span>
+          <button class="var-btn" data-var="{知识点}">{知识点}</button>
+          <button class="var-btn" data-var="{章节}">{章节}</button>
+          <button class="var-btn" data-var="{学生姓名}">{学生姓名}</button>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>所属分组</label>
+          <select class="select" id="fGroup"></select>
+        </div>
+        <div class="field">
+          <label>对学生开放</label>
+          <label class="switch" style="margin-top:8px"><input type="checkbox" id="fOpen" checked /><span class="sl"></span></label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline btn-sm" id="cancelBtn">取消</button>
+      <button class="btn btn-primary btn-sm" id="saveBtn">保存指令</button>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/shell.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var groups = ['第 1 章 绪论', '第 3 章 栈与队列', '第 5 章 树与二叉树', '第 7 章 查找', '第 8 章 排序', '面向对象程序设计'];
+
+  var commands = [
+    { id: 1, name: '请从三种角度分析「多态」', type: '复杂', group: '面向对象程序设计', desc: '请从「定义、实现方式、应用场景」三个角度，系统分析 {知识点} 这一概念，并结合 {章节} 中的例子加以说明。', open: true, refs: 128, created: '2026-09-12' },
+    { id: 2, name: '用自己的话解释栈与队列的区别', type: '简单', group: '第 3 章 栈与队列', desc: '请用你自己的话解释栈与队列在存取顺序上的本质区别，并各举一个生活中的例子。', open: true, refs: 96, created: '2026-09-10' },
+    { id: 3, name: '结合实例说明核心概念', type: '复杂', group: '第 1 章 绪论', desc: '请结合 {章节} 中的实例，说明 {知识点} 的定义与典型应用场景，{学生姓名} 同学请重点准备。', open: true, refs: 214, created: '2026-09-08' },
+    { id: 4, name: '二叉树遍历易错点梳理', type: '简单', group: '第 5 章 树与二叉树', desc: '请梳理前序、中序、后序三种遍历的步骤差异，并指出最常出现的两处易错点。', open: false, refs: 45, created: '2026-09-05' },
+    { id: 5, name: '用三步法推导时间复杂度', type: '复杂', group: '第 1 章 绪论', desc: '请用「识别基本操作、统计执行次数、确定数量级」三步法，推导 {知识点} 的时间复杂度。', open: true, refs: 87, created: '2026-09-01' },
+    { id: 6, name: '哈希表冲突解决方法对比', type: '简单', group: '第 7 章 查找', desc: '请对比开放定址法与链地址法在解决哈希冲突时的优缺点，并说明各自适用场景。', open: false, refs: 33, created: '2026-08-28' },
+    { id: 7, name: '选择排序的稳定性分析', type: '复杂', group: '第 8 章 排序', desc: '请结合一趟排序过程，说明 {知识点} 是否稳定，并用 {章节} 中的例子验证你的结论。', open: true, refs: 59, created: '2026-08-20' }
+  ];
+
+  var nextId = 8;
+  var editingId = null;
+
+  var body = document.getElementById('cmdBody');
+  var emptyState = document.getElementById('emptyState');
+  var listCount = document.getElementById('listCount');
+  var searchInput = document.getElementById('searchInput');
+  var groupFilter = document.getElementById('groupFilter');
+  var statusFilter = document.getElementById('statusFilter');
+  var modal = document.getElementById('cmdModal');
+  var modalTitle = document.getElementById('modalTitle');
+  var modeTabs = document.getElementById('modeTabs');
+  var varField = document.getElementById('varField');
+  var fName = document.getElementById('fName');
+  var fDesc = document.getElementById('fDesc');
+  var fGroup = document.getElementById('fGroup');
+  var fOpen = document.getElementById('fOpen');
+
+  function initGroupSelect() {
+    var opts = ['<option value="">全部分组</option>'];
+    groups.forEach(function (g) { opts.push('<option value="' + escapeHtml(g) + '">' + escapeHtml(g) + '</option>'); });
+    groupFilter.innerHTML = opts.join('');
+    fGroup.innerHTML = groups.map(function (g) { return '<option value="' + escapeHtml(g) + '">' + escapeHtml(g) + '</option>'; }).join('');
+  }
+
+  function filtered() {
+    var kw = searchInput.value.trim().toLowerCase();
+    var g = groupFilter.value;
+    var s = statusFilter.value;
+    return commands.filter(function (c) {
+      if (kw && (c.name + c.desc).toLowerCase().indexOf(kw) === -1) return false;
+      if (g && c.group !== g) return false;
+      if (s === 'open' && !c.open) return false;
+      if (s === 'closed' && c.open) return false;
+      return true;
+    });
+  }
+
+  function render() {
+    var list = filtered();
+    listCount.textContent = '共 ' + list.length + ' 条指令';
+    emptyState.style.display = list.length ? 'none' : 'block';
+    body.innerHTML = list.map(function (c) {
+      var typeBadge = c.type === '复杂' ? '<span class="badge purple">复杂</span>' : '<span class="badge blue">简单</span>';
+      return '<tr>' +
+        '<td><div class="cell-main">' + escapeHtml(c.name) + '</div><div class="cmd-desc">' + escapeHtml(c.desc) + '</div></td>' +
+        '<td>' + typeBadge + '</td>' +
+        '<td>' + escapeHtml(c.group) + '</td>' +
+        '<td><label class="switch"><input type="checkbox" data-toggle="' + c.id + '"' + (c.open ? ' checked' : '') + ' /><span class="sl"></span></label></td>' +
+        '<td>' + c.refs + '</td>' +
+        '<td>' + c.created + '</td>' +
+        '<td><button class="op-link" data-edit="' + c.id + '">编辑</button><button class="op-link danger" data-del="' + c.id + '">删除</button></td>' +
+        '</tr>';
+    }).join('');
+  }
+
+  body.addEventListener('click', function (e) {
+    var edit = e.target.closest('[data-edit]');
+    var del = e.target.closest('[data-del]');
+    if (edit) { openModal(parseInt(edit.getAttribute('data-edit'), 10)); }
+    else if (del) { removeCommand(parseInt(del.getAttribute('data-del'), 10)); }
+  });
+
+  body.addEventListener('change', function (e) {
+    var t = e.target.closest('[data-toggle]');
+    if (!t) return;
+    var c = commands.find(function (x) { return x.id === parseInt(t.getAttribute('data-toggle'), 10); });
+    if (!c) return;
+    c.open = t.checked;
+    toast(t.checked ? '已对学生开放「' + c.name + '」' : '已关闭「' + c.name + '」的学生可见');
+  });
+
+  function removeCommand(id) {
+    var c = commands.find(function (x) { return x.id === id; });
+    if (!c) return;
+    commands = commands.filter(function (x) { return x.id !== id; });
+    render();
+    toast('已删除指令「' + c.name + '」');
+  }
+
+  function setMode(mode) {
+    modeTabs.querySelectorAll('.tab').forEach(function (t) { t.classList.toggle('active', t.getAttribute('data-mode') === mode); });
+    varField.style.display = mode === 'complex' ? 'block' : 'none';
+  }
+
+  function openModal(id) {
+    editingId = id || null;
+    if (id) {
+      var c = commands.find(function (x) { return x.id === id; });
+      modalTitle.textContent = '编辑指令';
+      fName.value = c.name;
+      fDesc.value = c.desc;
+      fGroup.value = c.group;
+      fOpen.checked = c.open;
+      setMode(c.type === '复杂' ? 'complex' : 'simple');
+    } else {
+      modalTitle.textContent = '新建指令';
+      fName.value = '';
+      fDesc.value = '';
+      fGroup.value = groups[0];
+      fOpen.checked = true;
+      setMode('simple');
+    }
+    modal.classList.add('show');
+    setTimeout(function () { fName.focus(); }, 60);
+  }
+
+  function closeModal() { modal.classList.remove('show'); }
+
+  function save() {
+    var name = fName.value.trim();
+    var desc = fDesc.value.trim();
+    if (!name) { toast('请填写指令名称'); fName.focus(); return; }
+    if (!desc) { toast('请填写指令描述'); fDesc.focus(); return; }
+    var activeTab = modeTabs.querySelector('.tab.active');
+    var type = activeTab.getAttribute('data-mode') === 'complex' ? '复杂' : '简单';
+
+    if (editingId) {
+      var c = commands.find(function (x) { return x.id === editingId; });
+      c.name = name; c.desc = desc; c.type = type; c.group = fGroup.value; c.open = fOpen.checked;
+      toast('指令已更新');
+    } else {
+      commands.unshift({ id: nextId++, name: name, type: type, group: fGroup.value, desc: desc, open: fOpen.checked, refs: 0, created: '2026-09-21' });
+      toast('指令已创建并保存');
+    }
+    closeModal();
+    render();
+  }
+
+  function insertVar(v) {
+    var start = fDesc.selectionStart != null ? fDesc.selectionStart : fDesc.value.length;
+    var end = fDesc.selectionEnd != null ? fDesc.selectionEnd : fDesc.value.length;
+    fDesc.value = fDesc.value.slice(0, start) + v + fDesc.value.slice(end);
+    fDesc.focus();
+    var pos = start + v.length;
+    fDesc.setSelectionRange(pos, pos);
+  }
+
+  document.getElementById('newBtn').addEventListener('click', function () { openModal(null); });
+  document.getElementById('saveBtn').addEventListener('click', save);
+  document.getElementById('cancelBtn').addEventListener('click', closeModal);
+  document.getElementById('closeModal').addEventListener('click', closeModal);
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+
+  modeTabs.addEventListener('click', function (e) {
+    var t = e.target.closest('.tab');
+    if (t) setMode(t.getAttribute('data-mode'));
+  });
+
+  document.querySelectorAll('.var-btn').forEach(function (b) {
+    b.addEventListener('click', function () { insertVar(b.getAttribute('data-var')); });
+  });
+
+  searchInput.addEventListener('input', render);
+  groupFilter.addEventListener('change', render);
+  statusFilter.addEventListener('change', render);
+
+  initGroupSelect();
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI 出题 · 智能课程教学平台教学平台</title>
+<link rel="stylesheet" href="../assets/base.css" />
+<link rel="stylesheet" href="../assets/product.css" />
+<style>
+  /* 页面专属样式 */
+  .gen-layout { display: grid; grid-template-columns: 360px 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 1000px) { .gen-layout { grid-template-columns: 1fr; } }
+
+  .q-card { background: var(--surface); border: 1px solid var(--line-soft); border-radius: 16px; padding: 20px 22px; animation: qrise .4s var(--ease); }
+  @keyframes qrise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .q-card + .q-card { margin-top: 16px; }
+  .q-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .q-stem { font-size: 15.5px; font-weight: 600; line-height: 1.6; margin-bottom: 14px; }
+  .q-options { display: grid; gap: 9px; }
+  .q-opt { display: flex; align-items: center; gap: 10px; padding: 10px 13px; border-radius: 11px; border: 1px solid var(--line-soft); background: var(--bg-soft-2); font-size: 14px; }
+  .q-opt .letter { flex: 0 0 auto; width: 24px; height: 24px; border-radius: 6px; background: var(--bg-soft); display: grid; place-items: center; font-size: 12px; font-weight: 700; color: var(--ink-3); }
+  .q-opt.right { border-color: rgba(31,191,92,.45); background: #f0fbf4; }
+  .q-opt.right .letter { background: var(--green); color: #fff; }
+  .q-opt .flag { margin-left: auto; color: var(--green); font-size: 12px; white-space: nowrap; }
+  .q-analysis { margin-top: 13px; font-size: 13px; color: var(--ink-3); background: var(--bg-soft-2); border-radius: 10px; padding: 11px 13px; line-height: 1.6; }
+  .q-analysis b { color: var(--ink-2); }
+  .q-actions { display: flex; gap: 10px; margin-top: 14px; }
+  .q-actions .btn { padding: 8px 15px; font-size: 13px; border-radius: 10px; }
+  .gen-empty { text-align: center; padding: 60px 20px; color: var(--ink-4); }
+  .gen-empty .e-icon { font-size: 44px; margin-bottom: 12px; opacity: .6; }
+  .gen-meta { font-size: 13px; color: var(--ink-4); display: flex; align-items: center; gap: 8px; }
+  .gen-meta b { color: var(--accent); font-size: 16px; }
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <div>
+    <div class="ph-title">AI 出题</div>
+    <div class="ph-sub">数据结构与算法 · 按知识点或参考内容智能组题 · 答案与解析同步生成</div>
+  </div>
+</div>
+
+<div class="gen-layout">
+  <!-- 配置面板 -->
+  <div class="panel" style="align-self:start">
+    <div class="panel-head">
+      <h3>出题配置</h3>
+      <span class="hint" id="configSummary"></span>
+    </div>
+    <div class="panel-body">
+      <div class="field">
+        <label>题型</label>
+        <div class="opt-group" id="typeRow">
+          <label class="opt active"><input type="radio" name="qtype" value="single" checked />单选题</label>
+          <label class="opt"><input type="radio" name="qtype" value="multi" />多选题</label>
+          <label class="opt"><input type="radio" name="qtype" value="judge" />判断题</label>
+          <label class="opt"><input type="radio" name="qtype" value="blank" />填空题</label>
+          <label class="opt"><input type="radio" name="qtype" value="mixed" />混合题型</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>出题模式</label>
+        <div class="opt-group" id="modeRow">
+          <label class="opt active"><input type="radio" name="qmode" value="knowledge" checked />按知识点</label>
+          <label class="opt"><input type="radio" name="qmode" value="context" />按参考内容</label>
+        </div>
+      </div>
+
+      <div class="field" id="knowledgeGroup">
+        <label>选择知识点（最多 3 个）</label>
+        <div class="opt-group" id="knowledgeRow">
+          <label class="opt active"><input type="checkbox" name="qk" value="线性表" checked />线性表</label>
+          <label class="opt"><input type="checkbox" name="qk" value="栈与队列" />栈与队列</label>
+          <label class="opt"><input type="checkbox" name="qk" value="树与二叉树" />树与二叉树</label>
+          <label class="opt"><input type="checkbox" name="qk" value="图" />图</label>
+          <label class="opt"><input type="checkbox" name="qk" value="查找" />查找</label>
+          <label class="opt"><input type="checkbox" name="qk" value="排序" />排序</label>
+        </div>
+        <div class="help" id="kHelp">当前已选 1 个知识点</div>
+      </div>
+
+      <div class="field" id="contextGroup" style="display:none">
+        <label>参考内容</label>
+        <textarea class="textarea" id="ctxInput" placeholder="粘贴教材段落、讲义或题目原文，AI 将据此提炼考点并出题…">在面向对象程序设计中，封装将数据与操作数据的方法绑定在一起并隐藏内部实现细节；继承允许子类复用父类的属性和方法；多态让同一操作作用于不同对象时产生不同行为。栈是一种后进先出的线性结构，常用于表达式求值与递归调用。</textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>题目数量</label>
+          <select class="select" id="countSelect">
+            <option value="3">3 题</option>
+            <option value="5" selected>5 题</option>
+            <option value="10">10 题</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>&nbsp;</label>
+          <button class="btn btn-primary btn-block" id="genBtn">生成题目</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 结果区 -->
+  <div>
+    <div class="panel">
+      <div class="panel-head">
+        <h3>生成结果</h3>
+        <span class="gen-meta">本次 <b id="resultCount">0</b> 题 · 已加入题库 <b id="bankCount">0</b> 题</span>
+      </div>
+      <div class="panel-body" id="results"></div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/shell.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var POOL = [
+    { k: '线性表', type: 'single', difficulty: '中等', stem: '在长度为 n 的顺序表中删除第 i 个元素（1 ≤ i ≤ n），需要向前移动的元素个数是？', options: ['i', 'n - i', 'n - i + 1', 'n - i - 1'], answer: 1, analysis: '删除第 i 个元素后，其后的 n - i 个元素需依次前移一个位置。' },
+    { k: '线性表', type: 'single', difficulty: '简单', stem: '单链表中，删除某结点前必须先找到它的哪种结点？', options: ['后继结点', '前驱结点', '头结点', '尾结点'], answer: 1, analysis: '单链表只能单向访问，删除结点需先定位其前驱结点以修改指针。' },
+    { k: '线性表', type: 'judge', difficulty: '简单', stem: '顺序存储的线性表支持随机存取。', options: ['正确', '错误'], answer: 0, analysis: '顺序表通过下标可直接定位元素，支持 O(1) 的随机存取。' },
+    { k: '线性表', type: 'blank', difficulty: '简单', stem: '在单链表中，删除某结点前必须先找到它的 ______ 结点。', options: [], answer: '前驱', analysis: '单链表只能单向访问，删除结点需先定位其前驱结点。' },
+
+    { k: '栈与队列', type: 'single', difficulty: '简单', stem: '栈是一种遵循什么原则的线性结构？', options: ['先进先出', '后进先出', '随机存取', '按优先级'], answer: 1, analysis: '栈只允许在一端进行插入和删除，遵循后进先出（LIFO）原则。' },
+    { k: '栈与队列', type: 'multi', difficulty: '中等', stem: '以下关于栈和队列的说法正确的是？', options: ['栈是先进后出', '队列是先进先出', '二者都只能顺序存储', '二者都是线性结构'], answer: [0, 1, 3], analysis: '栈为 LIFO、队列为 FIFO，二者都是受限的线性结构，既可顺序存储也可链式存储。' },
+    { k: '栈与队列', type: 'judge', difficulty: '简单', stem: '队列遵循「先进先出」原则。', options: ['正确', '错误'], answer: 0, analysis: '队列在队尾插入、队头删除，遵循先进先出（FIFO）。' },
+    { k: '栈与队列', type: 'blank', difficulty: '中等', stem: '栈的两种典型应用包括递归调用和 ______ 求值。', options: [], answer: '表达式', analysis: '表达式求值是栈的典型应用，此外还有括号匹配、递归调用等。' },
+
+    { k: '树与二叉树', type: 'single', difficulty: '中等', stem: '一棵完全二叉树共有 1001 个结点，其叶子结点个数为？', options: ['250', '500', '501', '1001'], answer: 2, analysis: '由完全二叉树性质，度为 0 的结点比度为 2 的结点多 1 个，n0 = (n + 1) / 2 = 501。' },
+    { k: '树与二叉树', type: 'multi', difficulty: '中等', stem: '下列属于二叉树遍历方式的是？', options: ['前序遍历', '中序遍历', '后序遍历', '广度优先搜索'], answer: [0, 1, 2], analysis: '前序、中序、后序是二叉树的三种深度优先遍历方式；广度优先搜索属于按层遍历。' },
+    { k: '树与二叉树', type: 'judge', difficulty: '中等', stem: '二叉树的先序序列和中序序列可以唯一确定一棵二叉树。', options: ['正确', '错误'], answer: 0, analysis: '由先序确定根、中序划分左右子树，可递归唯一确定二叉树。' },
+    { k: '树与二叉树', type: 'blank', difficulty: '中等', stem: '哈夫曼树中，权值越大的叶子离根结点越 ______。', options: [], answer: '近', analysis: '哈夫曼树构造时权值大的结点路径更短，离根更近。' },
+
+    { k: '图', type: 'single', difficulty: '困难', stem: '具有 n 个顶点的有向完全图，其边数为？', options: ['n(n-1)/2', 'n(n-1)', 'n(n+1)/2', 'n²'], answer: 1, analysis: '有向完全图中任意两顶点之间都有两条方向相反的边，故边数为 n(n-1)。' },
+    { k: '图', type: 'multi', difficulty: '中等', stem: '下列属于图的遍历算法的是？', options: ['深度优先搜索', '广度优先搜索', '折半查找', '拓扑排序'], answer: [0, 1], analysis: '图的遍历主要有深度优先搜索（DFS）和广度优先搜索（BFS）。' },
+    { k: '图', type: 'judge', difficulty: '中等', stem: '最小生成树一定唯一。', options: ['正确', '错误'], answer: 1, analysis: '当图中存在权值相同的边时，最小生成树可能不唯一。' },
+    { k: '图', type: 'blank', difficulty: '中等', stem: 'Prim 算法和 Kruskal 算法都用于求解图的 ______ 问题。', options: [], answer: '最小生成树', analysis: '两者都是经典的最小生成树算法。' },
+
+    { k: '查找', type: 'single', difficulty: '简单', stem: '对有序表进行折半查找，其时间复杂度为？', options: ['O(n)', 'O(log n)', 'O(n log n)', 'O(1)'], answer: 1, analysis: '折半查找每次将查找区间缩小一半，时间复杂度为 O(log n)。' },
+    { k: '查找', type: 'multi', difficulty: '困难', stem: '影响哈希表查找效率的因素包括？', options: ['哈希函数', '装填因子', '冲突处理方法', '表长是否为素数'], answer: [0, 1, 2], analysis: '哈希查找效率主要取决于哈希函数、装填因子与冲突处理方法；表长是否素数并非决定因素。' },
+    { k: '查找', type: 'judge', difficulty: '简单', stem: '折半查找要求查找表必须是有序的顺序存储结构。', options: ['正确', '错误'], answer: 0, analysis: '折半查找要求顺序存储且关键字有序。' },
+    { k: '查找', type: 'blank', difficulty: '中等', stem: '哈希表中，处理冲突的两种常用方法是开放定址法和 ______。', options: [], answer: '链地址法', analysis: '链地址法（拉链法）与开放定址法是两种主要的冲突处理方法。' },
+
+    { k: '排序', type: 'single', difficulty: '中等', stem: '快速排序在最好情况下的时间复杂度为？', options: ['O(n)', 'O(n log n)', 'O(n²)', 'O(log n)'], answer: 1, analysis: '每次划分都较均衡时，递归深度为 O(log n)，总时间复杂度为 O(n log n)。' },
+    { k: '排序', type: 'multi', difficulty: '简单', stem: '下列属于稳定排序算法的是？', options: ['冒泡排序', '插入排序', '归并排序', '快速排序'], answer: [0, 1, 2], analysis: '冒泡、插入、归并是稳定排序；快速排序和堆排序不稳定。' },
+    { k: '排序', type: 'judge', difficulty: '中等', stem: '堆排序是稳定的排序算法。', options: ['正确', '错误'], answer: 1, analysis: '堆排序在调整堆的过程中会打乱相同关键字的相对次序，不稳定。' },
+    { k: '排序', type: 'blank', difficulty: '简单', stem: '冒泡排序一趟结束后，最大（或最小）的元素会被移动到 ______ 位置。', options: [], answer: '最终', analysis: '每趟冒泡把当前最大（或最小）元素移动到最终位置。' }
+  ];
+
+  var typeName = { single: '单选题', multi: '多选题', judge: '判断题', blank: '填空题' };
+  var typeBadge = { single: 'blue', multi: 'purple', judge: 'green', blank: 'orange' };
+  var diffBadge = { '简单': 'green', '中等': 'orange', '困难': 'red' };
+
+  var bankCount = 0;
+  var results = document.getElementById('results');
+  var resultCount = document.getElementById('resultCount');
+  var bankCountEl = document.getElementById('bankCount');
+  var configSummary = document.getElementById('configSummary');
+
+  function selectedType() {
+    var el = document.querySelector('input[name="qtype"]:checked');
+    return el ? el.value : 'single';
+  }
+  function selectedMode() {
+    var el = document.querySelector('input[name="qmode"]:checked');
+    return el ? el.value : 'knowledge';
+  }
+  function selectedK() {
+    return Array.prototype.slice.call(document.querySelectorAll('input[name="qk"]:checked')).map(function (i) { return i.value; });
+  }
+
+  function syncOptGroup() {
+    document.querySelectorAll('#typeRow .opt, #modeRow .opt, #knowledgeRow .opt').forEach(function (label) {
+      var input = label.querySelector('input');
+      label.classList.toggle('active', input.checked);
+    });
+    var k = selectedK();
+    document.getElementById('kHelp').textContent = '当前已选 ' + k.length + ' 个知识点';
+    configSummary.textContent = typeName[selectedType()] + (selectedMode() === 'knowledge' ? ' · ' + k.length + ' 个知识点' : ' · 参考内容');
+  }
+
+  document.getElementById('typeRow').addEventListener('change', syncOptGroup);
+  document.getElementById('modeRow').addEventListener('change', function () {
+    var m = selectedMode();
+    document.getElementById('knowledgeGroup').style.display = m === 'knowledge' ? 'block' : 'none';
+    document.getElementById('contextGroup').style.display = m === 'context' ? 'block' : 'none';
+    syncOptGroup();
+  });
+  document.getElementById('knowledgeRow').addEventListener('change', function (e) {
+    var checked = selectedK();
+    if (checked.length > 3) {
+      var input = e.target;
+      input.checked = false;
+      toast('最多选择 3 个知识点');
+    }
+    syncOptGroup();
+  });
+
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  function makeQuestion() {
+    var t = selectedType();
+    var types = t === 'mixed' ? ['single', 'multi', 'judge', 'blank'] : [t];
+    var type = pick(types);
+    var ks = selectedK();
+    var candidates = POOL.filter(function (q) { return q.type === type && ks.indexOf(q.k) !== -1; });
+    if (!candidates.length) candidates = POOL.filter(function (q) { return q.type === type; });
+    var data = candidates.length ? pick(candidates) : pick(POOL.filter(function (q) { return q.type === type; }));
+    return data;
+  }
+
+  function letter(i) { return String.fromCharCode(65 + i); }
+  function isRight(data, i) {
+    if (data.type === 'multi') return data.answer.indexOf(i) !== -1;
+    return data.answer === i;
+  }
+
+  function renderCard(data) {
+    var card = document.createElement('div');
+    card.className = 'q-card';
+
+    var optionsHtml;
+    if (data.type === 'blank') {
+      optionsHtml = '<div class="q-opt right"><span class="letter">答</span>参考答案：<b style="margin-left:4px">' + escapeHtml(data.answer) + '</b><span class="flag">正确答案</span></div>';
+    } else {
+      optionsHtml = '<div class="q-options">' + data.options.map(function (opt, i) {
+        var right = isRight(data, i);
+        return '<div class="q-opt' + (right ? ' right' : '') + '"><span class="letter">' + letter(i) + '</span>' + escapeHtml(opt) + (right ? '<span class="flag">✓ 正确答案</span>' : '') + '</div>';
+      }).join('') + '</div>';
+    }
+
+    card.innerHTML =
+      '<div class="q-head">' +
+        '<span class="badge ' + typeBadge[data.type] + '">' + typeName[data.type] + '</span>' +
+        '<span class="badge ' + diffBadge[data.difficulty] + '">' + data.difficulty + '</span>' +
+        '<span class="tag blue">' + escapeHtml(data.k) + '</span>' +
+      '</div>' +
+      '<div class="q-stem">' + escapeHtml(data.stem) + '</div>' +
+      optionsHtml +
+      '<div class="q-analysis"><b>解析：</b>' + escapeHtml(data.analysis) + '</div>' +
+      '<div class="q-actions">' +
+        '<button class="btn btn-outline btn-sm" data-act="regen">↻ 重新生成</button>' +
+        '<button class="btn btn-primary btn-sm" data-act="add">＋ 加入题库</button>' +
+      '</div>';
+
+    card.querySelector('[data-act="regen"]').addEventListener('click', function () {
+      var nd = makeQuestion();
+      card.style.animation = 'none';
+      void card.offsetWidth;
+      card.style.animation = '';
+      card.replaceWith(renderCard(nd));
+      updateCount();
+    });
+    card.querySelector('[data-act="add"]').addEventListener('click', function () {
+      bankCount++;
+      bankCountEl.textContent = bankCount;
+      toast('已加入题库 · 当前 ' + bankCount + ' 题');
+    });
+
+    return card;
+  }
+
+  function updateCount() {
+    resultCount.textContent = results.querySelectorAll('.q-card').length;
+  }
+
+  function generate() {
+    var n = parseInt(document.getElementById('countSelect').value, 10);
+    results.innerHTML = '';
+    for (var i = 0; i < n; i++) results.appendChild(renderCard(makeQuestion()));
+    updateCount();
+    results.parentElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  document.getElementById('genBtn').addEventListener('click', generate);
+
+  syncOptGroup();
+  generate();
+})();
+</script>
+</body>
+</html>

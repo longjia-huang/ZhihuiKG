@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>测评任务 · 智能课程教学平台教学平台</title>
+<link rel="stylesheet" href="../assets/base.css" />
+<link rel="stylesheet" href="../assets/product.css" />
+<style>
+  .level-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .level-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+  .level-row .lv-name { flex: 1; }
+  .level-row .lv-score { max-width: 120px; }
+  .level-row .del { width: 40px; height: 40px; border-radius: 10px; background: var(--bg-soft); color: var(--red); font-size: 18px; flex: 0 0 40px; }
+  .level-row .del:hover { background: rgba(255,69,58,.14); }
+  .add-level { width: 100%; padding: 11px; border-radius: 10px; border: 1px dashed var(--line); color: var(--accent); font-size: 13.5px; transition: background .2s; }
+  .add-level:hover { background: rgba(10,132,255,.05); }
+
+  .detail-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; }
+  @media (max-width: 640px) { .detail-summary { grid-template-columns: 1fr; } }
+  .sum-item { background: var(--bg-soft-2); border-radius: 12px; padding: 14px 16px; }
+  .sum-item .num { font-size: 22px; font-weight: 700; letter-spacing: -.02em; }
+  .sum-item .label { font-size: 12px; color: var(--ink-4); margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <div>
+    <div class="ph-title">测评任务</div>
+    <div class="ph-sub">面向计算机学院 6 个教学班 · 智能体情景测评与成绩评级</div>
+  </div>
+  <div class="ph-actions">
+    <button class="btn btn-outline btn-sm" onclick="toast('测评任务清单已导出')">⤓ 导出清单</button>
+    <button class="btn btn-primary btn-sm" id="newTaskBtn">＋ 新建任务</button>
+  </div>
+</div>
+
+<div class="kpi-row">
+  <div class="kpi"><div class="k-label">进行中任务</div><div class="k-value">3</div><div class="k-trend up">本周新增 2 个</div><div class="k-icon">🚀</div></div>
+  <div class="kpi"><div class="k-label">已参与学生</div><div class="k-value">186</div><div class="k-trend up">较上周 +24 人</div><div class="k-icon">👥</div></div>
+  <div class="kpi"><div class="k-label">平均成绩</div><div class="k-value">82.4</div><div class="k-trend up">较上周 +1.8 分</div><div class="k-icon">📈</div></div>
+  <div class="kpi"><div class="k-label">待评任务</div><div class="k-value">2</div><div class="k-trend">等待发布评分</div><div class="k-icon">📝</div></div>
+</div>
+
+<div class="panel">
+  <div class="panel-head">
+    <h3>任务列表</h3>
+    <span class="hint">共 5 个任务 · 数据实时同步</span>
+  </div>
+  <div class="table-wrap">
+    <table class="tbl">
+      <thead>
+        <tr><th>任务名称</th><th>智能体</th><th>发布班级</th><th>起止时间</th><th>参与率</th><th>状态</th><th style="text-align:right">操作</th></tr>
+      </thead>
+      <tbody id="taskBody">
+        <tr data-id="t1">
+          <td class="cell-main">第 5 周随堂测评</td><td>数据结构答疑智能体</td><td>计算机应用技术 2301 班</td><td>09-14 08:00 — 09-21 23:59</td><td>92%</td><td><span class="badge green">进行中</span></td>
+          <td style="text-align:right"><button class="btn btn-text btn-xs" data-act="detail">查看详情</button><button class="btn btn-text btn-xs" onclick="toast('打开「第 5 周随堂测评」编辑')">编辑</button><button class="btn btn-text btn-xs" onclick="toast('已复制任务链接')">复制</button></td>
+        </tr>
+        <tr data-id="t2">
+          <td class="cell-main">期中智能体综合测评</td><td>面试模拟智能体</td><td>计算机应用技术 2302 班</td><td>09-08 08:00 — 09-12 18:00</td><td>100%</td><td><span class="badge blue">已完成</span></td>
+          <td style="text-align:right"><button class="btn btn-text btn-xs" data-act="detail">查看详情</button><button class="btn btn-text btn-xs" onclick="toast('打开「期中智能体综合测评」编辑')">编辑</button><button class="btn btn-text btn-xs" onclick="toast('已复制任务链接')">复制</button></td>
+        </tr>
+        <tr data-id="t3">
+          <td class="cell-main">面向对象单元测评</td><td>实验指导智能体</td><td>软件技术 2301 班</td><td>09-16 08:00 — 09-22 18:00</td><td>68%</td><td><span class="badge green">进行中</span></td>
+          <td style="text-align:right"><button class="btn btn-text btn-xs" data-act="detail">查看详情</button><button class="btn btn-text btn-xs" onclick="toast('打开「面向对象单元测评」编辑')">编辑</button><button class="btn btn-text btn-xs" onclick="toast('已复制任务链接')">复制</button></td>
+        </tr>
+        <tr data-id="t4">
+          <td class="cell-main">临床问诊技能测评</td><td>临床问诊室智能体</td><td>大数据技术 2301 班</td><td>09-01 08:00 — 09-05 18:00</td><td>96%</td><td><span class="badge blue">已完成</span></td>
+          <td style="text-align:right"><button class="btn btn-text btn-xs" data-act="detail">查看详情</button><button class="btn btn-text btn-xs" onclick="toast('打开「临床问诊技能测评」编辑')">编辑</button><button class="btn btn-text btn-xs" onclick="toast('已复制任务链接')">复制</button></td>
+        </tr>
+        <tr data-id="t5">
+          <td class="cell-main">期末课程综合测评</td><td>辩论赛场智能体</td><td>计算机应用技术 2303 班</td><td>09-25 08:00 — 10-02 18:00</td><td>0%</td><td><span class="badge gray">未开始</span></td>
+          <td style="text-align:right"><button class="btn btn-text btn-xs" data-act="detail">查看详情</button><button class="btn btn-text btn-xs" onclick="toast('打开「期末课程综合测评」编辑')">编辑</button><button class="btn btn-text btn-xs" onclick="toast('已复制任务链接')">复制</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="panel" id="detailPanel" style="display:none">
+  <div class="panel-head">
+    <h3 id="detailTitle">任务详情</h3>
+    <button class="btn btn-text btn-sm" id="closeDetail">收起详情</button>
+  </div>
+  <div class="panel-body">
+    <div class="detail-summary">
+      <div class="sum-item"><div class="num" id="dCount">—</div><div class="label">参与人数</div></div>
+      <div class="sum-item"><div class="num" id="dAvg">—</div><div class="label">平均成绩</div></div>
+      <div class="sum-item"><div class="num" id="dMax">—</div><div class="label">最高成绩</div></div>
+    </div>
+    <div class="table-wrap">
+      <table class="tbl">
+        <thead><tr><th>学生</th><th>完成次数</th><th>成绩</th><th>评级</th></tr></thead>
+        <tbody id="detailBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 新建任务弹窗 -->
+<div class="modal-mask" id="taskModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>新建测评任务</h3>
+      <button class="icon-btn" style="font-size:20px" onclick="closeTaskModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="req">任务名称</label>
+        <input class="input" id="taskName" type="text" placeholder="例如：第 6 周随堂测评" />
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>发布班级</label>
+          <select class="select" id="taskClass">
+            <option>计算机应用技术 2301 班</option>
+            <option>计算机应用技术 2302 班</option>
+            <option>计算机应用技术 2303 班</option>
+            <option>软件技术 2301 班</option>
+            <option>大数据技术 2301 班</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>关联智能体</label>
+          <select class="select" id="taskAgent">
+            <option>数据结构答疑智能体</option>
+            <option>面试模拟智能体</option>
+            <option>实验指导智能体</option>
+            <option>临床问诊室智能体</option>
+            <option>辩论赛场智能体</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>开始时间</label>
+          <input class="input" id="startTime" type="datetime-local" value="2026-09-22T09:00" />
+        </div>
+        <div class="field">
+          <label>结束时间</label>
+          <input class="input" id="endTime" type="datetime-local" value="2026-09-29T18:00" />
+        </div>
+      </div>
+      <div class="field">
+        <label>通知方式</label>
+        <div class="opt-group" id="notifyGroup">
+          <label class="opt active"><input type="radio" name="notify" checked />小程序</label>
+          <label class="opt"><input type="radio" name="notify" />短信</label>
+          <label class="opt"><input type="radio" name="notify" />两者</label>
+          <label class="opt"><input type="radio" name="notify" />不通知</label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>重复次数</label>
+          <input class="input" id="repeat" type="number" min="1" max="10" value="1" />
+        </div>
+        <div class="field">
+          <label>满分值</label>
+          <input class="input" id="fullScore" type="number" min="1" value="100" />
+        </div>
+      </div>
+
+      <div class="level-head">
+        <label style="font-size:13px;font-weight:600;color:var(--ink-2)">评分等级</label>
+        <span style="font-size:12px;color:var(--ink-4)">分数要求为「达到该等级的最低分」</span>
+      </div>
+      <div id="levelList"></div>
+      <button class="add-level" id="addLevel">＋ 添加等级</button>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeTaskModal()">取消</button>
+      <button class="btn btn-primary" id="publishBtn">发布任务</button>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/shell.js"></script>
+<script>
+(function () {
+  var levels = [
+    { name: '优秀', score: 90 },
+    { name: '良好', score: 80 },
+    { name: '及格', score: 60 },
+    { name: '不及格', score: 0 }
+  ];
+
+  var levelList = document.getElementById('levelList');
+  function renderLevels() {
+    levelList.innerHTML = '';
+    levels.forEach(function (lv, i) {
+      var row = document.createElement('div');
+      row.className = 'level-row';
+      var nameInput = document.createElement('input');
+      nameInput.type = 'text'; nameInput.className = 'input lv-name'; nameInput.value = lv.name; nameInput.placeholder = '等级名称';
+      var scoreInput = document.createElement('input');
+      scoreInput.type = 'number'; scoreInput.className = 'input lv-score'; scoreInput.value = lv.score; scoreInput.placeholder = '分数要求';
+      var del = document.createElement('button');
+      del.className = 'del'; del.textContent = '×'; del.title = '删除该等级';
+      nameInput.addEventListener('input', function () { lv.name = nameInput.value; });
+      scoreInput.addEventListener('input', function () { lv.score = parseInt(scoreInput.value || '0', 10); });
+      del.addEventListener('click', function () {
+        if (levels.length <= 1) { toast('至少保留一个评级等级'); return; }
+        levels.splice(i, 1); renderLevels();
+      });
+      row.appendChild(nameInput); row.appendChild(scoreInput); row.appendChild(del);
+      levelList.appendChild(row);
+    });
+  }
+  document.getElementById('addLevel').addEventListener('click', function () {
+    levels.push({ name: '新等级', score: 0 });
+    renderLevels();
+  });
+  renderLevels();
+
+  // 通知方式单选
+  document.querySelectorAll('#notifyGroup .opt').forEach(function (o) {
+    o.addEventListener('click', function () {
+      document.querySelectorAll('#notifyGroup .opt').forEach(function (x) { x.classList.remove('active'); });
+      o.classList.add('active');
+      o.querySelector('input').checked = true;
+    });
+  });
+
+  // 评分等级判定
+  function grade(score) {
+    var sorted = levels.slice().sort(function (a, b) { return b.score - a.score; });
+    for (var i = 0; i < sorted.length; i++) { if (score >= sorted[i].score) return sorted[i].name; }
+    return sorted[sorted.length - 1].name;
+  }
+  var gradeClass = { '优秀': 'purple', '良好': 'green', '及格': 'orange', '不及格': 'red' };
+
+  var studentsPool = ['张小明','李华','王芳','陈晨','刘洋','赵敏','孙悦','周杰','吴倩','郑浩','林晓','黄磊'];
+
+  // 确定性伪随机：根据任务 id 生成学生成绩
+  function hash(str) { var h = 0; for (var i = 0; i < str.length; i++) { h = (h * 31 + str.charCodeAt(i)) % 100000; } return h; }
+  function genResults(seed, n) {
+    var s = hash(seed);
+    var out = [];
+    for (var i = 0; i < n; i++) {
+      s = (s * 1103515245 + 12345) % 100000;
+      var score = 50 + (s % 50);
+      var attempts = 1 + (s % 3);
+      out.push({ name: studentsPool[i % studentsPool.length], attempts: attempts, score: score });
+    }
+    return out;
+  }
+
+  function fillDetail(title, seed) {
+    document.getElementById('detailTitle').textContent = title + ' · 完成详情';
+    var res = genResults(seed, 12);
+    var sum = 0, max = 0;
+    res.forEach(function (r) { sum += r.score; max = Math.max(max, r.score); });
+    document.getElementById('dCount').textContent = res.length;
+    document.getElementById('dAvg').textContent = Math.round(sum / res.length);
+    document.getElementById('dMax').textContent = max;
+
+    var tb = document.getElementById('detailBody');
+    tb.innerHTML = '';
+    res.forEach(function (r) {
+      var g = grade(r.score);
+      var cls = gradeClass[g] || 'green';
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td class="cell-main">' + r.name + '</td><td>' + r.attempts + '</td><td>' + r.score + '</td>' +
+        '<td><span class="badge ' + cls + '">' + g + '</span></td>';
+      tb.appendChild(tr);
+    });
+    document.getElementById('detailPanel').style.display = '';
+    document.getElementById('detailPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // 任务列表详情
+  document.getElementById('taskBody').addEventListener('click', function (e) {
+    var btn = e.target.closest('button[data-act="detail"]');
+    if (!btn) return;
+    var tr = btn.closest('tr');
+    var name = tr.querySelector('.cell-main').textContent;
+    fillDetail(name, tr.getAttribute('data-id'));
+  });
+  document.getElementById('closeDetail').addEventListener('click', function () {
+    document.getElementById('detailPanel').style.display = 'none';
+  });
+
+  // 新建任务弹窗
+  var modal = document.getElementById('taskModal');
+  document.getElementById('newTaskBtn').addEventListener('click', function () { modal.classList.add('show'); });
+  window.closeTaskModal = function () { modal.classList.remove('show'); };
+  modal.addEventListener('click', function (e) { if (e.target === modal) modal.classList.remove('show'); });
+
+  function fmtTime(v) {
+    if (!v) return '';
+    return v.replace('T', ' ').replace(/(\d{4})-(\d{2})-(\d{2})/, '$2-$3');
+  }
+
+  document.getElementById('publishBtn').addEventListener('click', function () {
+    var name = document.getElementById('taskName').value.trim();
+    if (!name) { toast('请先填写任务名称'); return; }
+    var cls = document.getElementById('taskClass').value;
+    var agent = document.getElementById('taskAgent').value;
+    var st = document.getElementById('startTime').value;
+    var et = document.getElementById('endTime').value;
+    if (st && et && st >= et) { toast('结束时间需晚于开始时间'); return; }
+
+    var id = 't' + Date.now();
+    var tr = document.createElement('tr');
+    tr.setAttribute('data-id', id);
+    tr.innerHTML =
+      '<td class="cell-main">' + escapeHtml(name) + '</td><td>' + agent + '</td><td>' + cls + '</td>' +
+      '<td>' + fmtTime(st) + ' — ' + fmtTime(et) + '</td><td>0%</td><td><span class="badge green">进行中</span></td>' +
+      '<td style="text-align:right"><button class="btn btn-text btn-xs" data-act="detail">查看详情</button>' +
+      '<button class="btn btn-text btn-xs" onclick="toast(\'打开「' + escapeHtml(name) + '」编辑\')">编辑</button>' +
+      '<button class="btn btn-text btn-xs" onclick="toast(\'已复制任务链接\')">复制</button></td>';
+    document.getElementById('taskBody').insertBefore(tr, document.getElementById('taskBody').firstChild);
+    modal.classList.remove('show');
+    toast('任务「' + name + '」已发布');
+  });
+})();
+</script>
+</body>
+</html>

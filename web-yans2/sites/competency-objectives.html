@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>能力目标 · 智能课程教学平台教学平台</title>
+<link rel="stylesheet" href="../assets/base.css" />
+<link rel="stylesheet" href="../assets/product.css" />
+<style>
+  .obj-layout { display: grid; grid-template-columns: 320px 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 960px) { .obj-layout { grid-template-columns: 1fr; } }
+
+  .obj-search { margin-bottom: 12px; }
+  .obj-list { display: flex; flex-direction: column; gap: 6px; max-height: 620px; overflow-y: auto; }
+  .obj-item {
+    padding: 12px 14px; border-radius: 12px; cursor: pointer; transition: background .13s;
+    border: 1px solid transparent;
+  }
+  .obj-item:hover { background: var(--bg-soft); }
+  .obj-item.active { background: rgba(10,132,255,.08); border-color: rgba(10,132,255,.22); }
+  .obj-item .o-top { display: flex; align-items: center; gap: 9px; }
+  .obj-item .o-idx {
+    flex: 0 0 auto; width: 24px; height: 24px; border-radius: 7px; background: var(--grad-ai);
+    color: #fff; display: grid; place-items: center; font-size: 11px; font-weight: 700;
+  }
+  .obj-item .o-name { font-size: 14px; font-weight: 600; color: var(--ink); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .obj-item .o-meta { display: flex; gap: 10px; font-size: 12px; color: var(--ink-4); margin-top: 6px; padding-left: 33px; }
+
+  .detail-name { font-size: 19px; font-weight: 700; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .detail-desc { color: var(--ink-2); font-size: 14px; line-height: 1.7; margin-top: 10px; }
+  .rel-block { margin-top: 18px; }
+  .rel-block .rel-label { font-size: 12px; font-weight: 600; color: var(--ink-4); margin-bottom: 8px; letter-spacing: .03em; }
+  .rel-block .tags { display: flex; flex-wrap: wrap; gap: 7px; }
+  .sub-table { margin-top: 22px; }
+  .sub-table h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <div>
+    <div class="ph-title">能力目标</div>
+    <div class="ph-sub">数据结构与算法 · 32 学时 · 计算机学院</div>
+  </div>
+  <div class="ph-actions">
+    <button class="btn btn-primary btn-sm" onclick="openModal()">＋ 新建能力目标</button>
+  </div>
+</div>
+
+<div class="kpi-row">
+  <div class="kpi">
+    <div class="k-icon">🎯</div>
+    <div class="k-label">能力目标数</div>
+    <div class="k-value" id="kpiObj">8</div>
+    <div class="k-trend">覆盖 6 个章节模块</div>
+  </div>
+  <div class="kpi">
+    <div class="k-icon">🔢</div>
+    <div class="k-label">子目标数</div>
+    <div class="k-value" id="kpiSub">26</div>
+    <div class="k-trend">平均每个目标 3.3 项</div>
+  </div>
+  <div class="kpi">
+    <div class="k-icon">🔗</div>
+    <div class="k-label">已关联知识点</div>
+    <div class="k-value" id="kpiKp">43</div>
+    <div class="k-trend up">本周新增 6 个</div>
+  </div>
+  <div class="kpi">
+    <div class="k-icon">❓</div>
+    <div class="k-label">已关联问题</div>
+    <div class="k-value" id="kpiQ">18</div>
+    <div class="k-trend up">本周新增 3 道</div>
+  </div>
+</div>
+
+<div class="obj-layout">
+  <div class="panel">
+    <div class="panel-head"><h3>目标列表</h3><span class="hint" id="listCount"></span></div>
+    <div class="panel-body">
+      <div class="obj-search">
+        <input class="input" id="objSearch" type="text" placeholder="搜索目标名称或描述…" />
+      </div>
+      <div class="obj-list" id="objList"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><h3>目标详情</h3><span class="hint">目标 → 子目标 → 知识点 / 问题</span></div>
+    <div class="panel-body" id="detailBody"></div>
+  </div>
+</div>
+
+<div class="modal-mask" id="modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>新建能力目标</h3>
+      <button class="icon-btn" onclick="closeModal()" style="font-size:20px">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="req">目标名称</label>
+        <input class="input" id="fName" type="text" placeholder="例如：掌握排序算法并能分析其复杂度" />
+      </div>
+      <div class="field">
+        <label>目标描述</label>
+        <textarea class="textarea" id="fDesc" placeholder="一句话说明该目标要求学生具备的能力…"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary btn-sm" onclick="saveObjective()">保存</button>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/shell.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var objectives = [
+    {
+      id: 'ob-01', name: '掌握数据结构基本概念与算法分析方法',
+      desc: '理解数据结构的逻辑结构、存储结构以及算法的时间复杂度与空间复杂度分析方法，为后续内容建立理论基础。',
+      kp: ['数据结构三要素', '逻辑结构', '存储结构', '时间复杂度', '空间复杂度', '大 O 记号'],
+      q: ['什么是时间复杂度？', '如何分析递归算法的时间复杂度？'],
+      subs: [
+        { n: '能区分逻辑结构与存储结构', d: '用实例说明两者区别', s: 'done' },
+        { n: '能理解抽象数据类型的定义', d: '数据对象、关系与操作三要素', s: 'done' },
+        { n: '会用大 O 记号估算算法复杂度', d: '对常见代码段给出复杂度结论', s: 'done' },
+        { n: '能分析递归算法的复杂度', d: '借助递归树与主定理', s: 'doing' }
+      ]
+    },
+    {
+      id: 'ob-02', name: '掌握线性表及其顺序与链式实现',
+      desc: '掌握顺序表与单链表、双链表、循环链表的存储结构与基本操作，并能对比其时间效率与适用场景。',
+      kp: ['顺序表', '单链表', '双链表', '循环链表', '静态链表', '头插法与尾插法'],
+      q: ['顺序表和链表各自的优缺点？', '如何在单链表中删除指定节点？'],
+      subs: [
+        { n: '能实现顺序表的插入与删除', d: '处理边界与移动元素', s: 'done' },
+        { n: '能实现单链表的基本运算', d: '头插、尾插、查找、删除', s: 'done' },
+        { n: '能对比顺序表与链表的效率', d: '从随机访问与插入删除角度分析', s: 'doing' }
+      ]
+    },
+    {
+      id: 'ob-03', name: '掌握栈和队列的特性与应用',
+      desc: '理解栈的后进先出与队列的先进先出特性，掌握顺序栈、链栈、循环队列的存储结构与典型应用场景。',
+      kp: ['栈', '队列', '循环队列', '链栈', '括号匹配', '表达式求值'],
+      q: ['如何用两个栈实现一个队列？', '循环队列如何判断队空与队满？'],
+      subs: [
+        { n: '能实现顺序栈与链栈', d: '入栈、出栈、判空', s: 'done' },
+        { n: '能实现循环队列并处理队满', d: '使用取模运算与牺牲单元法', s: 'done' },
+        { n: '能应用栈解决括号匹配问题', d: '给出完整算法过程', s: 'todo' }
+      ]
+    },
+    {
+      id: 'ob-04', name: '掌握二叉树、遍历与二叉排序树',
+      desc: '掌握二叉树的性质、三种遍历方式及其应用，理解二叉排序树、平衡二叉树与堆的基本概念。',
+      kp: ['二叉树', '先序遍历', '中序遍历', '后序遍历', '层序遍历', '二叉排序树', '堆'],
+      q: ['中序遍历为什么能得到有序序列？', '如何由前序和中序重建二叉树？'],
+      subs: [
+        { n: '能写出三种遍历的递归实现', d: '先序、中序、后序', s: 'done' },
+        { n: '能写出层序遍历的非递归实现', d: '借助队列逐层访问', s: 'done' },
+        { n: '能构建并查找二叉排序树', d: '插入、删除与查找', s: 'doing' },
+        { n: '能利用堆实现优先队列', d: '堆的调整与插入', s: 'todo' }
+      ]
+    },
+    {
+      id: 'ob-05', name: '掌握图的存储结构与遍历算法',
+      desc: '掌握图的邻接矩阵与邻接表存储，理解深度优先与广度优先遍历，了解最小生成树与最短路径。',
+      kp: ['邻接矩阵', '邻接表', '深度优先遍历', '广度优先遍历', '最小生成树'],
+      q: ['邻接矩阵和邻接表如何选择？', '广度优先遍历为何使用队列？', '深度优先遍历与广度优先遍历有何区别？'],
+      subs: [
+        { n: '能用邻接表存储图', d: '有向图与无向图', s: 'doing' },
+        { n: '能实现深度优先与广度优先遍历', d: '递归与队列两种方式', s: 'doing' },
+        { n: '能求最小生成树', d: 'Prim 与 Kruskal 算法', s: 'todo' }
+      ]
+    },
+    {
+      id: 'ob-06', name: '掌握经典排序算法并能分析性能',
+      desc: '掌握冒泡、插入、选择、快速、归并等排序算法，能对比其时间与空间复杂度及稳定性。',
+      kp: ['冒泡排序', '插入排序', '快速排序', '归并排序', '稳定性'],
+      q: ['快速排序最坏情况何时出现？', '哪些排序算法是稳定的？', '归并排序的时间复杂度是多少？'],
+      subs: [
+        { n: '能实现快速排序并分析复杂度', d: '划分过程与递归', s: 'done' },
+        { n: '能实现归并排序', d: '分治与合并', s: 'doing' },
+        { n: '能对比各排序算法的稳定性', d: '列表对比并给出结论', s: 'todo' }
+      ]
+    },
+    {
+      id: 'ob-07', name: '掌握查找技术与散列表',
+      desc: '掌握顺序查找、折半查找与散列表的构造方法，理解散列冲突的解决方式及其性能影响因素。',
+      kp: ['顺序查找', '折半查找', '散列函数', '开放定址法', '链地址法'],
+      q: ['散列表的装填因子如何影响查找效率？', '折半查找的前提是什么？'],
+      subs: [
+        { n: '能实现折半查找', d: '要求有序顺序存储', s: 'done' },
+        { n: '能构造散列表并处理冲突', d: '开放定址与链地址', s: 'doing' },
+        { n: '能计算平均查找长度', d: '成功与失败两种情况', s: 'todo' }
+      ]
+    },
+    {
+      id: 'ob-08', name: '能综合运用数据结构解决实际问题',
+      desc: '能将所学数据结构知识迁移到实际工程问题中，完成从建模、选型到实现与复杂度评估的完整过程。',
+      kp: ['问题建模', '结构选型', '复杂度评估'],
+      q: ['如何为实际业务选择合适的数据结构？', '如何权衡时间与空间复杂度？'],
+      subs: [
+        { n: '能完成一次综合建模', d: '从问题到数据结构映射', s: 'doing' },
+        { n: '能给出方案并评估复杂度', d: '多方案对比与权衡', s: 'todo' },
+        { n: '能输出结构化的方案文档', d: '包含选型理由与复杂度说明', s: 'todo' }
+      ]
+    }
+  ];
+
+  var currentIdx = 0;
+  var listEl = document.getElementById('objList');
+  var detailEl = document.getElementById('detailBody');
+  var searchInput = document.getElementById('objSearch');
+
+  function statusBadge(s) {
+    if (s === 'done') return '<span class="badge green">已达成</span>';
+    if (s === 'doing') return '<span class="badge orange">进行中</span>';
+    return '<span class="badge gray">未开始</span>';
+  }
+
+  function updateKpi() {
+    var sub = objectives.reduce(function (s, o) { return s + o.subs.length; }, 0);
+    var kp = objectives.reduce(function (s, o) { return s + o.kp.length; }, 0);
+    var q = objectives.reduce(function (s, o) { return s + o.q.length; }, 0);
+    document.getElementById('kpiObj').textContent = objectives.length;
+    document.getElementById('kpiSub').textContent = sub;
+    document.getElementById('kpiKp').textContent = kp;
+    document.getElementById('kpiQ').textContent = q;
+  }
+
+  function renderList() {
+    var kw = searchInput.value.trim().toLowerCase();
+    var filtered = objectives.map(function (o, i) { return { o: o, i: i }; }).filter(function (x) {
+      if (!kw) return true;
+      return x.o.name.toLowerCase().indexOf(kw) !== -1 || x.o.desc.toLowerCase().indexOf(kw) !== -1;
+    });
+    document.getElementById('listCount').textContent = '共 ' + objectives.length + ' 个目标';
+    if (!filtered.length) {
+      listEl.innerHTML = '<div class="empty"><div class="e-icon">🔍</div><p>未找到匹配的目标</p></div>';
+      return;
+    }
+    listEl.innerHTML = filtered.map(function (x) {
+      var o = x.o;
+      var done = o.subs.filter(function (s) { return s.s === 'done'; }).length;
+      return '<div class="obj-item' + (x.i === currentIdx ? ' active' : '') + '" data-i="' + x.i + '">' +
+        '<div class="o-top"><span class="o-idx">' + String(x.i + 1).padStart(2, '0') + '</span>' +
+        '<span class="o-name">' + escapeHtml(o.name) + '</span></div>' +
+        '<div class="o-meta"><span>子目标 ' + o.subs.length + '</span><span>已达成 ' + done + '</span><span>知识点 ' + o.kp.length + '</span></div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderDetail() {
+    var o = objectives[currentIdx];
+    if (!o) { detailEl.innerHTML = ''; return; }
+    var subRows = o.subs.map(function (s) {
+      return '<tr><td class="cell-main">' + escapeHtml(s.n) + '</td>' +
+        '<td class="cell-sub" style="font-size:13px;color:var(--ink-3)">' + escapeHtml(s.d) + '</td>' +
+        '<td>' + statusBadge(s.s) + '</td></tr>';
+    }).join('');
+    detailEl.innerHTML =
+      '<div class="detail-name">' + escapeHtml(o.name) +
+        '<span class="badge blue">' + o.subs.length + ' 个子目标</span>' +
+      '</div>' +
+      '<div class="detail-desc">' + escapeHtml(o.desc) + '</div>' +
+      '<div class="rel-block"><div class="rel-label">关联知识点 · ' + o.kp.length + ' 个</div>' +
+        '<div class="tags">' + o.kp.map(function (t) { return '<span class="tag blue">' + escapeHtml(t) + '</span>'; }).join('') + '</div></div>' +
+      '<div class="rel-block"><div class="rel-label">关联问题 · ' + o.q.length + ' 道</div>' +
+        '<div class="tags">' + o.q.map(function (t) { return '<span class="tag">' + escapeHtml(t) + '</span>'; }).join('') + '</div></div>' +
+      '<div class="sub-table"><h4>子目标明细</h4>' +
+        '<div class="table-wrap"><table class="tbl"><thead><tr><th style="width:36%">子目标名称</th><th>描述</th><th style="width:110px">状态</th></tr></thead>' +
+        '<tbody>' + subRows + '</tbody></table></div></div>';
+  }
+
+  listEl.addEventListener('click', function (e) {
+    var it = e.target.closest('.obj-item');
+    if (!it) return;
+    currentIdx = +it.getAttribute('data-i');
+    renderList(); renderDetail();
+  });
+
+  searchInput.addEventListener('input', renderList);
+
+  /* 新建目标弹窗 */
+  window.openModal = function () {
+    document.getElementById('modal').classList.add('show');
+    document.getElementById('fName').value = '';
+    document.getElementById('fDesc').value = '';
+    setTimeout(function () { document.getElementById('fName').focus(); }, 60);
+  };
+  window.closeModal = function () {
+    document.getElementById('modal').classList.remove('show');
+  };
+  window.saveObjective = function () {
+    var name = document.getElementById('fName').value.trim();
+    var desc = document.getElementById('fDesc').value.trim();
+    if (!name) { toast('请填写目标名称'); document.getElementById('fName').focus(); return; }
+    objectives.push({
+      id: 'ob-' + Date.now(), name: name, desc: desc || '目标描述待补充',
+      kp: [], q: [],
+      subs: [{ n: '待拆解子目标', d: '创建后可在课程建设中逐步补充', s: 'todo' }]
+    });
+    currentIdx = objectives.length - 1;
+    closeModal();
+    updateKpi(); renderList(); renderDetail();
+    toast('能力目标已保存');
+  };
+
+  document.getElementById('modal').addEventListener('click', function (e) {
+    if (e.target === this) closeModal();
+  });
+
+  renderList(); renderDetail();
+})();
+</script>
+</body>
+</html>

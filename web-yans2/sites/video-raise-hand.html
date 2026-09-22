@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>视频举手 · 智能课程教学平台教学平台</title>
+<link rel="stylesheet" href="../assets/base.css" />
+<link rel="stylesheet" href="../assets/product.css" />
+<style>
+  .work-layout { display: grid; grid-template-columns: 1.12fr 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 1080px) { .work-layout { grid-template-columns: 1fr; } }
+
+  /* 视频播放器 */
+  .player { background: #000; border-radius: 16px; overflow: hidden; }
+  .video-stage {
+    position: relative; aspect-ratio: 16 / 9; overflow: hidden;
+    display: grid; place-items: center; color: #fff; text-align: center; background: var(--grad-ink);
+  }
+  .scene {
+    position: absolute; inset: 0; padding: 34px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+    opacity: 0; transition: opacity .45s var(--ease);
+    background: radial-gradient(640px 340px at 50% 0%, rgba(10,132,255,.38), transparent 70%);
+  }
+  .scene.on { opacity: 1; }
+  .scene .kicker { font-size: 12px; letter-spacing: .1em; color: #34c3ff; }
+  .scene .topic { font-size: clamp(22px, 3vw, 30px); font-weight: 700; }
+  .scene .slide { font-size: 14px; color: #a1a1a6; max-width: 480px; }
+  .play-btn {
+    position: absolute; inset: 0; margin: auto; width: 74px; height: 74px; border-radius: 50%;
+    background: rgba(255,255,255,.92); color: #000; font-size: 24px; display: grid; place-items: center;
+    box-shadow: 0 12px 30px rgba(0,0,0,.4); transition: transform .2s, opacity .3s; z-index: 3;
+  }
+  .play-btn:hover { transform: scale(1.08); }
+  .play-btn.hide { opacity: 0; pointer-events: none; }
+  .player-controls { background: #111; padding: 15px 20px; }
+  .timeline { display: flex; align-items: center; gap: 12px; color: #a1a1a6; font-size: 12px; }
+  .track { flex: 1; height: 6px; border-radius: 999px; background: #333; overflow: hidden; cursor: pointer; }
+  .track .fill { height: 100%; width: 0; border-radius: 999px; background: var(--grad-ai); transition: width .4s linear; }
+  .ctrl-row { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
+  .ctrl-row .btn { padding: 9px 17px; font-size: 13.5px; }
+  .hand-btn {
+    background: var(--accent); color: #fff; font-weight: 600; border-radius: 980px; padding: 11px 21px;
+    display: inline-flex; align-items: center; gap: 8px; font-size: 14.5px; border: none; cursor: pointer;
+    box-shadow: 0 8px 22px rgba(255,255,255,.16); transition: transform .2s;
+  }
+  .hand-btn:hover { transform: translateY(-2px); }
+
+  /* AI 答疑面板 */
+  .q-panel { display: flex; flex-direction: column; min-height: 470px; }
+  .q-head { padding: 16px 20px; border-bottom: 1px solid var(--line-soft); display: flex; align-items: center; gap: 12px; }
+  .q-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--grad-ai); display: grid; place-items: center; color: #fff; font-weight: 700; flex: 0 0 42px; }
+  .q-head .name { font-weight: 600; font-size: 15px; }
+  .q-head .status { font-size: 12px; color: var(--green); display: flex; align-items: center; gap: 5px; }
+  .q-head .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+  .q-body { flex: 1; padding: 20px; background: var(--bg-soft-2); overflow-y: auto; max-height: 520px; }
+  .empty-state { text-align: center; color: var(--ink-4); padding: 70px 20px; }
+  .empty-state .big { font-size: 46px; margin-bottom: 12px; }
+  .shot { display: flex; gap: 12px; align-items: center; background: var(--surface); border: 1px solid var(--line-soft); border-radius: 14px; padding: 10px 14px; margin-bottom: 16px; }
+  .shot .thumb { width: 88px; height: 52px; border-radius: 8px; background: var(--grad-ink); display: grid; place-items: center; color: #fff; font-size: 12px; flex: 0 0 auto; }
+  .shot .cap { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+  .shot .cap b { color: var(--ink); }
+  .msg { max-width: 94%; padding: 13px 16px; border-radius: 18px; font-size: 14.5px; line-height: 1.7; background: var(--surface); border: 1px solid var(--line-soft); border-bottom-left-radius: 6px; animation: pop .35s var(--ease); }
+  .msg .meta { font-size: 11px; color: var(--ink-4); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .msg .meta .mini-avatar { width: 20px; height: 20px; border-radius: 50%; background: var(--grad-ai); display: inline-grid; place-items: center; color: #fff; font-size: 10px; }
+  @keyframes pop { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .typing { display: inline-flex; gap: 4px; padding: 4px 0; }
+  .typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-4); animation: blink 1.2s infinite; }
+  .typing i:nth-child(2) { animation-delay: .2s; } .typing i:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink { 0%,80%,100% { opacity: .3; } 40% { opacity: 1; } }
+  .msg-actions { display: flex; gap: 12px; margin-top: 10px; font-size: 13px; color: var(--ink-4); flex-wrap: wrap; }
+  .msg-actions span { cursor: pointer; transition: color .2s, transform .2s; user-select: none; }
+  .msg-actions span:hover { color: var(--accent); }
+  .msg-actions span.on { color: var(--accent); transform: scale(1.1); }
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <div>
+    <div class="ph-title">视频举手</div>
+    <div class="ph-sub">第 3 讲 · 面向对象 · 边看边问，AI 学伴即时答疑</div>
+  </div>
+  <div class="ph-actions">
+    <button class="btn btn-outline btn-sm" onclick="toast('已跳转至上一次提问 28:05')">↩ 上次提问</button>
+    <button class="btn btn-primary btn-sm" onclick="toast('本节课提问记录已导出')">⤓ 导出提问记录</button>
+  </div>
+</div>
+
+<div class="work-layout">
+  <!-- 左：视频播放器 -->
+  <div class="panel" style="padding:0">
+    <div class="player">
+      <div class="video-stage" id="stage">
+        <div class="scene on" data-i="0">
+          <div class="kicker">面向对象 · 3.1</div>
+          <div class="topic">类与对象</div>
+          <div class="slide">类是对象的抽象模板，对象是类的具体实例，属性描述状态、方法描述行为。</div>
+        </div>
+        <div class="scene" data-i="1">
+          <div class="kicker">面向对象 · 3.2</div>
+          <div class="topic">封装与访问控制</div>
+          <div class="slide">通过 private、protected、public 控制成员访问权限，隐藏内部实现细节。</div>
+        </div>
+        <div class="scene" data-i="2">
+          <div class="kicker">面向对象 · 3.3</div>
+          <div class="topic">继承与重写</div>
+          <div class="slide">子类继承父类的成员并可在运行时重写方法，表达「is-a」的类层次关系。</div>
+        </div>
+        <div class="scene" data-i="3">
+          <div class="kicker">面向对象 · 3.4</div>
+          <div class="topic">多态与动态绑定</div>
+          <div class="slide">通过虚函数与基类指针实现动态绑定，让同一调用呈现不同行为。</div>
+        </div>
+        <button class="play-btn" id="playBtn">▶</button>
+      </div>
+      <div class="player-controls">
+        <div class="timeline">
+          <span id="curTime">00:00</span>
+          <div class="track" id="track"><div class="fill" id="fill"></div></div>
+          <span id="totalTime">45:00</span>
+        </div>
+        <div class="ctrl-row">
+          <div style="font-size:13px;color:#a1a1a6" id="stateLabel">已暂停 · 点击播放继续</div>
+          <button class="hand-btn" id="handBtn">✋ 举手提问</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右：AI 答疑面板 -->
+  <div class="panel q-panel">
+    <div class="q-head">
+      <div class="q-avatar">师</div>
+      <div>
+        <div class="name">AI 学伴 · 王老师数字人</div>
+        <div class="status">在线 · 已连接当前课程</div>
+      </div>
+    </div>
+    <div class="q-body" id="qBody">
+      <div class="empty-state" id="emptyState">
+        <div class="big">✋</div>
+        <div>还没有举手提问</div>
+        <div style="font-size:13px;margin-top:6px">播放视频时点击「举手提问」，系统将自动截取当前画面并为你解答。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel" style="margin-top:20px">
+  <div class="panel-head">
+    <h3>本节课提问记录</h3>
+    <span class="hint">共 3 条 · 数据实时同步</span>
+  </div>
+  <div class="table-wrap">
+    <table class="tbl">
+      <thead><tr><th>时间点</th><th>提问内容</th><th>关联知识点</th><th>状态</th></tr></thead>
+      <tbody id="recordBody">
+        <tr><td class="cell-main">06:12</td><td>封装的意义是什么？</td><td><span class="tag blue">封装与访问控制</span></td><td><span class="badge green">已回答</span></td></tr>
+        <tr><td class="cell-main">14:37</td><td>子类能继承父类的私有成员吗？</td><td><span class="tag blue">继承与重写</span></td><td><span class="badge green">已回答</span></td></tr>
+        <tr><td class="cell-main">28:05</td><td>多态在运行时是如何实现的？</td><td><span class="tag blue">多态与动态绑定</span></td><td><span class="badge green">已回答</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script src="../assets/shell.js"></script>
+<script>
+(function () {
+  var DURATION = 2700; // 45 分钟
+  var progress = 0;
+  var playing = false;
+  var timer = null;
+
+  var scenes = [
+    { topic: '类与对象',
+      q: '类与对象有什么区别？',
+      ans: '类是对一类事物共同特征（属性）与行为（方法）的抽象描述，本身不占用内存；对象是类的一个具体实例，创建时才会分配内存。比如「学生」是类，「张同学」是对象。' },
+    { topic: '封装与访问控制',
+      q: 'private 和 protected 有什么区别？',
+      ans: 'private 成员只能在类内部访问，子类也无法直接访问；protected 成员在本类与派生类内部均可访问，但类外部不能访问。public 则对所有代码开放。' },
+    { topic: '继承与重写',
+      q: '子类重写父类方法有什么规则？',
+      ans: '重写要求方法签名（函数名、参数列表、const 限定）与父类一致，父类方法需声明为虚函数；子类重写后，通过基类指针调用时会动态绑定到子类版本。' },
+    { topic: '多态与动态绑定',
+      q: '多态是如何通过虚函数实现的？',
+      ans: '编译器为含虚函数的类生成虚函数表（vtable），对象中保存指向该表的指针。通过基类指针调用虚函数时，运行时根据对象实际类型查表，绑定到对应的函数地址。' }
+  ];
+
+  var stage = document.getElementById('stage');
+  var fill = document.getElementById('fill');
+  var curTime = document.getElementById('curTime');
+  var stateLabel = document.getElementById('stateLabel');
+  var playBtn = document.getElementById('playBtn');
+  var handBtn = document.getElementById('handBtn');
+  var track = document.getElementById('track');
+  var qBody = document.getElementById('qBody');
+  var emptyState = document.getElementById('emptyState');
+  var recordBody = document.getElementById('recordBody');
+
+  function fmt(s) {
+    var m = Math.floor(s / 60), ss = Math.floor(s % 60);
+    return (m < 10 ? '0' + m : m) + ':' + (ss < 10 ? '0' + ss : ss);
+  }
+  function sceneIndex() {
+    var p = progress / DURATION;
+    return p < 0.25 ? 0 : p < 0.5 ? 1 : p < 0.75 ? 2 : 3;
+  }
+  function renderScene() {
+    var idx = sceneIndex();
+    document.querySelectorAll('#stage .scene').forEach(function (s) {
+      s.classList.toggle('on', parseInt(s.getAttribute('data-i'), 10) === idx);
+    });
+  }
+  function renderProgress() {
+    fill.style.width = (progress / DURATION * 100) + '%';
+    curTime.textContent = fmt(progress);
+    renderScene();
+  }
+  function play() {
+    playing = true;
+    playBtn.textContent = '❚❚';
+    playBtn.classList.add('hide');
+    stateLabel.textContent = '播放中 · 点击「举手提问」可随时提问';
+    timer = setInterval(function () {
+      progress += 1;
+      if (progress >= DURATION) { progress = DURATION; pause(); }
+      renderProgress();
+    }, 500);
+  }
+  function pause() {
+    playing = false;
+    clearInterval(timer);
+    playBtn.textContent = '▶';
+    playBtn.classList.remove('hide');
+    stateLabel.textContent = '已暂停 · 点击播放继续';
+  }
+  function togglePlay() { playing ? pause() : play(); }
+  playBtn.addEventListener('click', togglePlay);
+  track.addEventListener('click', function (e) {
+    var r = track.getBoundingClientRect();
+    progress = Math.max(0, Math.min(DURATION, (e.clientX - r.left) / r.width * DURATION));
+    renderProgress();
+  });
+
+  function addRecord(sc, timeStr) {
+    var tr = document.createElement('tr');
+    var badge = document.createElement('span');
+    badge.className = 'badge orange';
+    badge.textContent = '解答中';
+    tr.innerHTML = '<td class="cell-main">' + timeStr + '</td><td>' + escapeHtml(sc.q) + '</td>' +
+      '<td><span class="tag blue">' + sc.topic + '</span></td><td></td>';
+    tr.lastElementChild.appendChild(badge);
+    recordBody.insertBefore(tr, recordBody.firstChild);
+    setTimeout(function () { badge.className = 'badge green'; badge.textContent = '已回答'; }, 800);
+  }
+
+  function addAnswer(sc, regenerate) {
+    emptyState.style.display = 'none';
+    var timeStr = fmt(progress);
+    var shot = document.createElement('div');
+    shot.className = 'shot';
+    shot.innerHTML = '<div class="thumb">' + timeStr + '</div>' +
+      '<div class="cap"><b>已截取当前画面</b><br/>' + sc.topic + ' · 视频时间 ' + timeStr + '</div>';
+    qBody.appendChild(shot);
+
+    var msg = document.createElement('div');
+    msg.className = 'msg';
+    msg.innerHTML = '<div class="meta"><span class="mini-avatar">师</span> AI 学伴 · 王老师数字人</div><span class="typing"><i></i><i></i><i></i></span>';
+    qBody.appendChild(msg);
+    qBody.scrollTop = qBody.scrollHeight;
+
+    setTimeout(function () {
+      var text = regenerate ? '换个角度理解：' + sc.ans : sc.ans;
+      msg.innerHTML = '<div class="meta"><span class="mini-avatar">师</span> AI 学伴 · 王老师数字人</div>' + escapeHtml(text) +
+        '<div class="msg-actions"><span data-a="voice">🔊 语音播放</span><span data-a="regen">↻ 重新生成</span><span data-a="copy">⧉ 复制</span><span data-a="like">👍</span><span data-a="dislike">👎</span></div>';
+      qBody.scrollTop = qBody.scrollHeight;
+      bindActions(msg, sc);
+    }, 800);
+  }
+
+  function bindActions(msg, sc) {
+    msg.querySelectorAll('span[data-a]').forEach(function (s) {
+      s.addEventListener('click', function () {
+        var act = s.getAttribute('data-a');
+        if (act === 'voice') toast('正在语音播放答疑');
+        else if (act === 'copy') { if (navigator.clipboard) navigator.clipboard.writeText(sc.ans); toast('已复制到剪贴板'); }
+        else if (act === 'regen') { addAnswer(sc, true); }
+        else if (act === 'like') { s.classList.toggle('on'); toast(s.classList.contains('on') ? '感谢反馈 👍' : '已取消点赞'); }
+        else if (act === 'dislike') { s.classList.toggle('on'); toast(s.classList.contains('on') ? '已记录，将优化答疑质量 👎' : '已取消点踩'); }
+      });
+    });
+  }
+
+  handBtn.addEventListener('click', function () {
+    pause();
+    var sc = scenes[sceneIndex()];
+    addAnswer(sc, false);
+    addRecord(sc, fmt(progress));
+    toast('已截取当前画面并提交给 AI 学伴');
+  });
+
+  renderProgress();
+})();
+</script>
+</body>
+</html>
