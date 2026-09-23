@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>题库管理 · 智能课程教学平台教学平台</title>
+<title>题库管理 · 智能课程教学平台</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" />
 <link rel="stylesheet" href="../assets/base.css" />
 <link rel="stylesheet" href="../assets/product.css" />
 <style>
@@ -12,9 +13,9 @@
   .stem-cell .stem { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .tbl tbody tr { cursor: pointer; }
   .op-link { color: var(--accent); font-size: 13px; padding: 2px 6px; border-radius: 6px; }
-  .op-link:hover { background: rgba(10,132,255,.08); }
+  .op-link:hover { background: rgba(201,162,75,.12); }
   .op-link.danger { color: var(--red); }
-  .op-link.danger:hover { background: rgba(255,69,58,.14); }
+  .op-link.danger:hover { background: rgba(210,106,90,.14); }
   .field .tag-list { display: flex; gap: 6px; flex-wrap: wrap; }
 </style>
 </head>
@@ -23,7 +24,7 @@
 <div class="page-head">
   <div>
     <div class="ph-title">题库管理</div>
-    <div class="ph-sub">数据结构与算法 · 课程题库 · 题干、答案、解析、难度与标签的统一维护</div>
+    <div class="ph-sub">中国现当代文学 · 课程题库 · 题干、答案、解析、难度与标签的统一维护</div>
   </div>
   <div class="ph-actions">
     <button class="btn btn-outline btn-sm" id="importBtn">导入题目</button>
@@ -55,12 +56,12 @@
       </select>
       <select class="select" id="kFilter" style="max-width:150px">
         <option value="">全部知识点</option>
-        <option value="线性表">线性表</option>
-        <option value="栈与队列">栈与队列</option>
-        <option value="树与二叉树">树与二叉树</option>
-        <option value="图">图</option>
-        <option value="查找">查找</option>
-        <option value="排序">排序</option>
+        <option value="鲁迅小说">鲁迅小说</option>
+        <option value="现代诗歌">现代诗歌</option>
+        <option value="现代散文">现代散文</option>
+        <option value="京派与海派">京派与海派</option>
+        <option value="曹禺戏剧">曹禺戏剧</option>
+        <option value="当代文学">当代文学</option>
       </select>
     </div>
   </div>
@@ -80,7 +81,7 @@
     </table>
   </div>
   <div class="empty" id="emptyState" style="display:none">
-    <div class="e-icon">🔍</div>
+    <div class="e-icon"><i class="ri-search-line"></i></div>
     <p>没有匹配的题目，调整筛选条件或导入新的题目。</p>
   </div>
   <div class="pagination">
@@ -104,13 +105,13 @@
       <div class="form-row">
         <div class="field">
           <label><span class="req">答案</span></label>
-          <input class="input" id="fAnswer" type="text" placeholder="例如：A、ABC、正确、后进先出" />
+          <input class="input" id="fAnswer" type="text" placeholder="例如：A、ABC、正确、精神胜利法" />
         </div>
         <div class="field">
           <label><span class="req">知识点</span></label>
           <select class="select" id="fKnowledge">
-            <option>线性表</option><option>栈与队列</option><option>树与二叉树</option>
-            <option>图</option><option>查找</option><option>排序</option>
+            <option>鲁迅小说</option><option>现代诗歌</option><option>现代散文</option>
+            <option>京派与海派</option><option>曹禺戏剧</option><option>当代文学</option>
           </select>
         </div>
       </div>
@@ -159,33 +160,33 @@
   'use strict';
 
   var questions = [
-    { id: 1, type: '单选', difficulty: '简单', stem: '顺序存储的线性表支持以下哪种存取方式？', answer: 'A', analysis: '顺序表通过下标可直接定位元素，支持 O(1) 的随机存取。', knowledge: '线性表', tags: ['基础'], updated: '2026-09-18' },
-    { id: 2, type: '单选', difficulty: '中等', stem: '在长度为 n 的顺序表中删除第 i 个元素（1 ≤ i ≤ n），需要向前移动的元素个数是？', answer: 'B', analysis: '删除第 i 个元素后，其后的 n - i 个元素需依次前移一个位置。', knowledge: '线性表', tags: ['基础', '易错'], updated: '2026-09-15' },
-    { id: 3, type: '单选', difficulty: '简单', stem: '栈遵循的存取原则是？', answer: 'B', analysis: '栈只允许在一端插入和删除，遵循后进先出（LIFO）。', knowledge: '栈与队列', tags: ['基础'], updated: '2026-09-18' },
-    { id: 4, type: '单选', difficulty: '中等', stem: '一棵完全二叉树共有 1001 个结点，其叶子结点个数为？', answer: 'C', analysis: '由完全二叉树性质，n0 = (n + 1) / 2 = 501。', knowledge: '树与二叉树', tags: ['进阶'], updated: '2026-09-12' },
-    { id: 5, type: '单选', difficulty: '困难', stem: '具有 n 个顶点的有向完全图，其边数为？', answer: 'B', analysis: '有向完全图中任意两顶点之间都有两条方向相反的边，边数为 n(n-1)。', knowledge: '图', tags: ['进阶'], updated: '2026-09-10' },
-    { id: 6, type: '单选', difficulty: '简单', stem: '对有序表进行折半查找，其时间复杂度为？', answer: 'B', analysis: '折半查找每次将查找区间缩小一半，时间复杂度为 O(log n)。', knowledge: '查找', tags: ['基础'], updated: '2026-09-18' },
-    { id: 7, type: '单选', difficulty: '中等', stem: '快速排序在最好情况下的时间复杂度为？', answer: 'B', analysis: '划分较均衡时递归深度为 O(log n)，总时间复杂度为 O(n log n)。', knowledge: '排序', tags: ['进阶'], updated: '2026-09-11' },
-    { id: 8, type: '单选', difficulty: '中等', stem: '下列哪种排序算法是稳定的？', answer: 'C', analysis: '归并排序在合并时保持相同关键字的相对次序，是稳定排序。', knowledge: '排序', tags: ['易错'], updated: '2026-09-09' },
+    { id: 1, type: '单选', difficulty: '简单', stem: '《狂人日记》是鲁迅哪部小说集的首篇？', answer: 'A', analysis: '《狂人日记》发表于 1918 年，是《呐喊》首篇，也是中国现代文学史上第一篇白话短篇小说。', knowledge: '鲁迅小说', tags: ['基础'], updated: '2026-09-18' },
+    { id: 2, type: '单选', difficulty: '中等', stem: '「哀其不幸，怒其不争」是鲁迅对哪个人物态度的概括？', answer: 'A', analysis: '鲁迅对阿Q既同情其不幸又痛恨其麻木不争，以「哀其不幸，怒其不争」概括。', knowledge: '鲁迅小说', tags: ['基础', '易错'], updated: '2026-09-15' },
+    { id: 3, type: '单选', difficulty: '简单', stem: '郭沫若以狂飙突进激情开一代诗风的诗集是？', answer: 'A', analysis: '《女神》是郭沫若的代表诗集，以浪漫主义激情体现五四时代精神。', knowledge: '现代诗歌', tags: ['基础'], updated: '2026-09-18' },
+    { id: 4, type: '单选', difficulty: '中等', stem: '散文《荷塘月色》的作者是？', answer: 'A', analysis: '《荷塘月色》是朱自清的写景抒情散文名篇。', knowledge: '现代散文', tags: ['基础'], updated: '2026-09-12' },
+    { id: 5, type: '单选', difficulty: '中等', stem: '沈从文《边城》的故事发生地是湘西的哪座小城？', answer: 'A', analysis: '《边城》以川湘交界的茶峒为背景，描写渡口少女翠翠的故事。', knowledge: '京派与海派', tags: ['进阶'], updated: '2026-09-10' },
+    { id: 6, type: '单选', difficulty: '中等', stem: '《雷雨》中繁漪与周朴园是什么关系？', answer: 'A', analysis: '繁漪是周朴园续娶的妻子，周萍的继母。', knowledge: '曹禺戏剧', tags: ['进阶'], updated: '2026-09-18' },
+    { id: 7, type: '单选', difficulty: '简单', stem: '下列不属于朦胧诗代表诗人的是？', answer: 'D', analysis: '舒婷、北岛、顾城是朦胧诗代表诗人；徐志摩属新月派。', knowledge: '当代文学', tags: ['基础'], updated: '2026-09-11' },
+    { id: 8, type: '单选', difficulty: '中等', stem: '「人像展览式」结构出自曹禺的哪部作品？', answer: 'A', analysis: '《日出》通过陈白露的客厅展览各色人物，被称为「人像展览式」结构。', knowledge: '曹禺戏剧', tags: ['进阶'], updated: '2026-09-09' },
 
-    { id: 9, type: '多选', difficulty: '中等', stem: '以下关于栈和队列的说法正确的是？', answer: 'ABD', analysis: '栈为 LIFO、队列为 FIFO，二者都是受限的线性结构，可顺序或链式存储。', knowledge: '栈与队列', tags: ['基础'], updated: '2026-09-14' },
-    { id: 10, type: '多选', difficulty: '中等', stem: '下列属于二叉树遍历方式的是？', answer: 'ABC', analysis: '前序、中序、后序是二叉树的三种深度优先遍历方式。', knowledge: '树与二叉树', tags: ['基础'], updated: '2026-09-13' },
-    { id: 11, type: '多选', difficulty: '中等', stem: '下列属于图的遍历算法的是？', answer: 'AB', analysis: '图的遍历主要有深度优先搜索（DFS）和广度优先搜索（BFS）。', knowledge: '图', tags: ['基础'], updated: '2026-09-12' },
-    { id: 12, type: '多选', difficulty: '简单', stem: '下列属于稳定排序算法的是？', answer: 'ABC', analysis: '冒泡、插入、归并是稳定排序；快速排序和堆排序不稳定。', knowledge: '排序', tags: ['易错'], updated: '2026-09-10' },
-    { id: 13, type: '多选', difficulty: '困难', stem: '影响哈希表查找效率的因素包括？', answer: 'ABC', analysis: '哈希查找效率取决于哈希函数、装填因子与冲突处理方法。', knowledge: '查找', tags: ['进阶'], updated: '2026-09-08' },
+    { id: 9, type: '多选', difficulty: '中等', stem: '闻一多提出的新诗「三美」包括？', answer: 'ABC', analysis: '闻一多提出新诗应具备音乐美、绘画美、建筑美，代表诗集为《死水》。', knowledge: '现代诗歌', tags: ['基础'], updated: '2026-09-14' },
+    { id: 10, type: '多选', difficulty: '简单', stem: '下列属于朱自清散文作品的是？', answer: 'ABC', analysis: '《背影》《荷塘月色》《匆匆》均为朱自清作品；《朝花夕拾》是鲁迅的散文集。', knowledge: '现代散文', tags: ['基础'], updated: '2026-09-13' },
+    { id: 11, type: '多选', difficulty: '中等', stem: '下列属于「京派」作家的是？', answer: 'ABC', analysis: '沈从文、朱光潜、周作人属京派；张爱玲是海派作家。', knowledge: '京派与海派', tags: ['进阶'], updated: '2026-09-12' },
+    { id: 12, type: '多选', difficulty: '简单', stem: '下列属于曹禺剧作的是？', answer: 'ABC', analysis: '《雷雨》《日出》《原野》均为曹禺作品；《茶馆》是老舍的话剧。', knowledge: '曹禺戏剧', tags: ['基础'], updated: '2026-09-10' },
+    { id: 13, type: '多选', difficulty: '中等', stem: '下列属于朦胧诗代表诗人的是？', answer: 'ABC', analysis: '舒婷、北岛、顾城均为朦胧诗代表；闻一多是新月派诗人。', knowledge: '当代文学', tags: ['进阶'], updated: '2026-09-08' },
 
-    { id: 14, type: '判断', difficulty: '简单', stem: '顺序存储的线性表支持随机存取。', answer: '正确', analysis: '顺序表通过下标可直接定位元素。', knowledge: '线性表', tags: ['基础'], updated: '2026-09-17' },
-    { id: 15, type: '判断', difficulty: '简单', stem: '队列遵循「先进先出」原则。', answer: '正确', analysis: '队列在队尾插入、队头删除，遵循 FIFO。', knowledge: '栈与队列', tags: ['基础'], updated: '2026-09-16' },
-    { id: 16, type: '判断', difficulty: '中等', stem: '二叉树的先序序列和中序序列可以唯一确定一棵二叉树。', answer: '正确', analysis: '由先序确定根、中序划分左右子树，可递归唯一确定。', knowledge: '树与二叉树', tags: ['进阶'], updated: '2026-09-11' },
-    { id: 17, type: '判断', difficulty: '中等', stem: '最小生成树一定唯一。', answer: '错误', analysis: '当图中存在权值相同的边时，最小生成树可能不唯一。', knowledge: '图', tags: ['易错'], updated: '2026-09-09' },
-    { id: 18, type: '判断', difficulty: '简单', stem: '折半查找要求查找表必须是有序的顺序存储结构。', answer: '正确', analysis: '折半查找要求顺序存储且关键字有序。', knowledge: '查找', tags: ['基础'], updated: '2026-09-15' },
-    { id: 19, type: '判断', difficulty: '中等', stem: '堆排序是稳定的排序算法。', answer: '错误', analysis: '堆排序在调整堆时会打乱相同关键字的相对次序，不稳定。', knowledge: '排序', tags: ['易错'], updated: '2026-09-08' },
+    { id: 14, type: '判断', difficulty: '简单', stem: '《狂人日记》被誉为中国现代白话小说的开山之作。', answer: '正确', analysis: '《狂人日记》发表于 1918 年，是中国现代文学史上第一篇白话短篇小说。', knowledge: '鲁迅小说', tags: ['基础'], updated: '2026-09-17' },
+    { id: 15, type: '判断', difficulty: '简单', stem: '戴望舒的《雨巷》属于新月派诗歌。', answer: '错误', analysis: '《雨巷》是戴望舒现代诗派的代表作，不属于新月派。', knowledge: '现代诗歌', tags: ['基础'], updated: '2026-09-16' },
+    { id: 16, type: '判断', difficulty: '中等', stem: '周作人倡导的「美文」概念推动了现代散文的文体自觉。', answer: '正确', analysis: '周作人最早倡导「美文」，推动了现代散文的文体自觉与发展。', knowledge: '现代散文', tags: ['进阶'], updated: '2026-09-11' },
+    { id: 17, type: '判断', difficulty: '中等', stem: '张爱玲的《倾城之恋》以香港沦陷为故事背景。', answer: '正确', analysis: '白流苏与范柳原的爱情在日军攻陷香港的背景下发生转折。', knowledge: '京派与海派', tags: ['易错'], updated: '2026-09-09' },
+    { id: 18, type: '判断', difficulty: '中等', stem: '《日出》采用了「人像展览式」的结构。', answer: '正确', analysis: '《日出》通过陈白露的客厅展览各色人物，是「人像展览式」结构。', knowledge: '曹禺戏剧', tags: ['进阶'], updated: '2026-09-15' },
+    { id: 19, type: '判断', difficulty: '中等', stem: '莫言是首位获得诺贝尔文学奖的中国籍作家。', answer: '正确', analysis: '2012 年莫言获诺贝尔文学奖，是首位获此殊荣的中国籍作家。', knowledge: '当代文学', tags: ['易错'], updated: '2026-09-08' },
 
-    { id: 20, type: '填空', difficulty: '简单', stem: '在单链表中，删除某结点前必须先找到它的 ______ 结点。', answer: '前驱', analysis: '单链表只能单向访问，删除结点需先定位其前驱。', knowledge: '线性表', tags: ['基础'], updated: '2026-09-14' },
-    { id: 21, type: '填空', difficulty: '中等', stem: '栈的两种典型应用包括递归调用和 ______ 求值。', answer: '表达式', analysis: '表达式求值、括号匹配、递归调用都是栈的典型应用。', knowledge: '栈与队列', tags: ['进阶'], updated: '2026-09-12' },
-    { id: 22, type: '填空', difficulty: '中等', stem: '哈夫曼树中，权值越大的叶子离根结点越 ______。', answer: '近', analysis: '哈夫曼树构造时权值大的结点路径更短。', knowledge: '树与二叉树', tags: ['进阶'], updated: '2026-09-10' },
-    { id: 23, type: '填空', difficulty: '中等', stem: 'Prim 算法和 Kruskal 算法都用于求解图的 ______ 问题。', answer: '最小生成树', analysis: '两者都是经典的最小生成树算法。', knowledge: '图', tags: ['进阶'], updated: '2026-09-09' },
-    { id: 24, type: '填空', difficulty: '中等', stem: '哈希表中，处理冲突的两种常用方法是开放定址法和 ______。', answer: '链地址法', analysis: '链地址法与开放定址法是两种主要的冲突处理方法。', knowledge: '查找', tags: ['易错'], updated: '2026-09-07' }
+    { id: 20, type: '填空', difficulty: '简单', stem: '《阿Q正传》中阿Q最典型的精神特征是 ______。', answer: '精神胜利法', analysis: '精神胜利法是阿Q用自欺与麻木化解现实痛苦的心理机制。', knowledge: '鲁迅小说', tags: ['基础'], updated: '2026-09-14' },
+    { id: 21, type: '填空', difficulty: '中等', stem: '闻一多的诗集《死水》体现了新诗的 ______ 主张。', answer: '三美', analysis: '「三美」即音乐美、绘画美、建筑美。', knowledge: '现代诗歌', tags: ['进阶'], updated: '2026-09-12' },
+    { id: 22, type: '填空', difficulty: '中等', stem: '《边城》的女主人公是 ______。', answer: '翠翠', analysis: '翠翠是渡船老人的孙女，是《边城》中的女主角。', knowledge: '京派与海派', tags: ['进阶'], updated: '2026-09-10' },
+    { id: 23, type: '填空', difficulty: '中等', stem: '曹禺的处女作是 ______。', answer: '《雷雨》', analysis: '《雷雨》是曹禺 1933 年创作的处女作，标志着中国现代话剧的成熟。', knowledge: '曹禺戏剧', tags: ['进阶'], updated: '2026-09-09' },
+    { id: 24, type: '填空', difficulty: '简单', stem: '舒婷《致橡树》以 ______ 象征独立平等的爱情观。', answer: '木棉', analysis: '诗中以橡树与木棉并立，象征独立平等的爱情。', knowledge: '当代文学', tags: ['基础'], updated: '2026-09-07' }
   ];
 
   var nextId = 25;
@@ -375,7 +376,7 @@
             stem: item.stem || '',
             answer: item.answer || '',
             analysis: item.analysis || '',
-            knowledge: item.knowledge || '线性表',
+            knowledge: item.knowledge || '鲁迅小说',
             tags: item.tags || [],
             updated: '2026-09-21'
           });

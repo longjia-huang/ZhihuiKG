@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>知识二维码 · 智能课程教学平台教学平台</title>
+<title>知识二维码 · 智能课程教学平台</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" />
 <link rel="stylesheet" href="../assets/base.css" />
 <link rel="stylesheet" href="../assets/product.css" />
 <style>
@@ -16,7 +17,7 @@
     padding: 12px 14px; border-radius: 12px; cursor: pointer; border: 1px solid transparent; transition: background .13s;
   }
   .kp-item:hover { background: var(--bg-soft); }
-  .kp-item.active { background: rgba(10,132,255,.08); border-color: rgba(10,132,255,.22); }
+  .kp-item.active { background: rgba(201,162,75,.10); border-color: rgba(201,162,75,.22); }
   .kp-item .k-name { font-size: 14px; font-weight: 600; color: var(--ink); }
   .kp-item .k-ch { font-size: 12px; color: var(--ink-4); margin-top: 3px; }
   .kp-item .k-views { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
@@ -44,7 +45,7 @@
 <div class="page-head">
   <div>
     <div class="ph-title">知识二维码</div>
-    <div class="ph-sub">数据结构与算法 · 为知识点生成学习二维码，扫码直达免登录学习页</div>
+    <div class="ph-sub">中国现当代文学 · 为知识点生成学习二维码，扫码直达免登录学习页</div>
   </div>
   <div class="ph-actions">
     <button class="btn btn-outline btn-sm" onclick="batchGenerate()">批量生成</button>
@@ -108,16 +109,16 @@
   'use strict';
 
   var kps = [
-    { id: 'ds-intro',    name: '数据结构基本概念', ch: '第 1 章 · 绪论',          desc: '逻辑结构、存储结构与抽象数据类型的定义。', views: 1284, status: 'active' },
-    { id: 'ds-linear',   name: '线性表与链表',     ch: '第 2 章 · 线性表',        desc: '顺序表与单链表、双链表的存储与基本操作。', views: 2316, status: 'active' },
-    { id: 'ds-stack',    name: '栈与队列',         ch: '第 3 章 · 栈和队列',      desc: '栈、队列、循环队列的特性与典型应用。', views: 1874, status: 'active' },
-    { id: 'ds-bintree',  name: '二叉树与遍历',     ch: '第 4 章 · 树与二叉树',    desc: '二叉树性质、三种遍历与二叉排序树。', views: 1529, status: 'active' },
-    { id: 'ds-heap',     name: '堆与优先队列',     ch: '第 4 章 · 树与二叉树',    desc: '堆的结构、调整操作与优先队列实现。', views: 663,  status: 'active' },
-    { id: 'ds-graph',    name: '图的存储与遍历',   ch: '第 5 章 · 图',            desc: '邻接矩阵、邻接表与深度广度优先遍历。', views: 912,  status: 'active' },
-    { id: 'ds-mst',      name: '最小生成树',       ch: '第 5 章 · 图',            desc: 'Prim 与 Kruskal 算法求解最小生成树。', views: 508,  status: 'draft' },
-    { id: 'ds-sort',     name: '排序算法',         ch: '第 6 章 · 排序',          desc: '快速、归并等经典排序算法与性能对比。', views: 2045, status: 'active' },
-    { id: 'ds-search',   name: '查找与散列表',     ch: '第 7 章 · 查找',          desc: '折半查找、散列函数与冲突处理。', views: 786,  status: 'active' },
-    { id: 'ds-complex',  name: '算法复杂度分析',   ch: '第 1 章 · 绪论',          desc: '时间复杂度、空间复杂度与大 O 记号。', views: 1042, status: 'active' }
+    { id: 'wx-occur',    name: '五四文学革命',     ch: '第 1 章 · 现代文学的发生',  desc: '文学革命主张、白话文运动与现代文学的发生。', views: 1284, status: 'active' },
+    { id: 'wx-nahan',    name: '鲁迅《呐喊》',     ch: '第 2 章 · 现代小说',        desc: '《狂人日记》《阿Q正传》与国民性批判主题。', views: 2316, status: 'active' },
+    { id: 'wx-panghuang',name: '鲁迅《彷徨》',     ch: '第 2 章 · 现代小说',        desc: '《祝福》《伤逝》与知识分子的精神困境。', views: 1874, status: 'active' },
+    { id: 'wx-nvshen',   name: '《女神》与新诗',   ch: '第 3 章 · 现代诗歌',        desc: '郭沫若的浪漫主义诗风与五四时代精神。', views: 1529, status: 'active' },
+    { id: 'wx-xinyue',   name: '新月派与闻一多',   ch: '第 3 章 · 现代诗歌',        desc: '「三美」格律主张与《死水》的艺术追求。', views: 663,  status: 'active' },
+    { id: 'wx-sanwen',   name: '现代散文与朱自清', ch: '第 4 章 · 现代散文',        desc: '《背影》《荷塘月色》的抒情与白描手法。', views: 912,  status: 'active' },
+    { id: 'wx-biancheng',name: '沈从文《边城》',   ch: '第 5 章 · 京派与海派',      desc: '湘西世界的田园牧歌与抒情叙事特色。', views: 2045, status: 'active' },
+    { id: 'wx-zhang',    name: '张爱玲《倾城之恋》', ch: '第 5 章 · 京派与海派',    desc: '都市男女的传奇书写与苍凉美学。', views: 786,  status: 'active' },
+    { id: 'wx-leiyu',    name: '曹禺《雷雨》',     ch: '第 6 章 · 现代戏剧',        desc: '戏剧冲突、人物塑造与命运悲剧。', views: 508,  status: 'draft' },
+    { id: 'wx-menglong', name: '朦胧诗与舒婷',     ch: '第 7 章 · 当代文学',        desc: '朦胧诗的艺术特征与《致橡树》的人道主义。', views: 1042, status: 'active' }
   ];
 
   var currentIdx = 0;
@@ -155,11 +156,11 @@
     return false;
   }
   function drawFinder(c, c0, r0, cell) {
-    c.fillStyle = '#1d1d1f';
+    c.fillStyle = '#1d1914';
     c.fillRect(c0, r0, 7 * cell, 7 * cell);
     c.fillStyle = '#fff';
     c.fillRect(c0 + cell, r0 + cell, 5 * cell, 5 * cell);
-    c.fillStyle = '#1d1d1f';
+    c.fillStyle = '#1d1914';
     c.fillRect(c0 + 2 * cell, r0 + 2 * cell, 3 * cell, 3 * cell);
   }
   function drawQR(c, size, id) {
@@ -167,7 +168,7 @@
     var pad = 4 * cell;
     c.fillStyle = '#ffffff';
     c.fillRect(0, 0, size, size);
-    c.fillStyle = '#1d1d1f';
+    c.fillStyle = '#1d1914';
     var rng = mulberry32(hashSeed(id));
     for (var r = 0; r < N; r++) {
       for (var cc = 0; cc < N; cc++) {
@@ -175,7 +176,7 @@
         if (rng() > 0.5) c.fillRect(cc * cell + pad, r * cell + pad, cell, cell);
       }
     }
-    c.fillStyle = '#1d1d1f';
+    c.fillStyle = '#1d1914';
     for (var t = 0; t < N; t++) {
       if (!isReserved(6, t) && t % 2 === 0) c.fillRect(t * cell + pad, 6 * cell + pad, cell, cell);
       if (!isReserved(t, 6) && t % 2 === 0) c.fillRect(6 * cell + pad, t * cell + pad, cell, cell);
@@ -191,7 +192,7 @@
     return tc.toDataURL('image/png');
   }
 
-  var kpUrl = function (k) { return 'https://zs.znjxpt.com/k/' + k.id; };
+  var kpUrl = function (k) { return 'https://wx.znjxpt.com/k/' + k.id; };
   function statusBadge(s) {
     return s === 'active' ? '<span class="badge green">已发布</span>' : '<span class="badge gray">草稿</span>';
   }
@@ -203,7 +204,7 @@
     });
     document.getElementById('kpCount').textContent = '共 ' + kps.length + ' 个知识点';
     if (!filtered.length) {
-      listEl.innerHTML = '<div class="empty"><div class="e-icon">🔍</div><p>未找到匹配的知识点</p></div>';
+      listEl.innerHTML = '<div class="empty"><div class="e-icon"><i class="ri-search-line"></i></div><p>未找到匹配的知识点</p></div>';
       return;
     }
     listEl.innerHTML = filtered.map(function (x) {

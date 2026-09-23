@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AI 学伴 · 智能课程教学平台教学平台</title>
+<title>AI 学伴 · 智能课程教学平台</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" />
 <link rel="stylesheet" href="../assets/base.css" />
 <link rel="stylesheet" href="../assets/product.css" />
 <style>
@@ -16,7 +17,7 @@
   .s-list { flex: 1; overflow-y: auto; padding: 8px; }
   .s-item { padding: 11px 12px; border-radius: 10px; cursor: pointer; transition: .13s; }
   .s-item:hover { background: var(--bg-soft); }
-  .s-item.active { background: rgba(10,132,255,.08); }
+  .s-item.active { background: rgba(201,162,75,.10); }
   .s-item .t { font-size: 13.5px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .s-item .d { font-size: 11.5px; color: var(--ink-4); margin-top: 3px; }
 
@@ -30,9 +31,9 @@
   .msg { max-width: 76%; padding: 11px 15px; border-radius: 16px; font-size: 14px; line-height: 1.65; animation: mpop .3s var(--ease); }
   @keyframes mpop { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
   .msg.ai { align-self: flex-start; background: var(--surface); border: 1px solid var(--line-soft); border-bottom-left-radius: 6px; }
-  .msg.user { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 6px; }
+  .msg.user { align-self: flex-end; background: var(--accent); color: #241c0d; border-bottom-right-radius: 6px; }
   .msg .m-meta { font-size: 11px; color: var(--ink-4); margin-bottom: 4px; }
-  .msg.user .m-meta { color: rgba(255,255,255,.7); }
+  .msg.user .m-meta { color: rgba(36,28,13,.7); }
   .msg .m-actions { display: flex; gap: 14px; margin-top: 8px; font-size: 13px; color: var(--ink-4); }
   .msg .m-actions span { cursor: pointer; } .msg .m-actions span:hover { color: var(--accent); }
   .typing { display: inline-flex; gap: 4px; padding: 3px 0; }
@@ -43,9 +44,9 @@
   .chat-input .quick { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
   .chat-input .quick .chip { cursor: pointer; font-size: 12px; padding: 5px 12px; }
   .chat-input .row { display: flex; gap: 10px; }
-  .chat-input input { flex: 1; border: 1px solid var(--line); border-radius: 980px; padding: 11px 18px; font-size: 14px; font-family: inherit; outline: none; transition: border .15s; }
+  .chat-input input { flex: 1; border: 1px solid var(--line); border-radius: 980px; padding: 11px 18px; font-size: 14px; font-family: inherit; outline: none; transition: border .15s; background: var(--surface); color: var(--ink); }
   .chat-input input:focus { border-color: var(--accent); }
-  .chat-input .send { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 17px; transition: transform .15s; flex: 0 0 44px; }
+  .chat-input .send { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: #241c0d; font-size: 17px; transition: transform .15s; flex: 0 0 44px; }
   .chat-input .send:hover { transform: scale(1.06); }
 
   .chat-side { display: flex; flex-direction: column; gap: 20px; }
@@ -65,11 +66,11 @@
 <div class="page-head">
   <div>
     <div class="ph-title">AI 学伴</div>
-    <div class="ph-sub">基于「数据结构与算法」课程知识库训练 · 智能答疑 / 知识点讲解 / 学情分析</div>
+    <div class="ph-sub">基于「中国现当代文学」课程知识库训练 · 智能答疑 / 作品解读 / 学情分析</div>
   </div>
   <div class="ph-actions">
-    <button class="btn btn-outline btn-sm" onclick="toast('已新建会话')">＋ 新建会话</button>
-    <button class="btn btn-primary btn-sm" onclick="toast('知识库同步完成（演示）')">↻ 同步知识库</button>
+    <button class="btn btn-outline btn-sm" onclick="toast('已新建会话')"><i class="ri-add-line"></i> 新建会话</button>
+    <button class="btn btn-primary btn-sm" onclick="toast('知识库同步完成（演示）')"><i class="ri-refresh-line"></i> 同步知识库</button>
   </div>
 </div>
 
@@ -78,33 +79,33 @@
   <div class="panel sessions">
     <div class="s-head"><b>会话记录</b><span class="tag blue">今日 12</span></div>
     <div class="s-list" id="sList">
-      <div class="s-item active"><div class="t">多态与虚函数的区别</div><div class="d">今天 09:24 · 5 条消息</div></div>
-      <div class="s-item"><div class="t">链表反转的两种写法</div><div class="d">今天 08:51 · 3 条消息</div></div>
-      <div class="s-item"><div class="t">二叉树遍历易错点</div><div class="d">昨天 16:02 · 8 条消息</div></div>
-      <div class="s-item"><div class="t">哈希表冲突解决</div><div class="d">昨天 14:30 · 4 条消息</div></div>
-      <div class="s-item"><div class="t">期末复习：排序算法</div><div class="d">周一 · 12 条消息</div></div>
+      <div class="s-item active"><div class="t">阿 Q 的精神胜利法</div><div class="d">今天 09:24 · 5 条消息</div></div>
+      <div class="s-item"><div class="t">《呐喊》与《彷徨》主题异同</div><div class="d">今天 08:51 · 3 条消息</div></div>
+      <div class="s-item"><div class="t">《边城》的抒情叙事特色</div><div class="d">昨天 16:02 · 8 条消息</div></div>
+      <div class="s-item"><div class="t">朦胧诗的艺术特征</div><div class="d">昨天 14:30 · 4 条消息</div></div>
+      <div class="s-item"><div class="t">期末复习：现代文学脉络</div><div class="d">周一 · 12 条消息</div></div>
     </div>
   </div>
 
   <!-- 聊天窗口 -->
   <div class="panel chat-main">
     <div class="chat-top">
-      <div class="davatar"><img src="../1.png" alt="" style="height: 50px;width: 50px;"></div>
-      <div><div class="t">AI 学伴 · 张老师数字人</div><div class="s">在线 · 已加载 128 个知识点</div></div>
+      <img class="avatar-img" src="../1.png" alt="林老师" style="width:40px;height:40px" />
+      <div><div class="t">AI 学伴 · 林老师数字人</div><div class="s">在线 · 已加载 128 个文学知识点</div></div>
     </div>
     <div class="chat-msgs" id="chatMsgs">
-      <div class="msg ai"><div class="m-meta">AI 学伴</div>你好，我是本课程的 AI 学伴。你可以问我任何知识点，我会基于课程知识库为你精准解答，并关联到对应的知识图谱节点。</div>
+      <div class="msg ai"><div class="m-meta">AI 学伴</div>你好，我是本课程的 AI 学伴。你可以问我任何文学知识点，我会基于课程知识库为你精准解答，并关联到对应的知识图谱节点。</div>
     </div>
     <div class="chat-input">
       <div class="quick">
-        <span class="chip" data-q="请讲解一下「多态」这个知识点">讲解「多态」</span>
-        <span class="chip" data-q="「继承」和「组合」有什么区别？">继承 vs 组合</span>
+        <span class="chip" data-q="请讲解一下「精神胜利法」这个知识点">讲解「精神胜利法」</span>
+        <span class="chip" data-q="《呐喊》和《彷徨》有什么区别？">呐喊 vs 彷徨</span>
         <span class="chip" data-q="我最近的学情怎么样？">我的学情</span>
-        <span class="chip" data-q="链表和数组各自的优缺点？">链表 vs 数组</span>
+        <span class="chip" data-q="沈从文《边城》的叙事特色？">《边城》特色</span>
       </div>
       <div class="row">
         <input id="chatInput" type="text" placeholder="输入你的问题…" />
-        <button class="send" id="sendBtn">➤</button>
+        <button class="send" id="sendBtn"><i class="ri-send-plane-fill"></i></button>
       </div>
     </div>
   </div>
@@ -128,9 +129,9 @@
       <div class="panel-head"><h3>待巩固知识点</h3></div>
       <div class="panel-body" style="padding-top:6px">
         <ul class="weak-list">
-          <li><span>多态与虚函数</span><span class="badge red">薄弱</span></li>
-          <li><span>数据库事务隔离</span><span class="badge orange">一般</span></li>
-          <li><span>递归的时间复杂度</span><span class="badge orange">一般</span></li>
+          <li><span>精神胜利法</span><span class="badge red">薄弱</span></li>
+          <li><span>现代主义诗歌</span><span class="badge orange">一般</span></li>
+          <li><span>茅盾《子夜》结构</span><span class="badge orange">一般</span></li>
         </ul>
       </div>
     </div>
@@ -144,10 +145,10 @@
   var input = document.getElementById('chatInput');
 
   var answers = {
-    '多态': '多态是指同一操作作用于不同对象时，可以有不同的解释与实现。以「声音」为例，猫和狗都能「叫」，但叫声不同。在 C++ 中通过虚函数与动态绑定实现：基类指针指向子类对象，运行时调用子类重写的方法。',
-    '继承': '继承是子类复用父类成员、表达「is-a」关系的机制；组合是将对象作为成员变量、表达「has-a」关系的机制。优先使用组合可降低耦合、提高灵活性。',
-    '学情': '根据你近两周的学习记录：已掌握 82% 的知识点，本周提问 36 次、活跃度上升 18%。薄弱点集中在「多态与虚函数」「数据库事务」，建议优先复习并完成配套习题。',
-    '链表': '链表：插入删除 O(1)，随机访问 O(n)，内存非连续、有指针开销；数组：随机访问 O(1)，插入删除 O(n)，内存连续。需要频繁中间插入用链表，需要随机访问用数组。'
+    '精神胜利法': '精神胜利法是鲁迅小说《阿Q正传》中阿Q典型的心理机制：在现实中处处受欺压，却用自欺、麻木与自我安慰化解痛苦，以此获得虚幻的胜利感。鲁迅借此深刻批判了国民性中的麻木、奴性与自欺，是「哀其不幸，怒其不争」的集中体现。',
+    '呐喊': '《呐喊》与《彷徨》同为鲁迅的短篇小说集。《呐喊》多写于五四高潮期，格调较为昂扬激越，重在「呐喊」唤醒民众，代表作有《狂人日记》《阿Q正传》《药》；《彷徨》写于五四落潮后，笔调更深沉苦闷，聚焦知识分子的精神困境，代表作有《祝福》《伤逝》。',
+    '学情': '根据你近两周的学习记录：已掌握 82% 的知识点，本周提问 36 次、活跃度上升 18%。薄弱点集中在「精神胜利法」「现代主义诗歌」，建议优先复习并完成配套习题。',
+    '边城': '沈从文的《边城》以湘西茶峒为背景，用清新淡远的抒情笔调描写翠翠与傩送、天保之间的爱情悲剧。它构建了一个充满「人性美」与「人情美」的湘西世界，叙事含蓄蕴藉、散文化，是沈从文「田园牧歌」式审美理想的代表作。'
   };
 
   function addMsg(text, who) {
@@ -156,8 +157,8 @@
     if (who === 'user') {
       d.innerHTML = '<div class="m-meta">你</div>' + escapeHtml(text);
     } else {
-      d.innerHTML = '<img src="../1.png" alt="" style="height: 50px;width: 50px;">' + escapeHtml(text) +
-        '<div class="m-actions"><span>🔊 语音</span><span>↻ 重新生成</span><span>⧉ 复制</span><span>👍</span><span>👎</span></div>';
+      d.innerHTML = '<div class="m-meta">AI 学伴</div>' + escapeHtml(text) +
+        '<div class="m-actions"><span><i class="ri-volume-up-line"></i> 语音</span><span><i class="ri-refresh-line"></i> 重新生成</span><span><i class="ri-file-copy-line"></i> 复制</span><span><i class="ri-thumb-up-line"></i></span><span><i class="ri-thumb-down-line"></i></span></div>';
     }
     msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
   }
@@ -169,9 +170,9 @@
     msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
     var key = Object.keys(answers).find(function (k) { return q.indexOf(k) !== -1; });
     setTimeout(function () {
-      var text = key ? answers[key] : '这个问题很好。基于课程知识库，该内容属于核心知识点，建议结合知识图谱中的关联节点一起理解。需要我展开讲解吗？';
+      var text = key ? answers[key] : '这个问题很好。基于课程知识库，该内容属于核心知识点，建议结合知识图谱中的关联作家作品一起理解。需要我展开讲解吗？';
       d.innerHTML = '<div class="m-meta">AI 学伴</div>' + text +
-        '<div class="m-actions"><span>🔊 语音</span><span>↻ 重新生成</span><span>⧉ 复制</span><span>👍</span><span>👎</span></div>';
+        '<div class="m-actions"><span><i class="ri-volume-up-line"></i> 语音</span><span><i class="ri-refresh-line"></i> 重新生成</span><span><i class="ri-file-copy-line"></i> 复制</span><span><i class="ri-thumb-up-line"></i></span><span><i class="ri-thumb-down-line"></i></span></div>';
       msgs.scrollTop = msgs.scrollHeight;
     }, 850);
   }

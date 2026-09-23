@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>视频举手 · 智能课程教学平台教学平台</title>
+<title>视频举手 · 智能课程教学平台</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" />
 <link rel="stylesheet" href="../assets/base.css" />
 <link rel="stylesheet" href="../assets/product.css" />
 <style>
@@ -20,29 +21,29 @@
     position: absolute; inset: 0; padding: 34px;
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
     opacity: 0; transition: opacity .45s var(--ease);
-    background: radial-gradient(640px 340px at 50% 0%, rgba(10,132,255,.38), transparent 70%);
+    background: radial-gradient(640px 340px at 50% 0%, rgba(201,162,75,.32), transparent 70%);
   }
   .scene.on { opacity: 1; }
-  .scene .kicker { font-size: 12px; letter-spacing: .1em; color: #34c3ff; }
+  .scene .kicker { font-size: 12px; letter-spacing: .1em; color: #d8b06a; }
   .scene .topic { font-size: clamp(22px, 3vw, 30px); font-weight: 700; }
-  .scene .slide { font-size: 14px; color: #a1a1a6; max-width: 480px; }
+  .scene .slide { font-size: 14px; color: #c9bda2; max-width: 480px; }
   .play-btn {
     position: absolute; inset: 0; margin: auto; width: 74px; height: 74px; border-radius: 50%;
-    background: rgba(255,255,255,.92); color: #000; font-size: 24px; display: grid; place-items: center;
+    background: rgba(244,234,214,.92); color: #1d1914; font-size: 24px; display: grid; place-items: center;
     box-shadow: 0 12px 30px rgba(0,0,0,.4); transition: transform .2s, opacity .3s; z-index: 3;
   }
   .play-btn:hover { transform: scale(1.08); }
   .play-btn.hide { opacity: 0; pointer-events: none; }
   .player-controls { background: #111; padding: 15px 20px; }
-  .timeline { display: flex; align-items: center; gap: 12px; color: #a1a1a6; font-size: 12px; }
+  .timeline { display: flex; align-items: center; gap: 12px; color: #c9bda2; font-size: 12px; }
   .track { flex: 1; height: 6px; border-radius: 999px; background: #333; overflow: hidden; cursor: pointer; }
   .track .fill { height: 100%; width: 0; border-radius: 999px; background: var(--grad-ai); transition: width .4s linear; }
   .ctrl-row { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
   .ctrl-row .btn { padding: 9px 17px; font-size: 13.5px; }
   .hand-btn {
-    background: var(--accent); color: #fff; font-weight: 600; border-radius: 980px; padding: 11px 21px;
+    background: var(--accent); color: #241c0d; font-weight: 600; border-radius: 980px; padding: 11px 21px;
     display: inline-flex; align-items: center; gap: 8px; font-size: 14.5px; border: none; cursor: pointer;
-    box-shadow: 0 8px 22px rgba(255,255,255,.16); transition: transform .2s;
+    box-shadow: 0 8px 22px rgba(244,234,214,.16); transition: transform .2s;
   }
   .hand-btn:hover { transform: translateY(-2px); }
 
@@ -79,7 +80,7 @@
 <div class="page-head">
   <div>
     <div class="ph-title">视频举手</div>
-    <div class="ph-sub">第 3 讲 · 面向对象 · 边看边问，AI 学伴即时答疑</div>
+    <div class="ph-sub">第 3 讲 · 鲁迅《呐喊》 · 边看边问，AI 学伴即时答疑</div>
   </div>
   <div class="ph-actions">
     <button class="btn btn-outline btn-sm" onclick="toast('已跳转至上一次提问 28:05')">↩ 上次提问</button>
@@ -93,24 +94,24 @@
     <div class="player">
       <div class="video-stage" id="stage">
         <div class="scene on" data-i="0">
-          <div class="kicker">面向对象 · 3.1</div>
-          <div class="topic">类与对象</div>
-          <div class="slide">类是对象的抽象模板，对象是类的具体实例，属性描述状态、方法描述行为。</div>
+          <div class="kicker">鲁迅《呐喊》 · 3.1</div>
+          <div class="topic">《狂人日记》</div>
+          <div class="slide">以「吃人」的隐喻揭示封建礼教的本质，发出「救救孩子」的呐喊。</div>
         </div>
         <div class="scene" data-i="1">
-          <div class="kicker">面向对象 · 3.2</div>
-          <div class="topic">封装与访问控制</div>
-          <div class="slide">通过 private、protected、public 控制成员访问权限，隐藏内部实现细节。</div>
+          <div class="kicker">鲁迅《呐喊》 · 3.2</div>
+          <div class="topic">《阿Q正传》</div>
+          <div class="slide">通过阿Q的「精神胜利法」批判国民性中的麻木、奴性与自欺。</div>
         </div>
         <div class="scene" data-i="2">
-          <div class="kicker">面向对象 · 3.3</div>
-          <div class="topic">继承与重写</div>
-          <div class="slide">子类继承父类的成员并可在运行时重写方法，表达「is-a」的类层次关系。</div>
+          <div class="kicker">鲁迅《呐喊》 · 3.3</div>
+          <div class="topic">《药》</div>
+          <div class="slide">以「人血馒头」象征群众的愚昧与革命者的悲哀。</div>
         </div>
         <div class="scene" data-i="3">
-          <div class="kicker">面向对象 · 3.4</div>
-          <div class="topic">多态与动态绑定</div>
-          <div class="slide">通过虚函数与基类指针实现动态绑定，让同一调用呈现不同行为。</div>
+          <div class="kicker">鲁迅《呐喊》 · 3.4</div>
+          <div class="topic">《故乡》</div>
+          <div class="slide">通过闰土的变化揭示旧制度对人的摧残，寄寓对「新生活」的向往。</div>
         </div>
         <button class="play-btn" id="playBtn">▶</button>
       </div>
@@ -121,8 +122,8 @@
           <span id="totalTime">45:00</span>
         </div>
         <div class="ctrl-row">
-          <div style="font-size:13px;color:#a1a1a6" id="stateLabel">已暂停 · 点击播放继续</div>
-          <button class="hand-btn" id="handBtn">✋ 举手提问</button>
+          <div style="font-size:13px;color:#c9bda2" id="stateLabel">已暂停 · 点击播放继续</div>
+          <button class="hand-btn" id="handBtn"><i class="ri-hand"></i> 举手提问</button>
         </div>
       </div>
     </div>
@@ -131,15 +132,15 @@
   <!-- 右：AI 答疑面板 -->
   <div class="panel q-panel">
     <div class="q-head">
-      <img src="../1.png" alt=" "style="height: 50px;width: 50px;">
+      <img class="avatar-img" src="../1.png" alt="林老师" style="width:42px;height:42px" />
       <div>
-        <div class="name">AI 学伴 · 王老师数字人</div>
+        <div class="name">AI 学伴 · 林老师数字人</div>
         <div class="status">在线 · 已连接当前课程</div>
       </div>
     </div>
     <div class="q-body" id="qBody">
       <div class="empty-state" id="emptyState">
-        <div class="big">✋</div>
+        <div class="big"><i class="ri-hand"></i></div>
         <div>还没有举手提问</div>
         <div style="font-size:13px;margin-top:6px">播放视频时点击「举手提问」，系统将自动截取当前画面并为你解答。</div>
       </div>
@@ -156,9 +157,9 @@
     <table class="tbl">
       <thead><tr><th>时间点</th><th>提问内容</th><th>关联知识点</th><th>状态</th></tr></thead>
       <tbody id="recordBody">
-        <tr><td class="cell-main">06:12</td><td>封装的意义是什么？</td><td><span class="tag blue">封装与访问控制</span></td><td><span class="badge green">已回答</span></td></tr>
-        <tr><td class="cell-main">14:37</td><td>子类能继承父类的私有成员吗？</td><td><span class="tag blue">继承与重写</span></td><td><span class="badge green">已回答</span></td></tr>
-        <tr><td class="cell-main">28:05</td><td>多态在运行时是如何实现的？</td><td><span class="tag blue">多态与动态绑定</span></td><td><span class="badge green">已回答</span></td></tr>
+        <tr><td class="cell-main">06:12</td><td>《狂人日记》的「吃人」隐喻指什么？</td><td><span class="tag blue">《狂人日记》</span></td><td><span class="badge green">已回答</span></td></tr>
+        <tr><td class="cell-main">14:37</td><td>如何理解阿Q的精神胜利法？</td><td><span class="tag blue">《阿Q正传》</span></td><td><span class="badge green">已回答</span></td></tr>
+        <tr><td class="cell-main">28:05</td><td>闰土形象的悲剧意义是什么？</td><td><span class="tag blue">《故乡》</span></td><td><span class="badge green">已回答</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -173,18 +174,18 @@
   var timer = null;
 
   var scenes = [
-    { topic: '类与对象',
-      q: '类与对象有什么区别？',
-      ans: '类是对一类事物共同特征（属性）与行为（方法）的抽象描述，本身不占用内存；对象是类的一个具体实例，创建时才会分配内存。比如「学生」是类，「张同学」是对象。' },
-    { topic: '封装与访问控制',
-      q: 'private 和 protected 有什么区别？',
-      ans: 'private 成员只能在类内部访问，子类也无法直接访问；protected 成员在本类与派生类内部均可访问，但类外部不能访问。public 则对所有代码开放。' },
-    { topic: '继承与重写',
-      q: '子类重写父类方法有什么规则？',
-      ans: '重写要求方法签名（函数名、参数列表、const 限定）与父类一致，父类方法需声明为虚函数；子类重写后，通过基类指针调用时会动态绑定到子类版本。' },
-    { topic: '多态与动态绑定',
-      q: '多态是如何通过虚函数实现的？',
-      ans: '编译器为含虚函数的类生成虚函数表（vtable），对象中保存指向该表的指针。通过基类指针调用虚函数时，运行时根据对象实际类型查表，绑定到对应的函数地址。' }
+    { topic: '《狂人日记》',
+      q: '《狂人日记》的「吃人」隐喻指什么？',
+      ans: '「吃人」是鲁迅对封建礼教本质的深刻隐喻：以仁义道德之名行压迫摧残之实。狂人从历史与现实中看穿礼教的虚伪，发出「救救孩子」的呐喊，呼吁挣脱封建桎梏。' },
+    { topic: '《阿Q正传》',
+      q: '如何理解阿Q的精神胜利法？',
+      ans: '精神胜利法是阿Q在现实中处处受欺却用自欺与自我安慰化解痛苦的心理机制。鲁迅借此批判国民性中的麻木、奴性与自欺，寄寓「哀其不幸，怒其不争」的深意。' },
+    { topic: '《药》',
+      q: '「人血馒头」有什么象征意义？',
+      ans: '「人血馒头」象征群众的愚昧麻木：革命者夏瑜为民众流血牺牲，其鲜血却被愚民当作治病的「药」。鲁迅借此揭示革命者与群众之间深刻的隔膜，批判辛亥革命的局限。' },
+    { topic: '《故乡》',
+      q: '闰土形象的悲剧意义是什么？',
+      ans: '少年闰土活泼勇敢，中年闰土却变得麻木迟钝、恭顺迷信。这种变化揭示了旧制度与「多子、饥荒、苛税、兵匪官绅」对劳动人民的摧残，寄寓鲁迅改造旧社会的理想。' }
   ];
 
   var stage = document.getElementById('stage');
@@ -266,14 +267,14 @@
 
     var msg = document.createElement('div');
     msg.className = 'msg';
-    msg.innerHTML = '<div class="meta"><span class="mini-avatar">师</span> AI 学伴 · 王老师数字人</div><span class="typing"><i></i><i></i><i></i></span>';
+    msg.innerHTML = '<div class="meta"><span class="mini-avatar">师</span> AI 学伴 · 林老师数字人</div><span class="typing"><i></i><i></i><i></i></span>';
     qBody.appendChild(msg);
     qBody.scrollTop = qBody.scrollHeight;
 
     setTimeout(function () {
       var text = regenerate ? '换个角度理解：' + sc.ans : sc.ans;
-      msg.innerHTML = '<div class="meta"><span class="mini-avatar">师</span> AI 学伴 · 王老师数字人</div>' + escapeHtml(text) +
-        '<div class="msg-actions"><span data-a="voice">🔊 语音播放</span><span data-a="regen">↻ 重新生成</span><span data-a="copy">⧉ 复制</span><span data-a="like">👍</span><span data-a="dislike">👎</span></div>';
+      msg.innerHTML = '<div class="meta"><span class="mini-avatar">师</span> AI 学伴 · 林老师数字人</div>' + escapeHtml(text) +
+        '<div class="msg-actions"><span data-a="voice"><i class="ri-volume-up-line"></i> 语音播放</span><span data-a="regen"><i class="ri-refresh-line"></i> 重新生成</span><span data-a="copy"><i class="ri-file-copy-line"></i> 复制</span><span data-a="like"><i class="ri-thumb-up-line"></i></span><span data-a="dislike"><i class="ri-thumb-down-line"></i></span></div>';
       qBody.scrollTop = qBody.scrollHeight;
       bindActions(msg, sc);
     }, 800);

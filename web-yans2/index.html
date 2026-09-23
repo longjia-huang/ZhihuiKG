@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>智能课程教学平台教学平台 · AI 赋能智慧教学</title>
+<title>智能课程教学平台 · 中国现当代文学 · AI 赋能智慧教学</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" />
 <link rel="stylesheet" href="assets/base.css" />
 <style>
   .nav-cta-outline { display:inline-flex; align-items:center; padding:8px 18px; border-radius:980px; border:1px solid var(--line); color:var(--ink); font-size:14px; font-weight:500; transition:.2s; }
   .nav-cta-outline:hover { background:var(--bg-soft); }
 
-  .hero-badge { display:inline-flex; align-items:center; gap:8px; padding:8px 16px; border-radius:980px; background:var(--grad-ai-soft); color:#0a5cbf; font-size:13px; font-weight:600; margin-bottom:24px; }
+  .hero-badge { display:inline-flex; align-items:center; gap:8px; padding:8px 16px; border-radius:980px; background:var(--grad-ai-soft); color:var(--accent); font-size:13px; font-weight:600; margin-bottom:24px; }
   .hero-badge .pulse { width:8px; height:8px; border-radius:50%; background:var(--accent); animation:pulse 1.8s infinite; }
   @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.4)} }
 
@@ -22,7 +23,9 @@
   .hero-screen .hs-body { display:grid; grid-template-columns: 210px 1fr; height: 340px; }
   .hero-screen .hs-side { background:var(--bg-soft-2); border-right:1px solid var(--line-soft); padding:12px 8px; }
   .hero-screen .hs-side .m { display:flex; align-items:center; gap:9px; padding:9px 11px; border-radius:9px; font-size:13px; color:var(--ink-2); }
-  .hero-screen .hs-side .m.on { background:rgba(10,132,255,.09); color:var(--accent); font-weight:600; }
+  .hero-screen .hs-side .m i { color: var(--ink-3); font-size:16px; }
+  .hero-screen .hs-side .m.on { background:rgba(201,162,75,.10); color:var(--accent); font-weight:600; }
+  .hero-screen .hs-side .m.on i { color: var(--accent); }
   .hero-screen .hs-main { padding: 18px 22px; display:flex; flex-direction:column; gap:12px; background:var(--surface); }
   .hero-screen .hs-kpi { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
   .hero-screen .hs-kpi > div { background:var(--bg-soft-2); border-radius:12px; padding:12px; }
@@ -32,18 +35,18 @@
 
   .feature-card { position:relative; display:flex; flex-direction:column; min-height:260px; overflow:hidden; }
   .feature-card .idx { font-size:12px; font-weight:700; letter-spacing:.06em; color:var(--ink-4); margin-bottom:14px; }
-  .feature-card .icon { width:54px; height:54px; border-radius:15px; display:grid; place-items:center; font-size:26px; margin-bottom:18px; color:#fff; background:var(--grad-ai); box-shadow:0 8px 22px rgba(10,132,255,.26); }
-  .feature-card h3 { font-size:21px; font-weight:700; letter-spacing:-.01em; }
+  .feature-card .icon { width:54px; height:54px; border-radius:15px; display:grid; place-items:center; font-size:26px; margin-bottom:18px; color:#fff; background:var(--grad-ai); box-shadow:0 8px 22px rgba(201,162,75,.26); }
+  .feature-card h3 { font-family:var(--font-serif); font-size:21px; font-weight:700; letter-spacing:0; }
   .feature-card p { color:var(--ink-3); font-size:14.5px; margin-top:10px; flex:1; }
   .feature-card .go { margin-top:20px; font-size:14.5px; font-weight:500; color:var(--accent); display:inline-flex; align-items:center; gap:6px; }
   .feature-card .go::after { content:"→"; transition:transform .3s var(--ease); }
   .feature-card:hover .go::after { transform:translateX(5px); }
   .feature-card .tag { position:absolute; top:20px; right:20px; font-size:11px; font-weight:600; padding:4px 10px; border-radius:980px; background:var(--bg-soft); color:var(--ink-3); }
 
-  .band { background:var(--grad-ink); color:#f5f5f7; border-radius:32px; padding:70px 48px; display:flex; align-items:center; justify-content:space-between; gap:40px; flex-wrap:wrap; overflow:hidden; position:relative; }
-  .band::before { content:""; position:absolute; inset:0; background:radial-gradient(600px 300px at 80% 20%, rgba(10,132,255,.5), transparent 60%); }
-  .band h2 { font-size:clamp(26px,4vw,40px); font-weight:700; letter-spacing:-.02em; position:relative; }
-  .band p { color:#a1a1a6; font-size:16px; margin-top:12px; position:relative; }
+  .band { background:var(--grad-ink); color:#f4ead6; border-radius:32px; padding:70px 48px; display:flex; align-items:center; justify-content:space-between; gap:40px; flex-wrap:wrap; overflow:hidden; position:relative; }
+  .band::before { content:""; position:absolute; inset:0; background:radial-gradient(600px 300px at 80% 20%, rgba(201,162,75,.45), transparent 60%); }
+  .band h2 { font-family:var(--font-serif); font-size:clamp(26px,4vw,40px); font-weight:700; letter-spacing:0; position:relative; }
+  .band p { color:#c9bda2; font-size:16px; margin-top:12px; position:relative; }
   .band .btn { position:relative; }
 </style>
 </head>
@@ -51,7 +54,7 @@
 
 <nav class="nav">
   <div class="container nav-inner">
-    <a class="nav-logo" href="index.html"><span class="dot">智</span> 智能课程教学平台教学平台</a>
+    <a class="nav-logo" href="index.html"><span class="dot">文</span> 智能课程教学平台</a>
     <div class="nav-links">
       <a href="#features">产品能力</a>
       <a href="#data">客户案例</a>
@@ -68,9 +71,9 @@
 <header class="hero">
   <div class="hero-glow"></div>
   <div class="container">
-    <div class="hero-badge"><span class="pulse"></span> 广西信息职业技术学院 · 智慧教学 AI 能力中心</div>
-    <h1 class="display">让 AI 真正融入<br /><span class="grad-text">每一个教学环节</span></h1>
-    <p class="subhead">从能力目标、知识图谱到智能答疑与 AI 出题，智能课程教学平台教学平台为高校提供覆盖课程全生命周期的一体化 AI 教学能力。</p>
+    <div class="hero-badge"><span class="pulse"></span> 文学院 · 中国现当代文学 · 智慧教学 AI 能力中心</div>
+    <h1 class="display">让 AI 真正融入<br /><span class="grad-text">每一个文学课堂</span></h1>
+    <p class="subhead">从能力目标、文学知识图谱到智能答疑与 AI 出题，智能课程教学平台为高校文学课程提供覆盖全生命周期的一体化 AI 教学能力。</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="#features">进入产品</a>
       <a class="btn btn-ghost" href="#architecture">了解技术底座</a>
@@ -78,27 +81,27 @@
 
     <div class="hero-visual reveal">
       <div class="hero-screen">
-        <div class="hs-top"><i></i><i></i><i></i><span class="hs-url">zhihuishu.edu.cn / teaching</span></div>
+        <div class="hs-top"><i></i><i></i><i></i><span class="hs-url">wenxue.edu.cn / 现当代文学</span></div>
         <div class="hs-body">
           <div class="hs-side">
-            <div class="m">🏠 工作台</div>
-            <div class="m">🎯 能力目标</div>
-            <div class="m on">💬 AI 学伴</div>
-            <div class="m">✍️ AI 出题</div>
-            <div class="m">🤖 智能体构建</div>
-            <div class="m">📊 建设进度</div>
-            <div class="m">🗂️ 题库管理</div>
+            <div class="m"><i class="ri-home-5-line"></i>工作台</div>
+            <div class="m"><i class="ri-crosshair-2-line"></i>能力目标</div>
+            <div class="m on"><i class="ri-chat-smile-2-line"></i>AI 学伴</div>
+            <div class="m"><i class="ri-quill-pen-line"></i>AI 出题</div>
+            <div class="m"><i class="ri-robot-2-line"></i>智能体构建</div>
+            <div class="m"><i class="ri-line-chart-line"></i>建设进度</div>
+            <div class="m"><i class="ri-database-2-line"></i>题库管理</div>
           </div>
           <div class="hs-main">
             <div class="hs-kpi">
               <div><b>86%</b><span>知识点完成度</span></div>
-              <div><b>128</b><span>关联知识点</span></div>
+              <div><b>128</b><span>关联文学知识点</span></div>
               <div><b>36</b><span>本周答疑</span></div>
             </div>
             <div class="hs-chat">
               <div style="color:var(--ink-4);font-size:11px;margin-bottom:8px">AI 学伴 · 实时答疑</div>
-              学生：「老师，什么是面向对象的多态？」<br/>
-              <span style="color:var(--accent)">AI 学伴：多态是指同一操作作用于不同对象时，可以有不同的解释与实现……</span>
+              学生：「老师，《呐喊》里阿 Q 的『精神胜利法』该如何理解？」<br/>
+              <span style="color:var(--accent)">AI 学伴：『精神胜利法』是阿 Q 用自欺与麻木化解现实痛苦的心理机制，鲁迅借此批判国民性的麻木与奴性……</span>
             </div>
           </div>
         </div>
@@ -127,16 +130,16 @@
     </div>
 
     <div class="grid grid-3">
-      <a class="card feature-card reveal" href="sites/competency-objectives.html"><span class="tag">教学建设</span><div class="idx">01</div><div class="icon">🎯</div><h3>能力目标</h3><p>编辑能力目标与子目标，关联知识点与问题，构建目标驱动课程体系。</p><span class="go">进入工作台</span></a>
-      <a class="card feature-card reveal" data-delay="1" href="sites/knowledge-qrcode.html"><span class="tag">教学建设</span><div class="idx">02</div><div class="icon">🔳</div><h3>知识二维码</h3><p>自动生成知识点二维码与链接，微信扫码免登录学习，内含知识图谱。</p><span class="go">进入工作台</span></a>
-      <a class="card feature-card reveal" data-delay="2" href="sites/ai-tutor.html"><span class="tag">AI 能力</span><div class="idx">03</div><div class="icon">💬</div><h3>AI 学伴</h3><p>基于课程知识库的大模型伴学，智能答疑、知识点讲解与学情分析。</p><span class="go">进入工作台</span></a>
-      <a class="card feature-card reveal" href="sites/course-commands.html"><span class="tag">AI 能力</span><div class="idx">04</div><div class="icon">📌</div><h3>课程指令</h3><p>创建简单与变量化提问指令，引导学生问题导向性学习。</p><span class="go">进入工作台</span></a>
-      <a class="card feature-card reveal" data-delay="1" href="sites/ai-question-gen.html"><span class="tag">AI 能力</span><div class="idx">05</div><div class="icon">✍️</div><h3>AI 出题</h3><p>按知识点或参考内容智能出题，支持四种题型自由组合。</p><span class="go">进入工作台</span></a>
-      <a class="card feature-card reveal" data-delay="2" href="sites/construction-progress.html"><span class="tag">教学建设</span><div class="idx">06</div><div class="icon">📊</div><h3>建设进度</h3><p>以 0%–100% 维度呈现知识点完成度，建设清单辅助观测。</p><span class="go">进入工作台</span></a>
-      <a class="card feature-card reveal" href="sites/video-raise-hand.html"><span class="tag">教学互动</span><div class="idx">07</div><div class="icon">🙋</div><h3>视频举手</h3><p>观看视频一键举手，AI 学伴以教师数字人形象即时答疑。</p><span class="go">进入工作台</span></a>
-      <a class="card feature-card reveal" data-delay="1" href="sites/agent-builder.html"><span class="tag">智能体</span><div class="idx">08</div><div class="icon">🤖</div><h3>智能体构建</h3><p>情景模板快速构建专属智能体，支持对话界面定制与预览。</p><span class="go">进入工作台</span></a>
-      <a class="card feature-card reveal" data-delay="2" href="sites/assessment-task.html"><span class="tag">智能体</span><div class="idx">09</div><div class="icon">📝</div><h3>测评任务</h3><p>灵活设定班级、通知方式与评分标准，多级评级统计。</p><span class="go">进入工作台</span></a>
-      <a class="card feature-card reveal" href="sites/question-bank.html"><span class="tag">教学互动</span><div class="idx">10</div><div class="icon">🗂️</div><h3>题库管理</h3><p>一键重新生成与入库，自由编辑题干、解析、标签并导出。</p><span class="go">进入工作台</span></a>
+      <a class="card feature-card reveal" href="sites/competency-objectives.html"><span class="tag">教学建设</span><div class="idx">01</div><div class="icon"><i class="ri-crosshair-2-line"></i></div><h3>能力目标</h3><p>编辑文学课程的能力目标与子目标，关联知识点与问题，构建目标驱动课程体系。</p><span class="go">进入工作台</span></a>
+      <a class="card feature-card reveal" data-delay="1" href="sites/knowledge-qrcode.html"><span class="tag">教学建设</span><div class="idx">02</div><div class="icon"><i class="ri-qr-code-line"></i></div><h3>知识二维码</h3><p>自动生成作家作品知识点二维码与链接，微信扫码免登录学习，内含文学知识图谱。</p><span class="go">进入工作台</span></a>
+      <a class="card feature-card reveal" data-delay="2" href="sites/ai-tutor.html"><span class="tag">AI 能力</span><div class="idx">03</div><div class="icon"><i class="ri-chat-smile-2-line"></i></div><h3>AI 学伴</h3><p>基于课程知识库的大模型伴学，智能答疑、作品解读与学情分析。</p><span class="go">进入工作台</span></a>
+      <a class="card feature-card reveal" href="sites/course-commands.html"><span class="tag">AI 能力</span><div class="idx">04</div><div class="icon"><i class="ri-command-line"></i></div><h3>课程指令</h3><p>创建简单与变量化提问指令，引导学生问题导向性学习。</p><span class="go">进入工作台</span></a>
+      <a class="card feature-card reveal" data-delay="1" href="sites/ai-question-gen.html"><span class="tag">AI 能力</span><div class="idx">05</div><div class="icon"><i class="ri-quill-pen-line"></i></div><h3>AI 出题</h3><p>按作家作品或参考文本智能出题，支持四种题型自由组合。</p><span class="go">进入工作台</span></a>
+      <a class="card feature-card reveal" data-delay="2" href="sites/construction-progress.html"><span class="tag">教学建设</span><div class="idx">06</div><div class="icon"><i class="ri-line-chart-line"></i></div><h3>建设进度</h3><p>以 0%–100% 维度呈现文学知识点完成度，建设清单辅助观测。</p><span class="go">进入工作台</span></a>
+      <a class="card feature-card reveal" href="sites/video-raise-hand.html"><span class="tag">教学互动</span><div class="idx">07</div><div class="icon"><i class="ri-hand"></i></div><h3>视频举手</h3><p>观看视频一键举手，AI 学伴以教师数字人形象即时答疑。</p><span class="go">进入工作台</span></a>
+      <a class="card feature-card reveal" data-delay="1" href="sites/agent-builder.html"><span class="tag">智能体</span><div class="idx">08</div><div class="icon"><i class="ri-robot-2-line"></i></div><h3>智能体构建</h3><p>情景模板快速构建专属智能体，支持对话界面定制与预览。</p><span class="go">进入工作台</span></a>
+      <a class="card feature-card reveal" data-delay="2" href="sites/assessment-task.html"><span class="tag">智能体</span><div class="idx">09</div><div class="icon"><i class="ri-clipboard-line"></i></div><h3>测评任务</h3><p>灵活设定班级、通知方式与评分标准，多级评级统计。</p><span class="go">进入工作台</span></a>
+      <a class="card feature-card reveal" href="sites/question-bank.html"><span class="tag">教学互动</span><div class="idx">10</div><div class="icon"><i class="ri-database-2-line"></i></div><h3>题库管理</h3><p>一键重新生成与入库，自由编辑题干、解析、标签并导出。</p><span class="go">进入工作台</span></a>
     </div>
   </div>
 </section>
@@ -145,12 +148,12 @@
   <div class="container" style="text-align:center">
     <div class="eyebrow reveal">技术底座</div>
     <h2 class="title reveal" style="margin-top:12px">统一的 AI 教学底座</h2>
-    <p class="subhead reveal" style="margin:16px auto 0; max-width:640px">所有能力共用课程知识库与大语言模型底座，向上支撑多样化教学场景。</p>
+    <p class="subhead reveal" style="margin:16px auto 0; max-width:640px">所有能力共用文学课程知识库与大语言模型底座，向上支撑多样化教学场景。</p>
     <div class="grid grid-4" style="margin-top:56px; text-align:left">
-      <div class="card reveal"><div class="icon">🧠</div><h3>知识库层</h3><p>知识点、资源、图谱与题库的统一沉淀与训练语料。</p></div>
-      <div class="card reveal" data-delay="1"><div class="icon">🤖</div><h3>模型层</h3><p>课程专属大语言模型，驱动答疑、出题与讲解。</p></div>
-      <div class="card reveal" data-delay="2"><div class="icon">🧩</div><h3>能力层</h3><p>指令、智能体、数字人、测评等可编排能力组件。</p></div>
-      <div class="card reveal" data-delay="3"><div class="icon">📱</div><h3>应用层</h3><p>Web 与移动端，扫码免登录的泛在学习体验。</p></div>
+      <div class="card reveal"><div class="icon"><i class="ri-brain-line"></i></div><h3>知识库层</h3><p>作家作品、文献资源、图谱与题库的统一沉淀与训练语料。</p></div>
+      <div class="card reveal" data-delay="1"><div class="icon"><i class="ri-robot-line"></i></div><h3>模型层</h3><p>课程专属大语言模型，驱动答疑、出题与讲解。</p></div>
+      <div class="card reveal" data-delay="2"><div class="icon"><i class="ri-puzzle-line"></i></div><h3>能力层</h3><p>指令、智能体、数字人、测评等可编排能力组件。</p></div>
+      <div class="card reveal" data-delay="3"><div class="icon"><i class="ri-smartphone-line"></i></div><h3>应用层</h3><p>Web 与移动端，扫码免登录的泛在学习体验。</p></div>
     </div>
   </div>
 </section>
@@ -160,7 +163,7 @@
     <div class="band reveal">
       <div>
         <h2>准备好体验了吗？</h2>
-        <p>登录教学平台，从十项能力中任选其一，立即进入真实的工作台。</p>
+        <p>登录教学平台，从十项能力中任选其一，立即进入真实的文学教学工作台。</p>
       </div>
       <a class="btn btn-primary" href="sites/ai-tutor.html">进入教学平台</a>
     </div>
@@ -171,14 +174,14 @@
   <div class="container">
     <div class="footer-inner">
       <div>
-        <div class="nav-logo"><span class="dot">智</span> 智能课程教学平台教学平台</div>
-        <small style="margin-top:16px">AI 赋能 · 智慧教学</small>
+        <div class="nav-logo"><span class="dot">文</span> 智能课程教学平台</div>
+        <small style="margin-top:16px">墨香金韵 · 文学智慧</small>
       </div>
       <div><strong>产品能力</strong><br/><br/><a href="sites/ai-tutor.html">AI 学伴</a><br/><a href="sites/ai-question-gen.html">AI 出题</a><br/><a href="sites/agent-builder.html">智能体构建</a></div>
       <div><strong>教学建设</strong><br/><br/><a href="sites/competency-objectives.html">能力目标</a><br/><a href="sites/knowledge-qrcode.html">知识二维码</a><br/><a href="sites/construction-progress.html">建设进度</a></div>
       <div><strong>测评互动</strong><br/><br/><a href="sites/assessment-task.html">测评任务</a><br/><a href="sites/question-bank.html">题库管理</a><br/><a href="sites/video-raise-hand.html">视频举手</a></div>
     </div>
-    <small style="text-align:center; display:block; margin-top:40px">Copyright © 2026 智能课程教学平台教学平台. 保留所有权利。</small>
+    <small style="text-align:center; display:block; margin-top:40px">Copyright © 2026 智能课程教学平台. 保留所有权利。</small>
   </div>
 </footer>
 

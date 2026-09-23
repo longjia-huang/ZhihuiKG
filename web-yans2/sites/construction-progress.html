@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>建设进度 · 智能课程教学平台教学平台</title>
+<title>建设进度 · 智能课程教学平台</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" />
 <link rel="stylesheet" href="../assets/base.css" />
 <link rel="stylesheet" href="../assets/product.css" />
 <style>
@@ -29,7 +30,7 @@
     font-size: 13px; color: var(--ink-2); transition: .18s;
   }
   .filter:hover { border-color: #b8b8bc; }
-  .filter.active { background: var(--accent); color: #fff; border-color: transparent; }
+  .filter.active { background: var(--accent); color: #241c0d; border-color: transparent; font-weight: 600; }
 
   .cell-bar { display: flex; align-items: center; gap: 10px; min-width: 170px; }
   .cell-bar .bar { flex: 1; height: 8px; }
@@ -41,35 +42,35 @@
 <div class="page-head">
   <div>
     <div class="ph-title">建设进度</div>
-    <div class="ph-sub">数据结构与算法 · 知识点建设完成度全景 · 最后更新于 2026-09-21 09:40</div>
+    <div class="ph-sub">中国现当代文学 · 知识点建设完成度全景 · 最后更新于 2026-09-21 09:40</div>
   </div>
   <div class="ph-actions">
     <button class="btn btn-outline btn-sm" onclick="exportReport()">导出报告</button>
-    <button class="btn btn-primary btn-sm" onclick="refreshProgress()">↻ 刷新</button>
+    <button class="btn btn-primary btn-sm" onclick="refreshProgress()"><i class="ri-refresh-line"></i> 刷新</button>
   </div>
 </div>
 
 <div class="kpi-row">
   <div class="kpi">
-    <div class="k-icon">📚</div>
+    <div class="k-icon"><i class="ri-book-2-line"></i></div>
     <div class="k-label">知识点总数</div>
     <div class="k-value" id="kpiTotal">12</div>
-    <div class="k-trend">覆盖 6 个章节</div>
+    <div class="k-trend">覆盖 7 个章节</div>
   </div>
   <div class="kpi">
-    <div class="k-icon">◔</div>
+    <div class="k-icon"><i class="ri-donut-chart-line"></i></div>
     <div class="k-label">总体完成度</div>
     <div class="k-value" id="kpiOverall">56%</div>
     <div class="k-trend up">较上周提升 6%</div>
   </div>
   <div class="kpi">
-    <div class="k-icon">✅</div>
+    <div class="k-icon"><i class="ri-checkbox-circle-line"></i></div>
     <div class="k-label">已完成</div>
     <div class="k-value" id="kpiDone">2</div>
     <div class="k-trend">100% 达标知识点</div>
   </div>
   <div class="kpi">
-    <div class="k-icon">⏳</div>
+    <div class="k-icon"><i class="ri-time-line"></i></div>
     <div class="k-label">进行中</div>
     <div class="k-value" id="kpiDoing">10</div>
     <div class="k-trend">含 2 个未开始</div>
@@ -126,21 +127,21 @@
   'use strict';
 
   var kps = [
-    { name: '数据结构基本概念', chapter: '第 1 章 · 绪论', pct: 100 },
-    { name: '算法复杂度分析',   chapter: '第 1 章 · 绪论', pct: 84 },
-    { name: '线性表与顺序表',   chapter: '第 2 章 · 线性表', pct: 92 },
-    { name: '单链表与双链表',   chapter: '第 2 章 · 线性表', pct: 66 },
-    { name: '栈与队列',         chapter: '第 3 章 · 栈和队列', pct: 78 },
-    { name: '循环队列',         chapter: '第 3 章 · 栈和队列', pct: 40 },
-    { name: '二叉树与遍历',     chapter: '第 4 章 · 树与二叉树', pct: 100 },
-    { name: '二叉排序树',       chapter: '第 4 章 · 树与二叉树', pct: 58 },
-    { name: '堆与优先队列',     chapter: '第 4 章 · 树与二叉树', pct: 30 },
-    { name: '图的存储与遍历',   chapter: '第 5 章 · 图', pct: 22 },
-    { name: '排序算法',         chapter: '第 6 章 · 排序', pct: 0 },
-    { name: '查找与散列表',     chapter: '第 7 章 · 查找', pct: 0 }
+    { name: '五四文学革命',       chapter: '第 1 章 · 现代文学的发生', pct: 100 },
+    { name: '白话文运动',         chapter: '第 1 章 · 现代文学的发生', pct: 84 },
+    { name: '鲁迅《呐喊》',       chapter: '第 2 章 · 现代小说', pct: 92 },
+    { name: '鲁迅《彷徨》',       chapter: '第 2 章 · 现代小说', pct: 66 },
+    { name: '郭沫若《女神》',     chapter: '第 3 章 · 现代诗歌', pct: 78 },
+    { name: '新月派与闻一多',     chapter: '第 3 章 · 现代诗歌', pct: 40 },
+    { name: '现代散文与朱自清',   chapter: '第 4 章 · 现代散文', pct: 100 },
+    { name: '周作人「美文」',     chapter: '第 4 章 · 现代散文', pct: 58 },
+    { name: '沈从文《边城》',     chapter: '第 5 章 · 京派与海派', pct: 30 },
+    { name: '张爱玲《倾城之恋》', chapter: '第 5 章 · 京派与海派', pct: 22 },
+    { name: '曹禺《雷雨》',       chapter: '第 6 章 · 现代戏剧', pct: 0 },
+    { name: '朦胧诗与舒婷',       chapter: '第 7 章 · 当代文学', pct: 0 }
   ];
 
-  var chapterNames = ['第 1 章 · 绪论', '第 2 章 · 线性表', '第 3 章 · 栈和队列', '第 4 章 · 树与二叉树', '第 5 章 · 图', '第 6 章 · 排序', '第 7 章 · 查找'];
+  var chapterNames = ['第 1 章 · 现代文学的发生', '第 2 章 · 现代小说', '第 3 章 · 现代诗歌', '第 4 章 · 现代散文', '第 5 章 · 京派与海派', '第 6 章 · 现代戏剧', '第 7 章 · 当代文学'];
   var chapters = chapterNames.map(function (name) {
     return { name: name, items: kps.filter(function (k) { return k.chapter === name; }) };
   }).filter(function (c) { return c.items.length; });
@@ -199,7 +200,7 @@
     });
     document.getElementById('tableCount').textContent = '共 ' + rows.length + ' 项';
     if (!rows.length) {
-      tableBody.innerHTML = '<tr><td colspan="4"><div class="empty"><div class="e-icon">📭</div><p>当前筛选条件下暂无知识点</p></div></td></tr>';
+      tableBody.innerHTML = '<tr><td colspan="4"><div class="empty"><div class="e-icon"><i class="ri-inbox-line"></i></div><p>当前筛选条件下暂无知识点</p></div></td></tr>';
       return;
     }
     tableBody.innerHTML = rows.map(function (k) {
@@ -294,7 +295,7 @@
   };
 
   window.exportReport = function () {
-    var lines = ['数据结构与算法 · 知识点建设进度报告', '导出时间：' + new Date().toLocaleString('zh-CN'), '', '知识点\t章节\t完成度\t状态'];
+    var lines = ['中国现当代文学 · 知识点建设进度报告', '导出时间：' + new Date().toLocaleString('zh-CN'), '', '知识点\t章节\t完成度\t状态'];
     kps.forEach(function (k) {
       lines.push(k.name + '\t' + k.chapter + '\t' + k.pct + '%\t' + statusText(statusOf(k.pct)));
     });

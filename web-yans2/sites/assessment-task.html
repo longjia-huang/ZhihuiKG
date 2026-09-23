@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>测评任务 · 智能课程教学平台教学平台</title>
+<title>测评任务 · 智能课程教学平台</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" />
 <link rel="stylesheet" href="../assets/base.css" />
 <link rel="stylesheet" href="../assets/product.css" />
 <style>
@@ -12,9 +13,9 @@
   .level-row .lv-name { flex: 1; }
   .level-row .lv-score { max-width: 120px; }
   .level-row .del { width: 40px; height: 40px; border-radius: 10px; background: var(--bg-soft); color: var(--red); font-size: 18px; flex: 0 0 40px; }
-  .level-row .del:hover { background: rgba(255,69,58,.14); }
+  .level-row .del:hover { background: rgba(210,106,90,.14); }
   .add-level { width: 100%; padding: 11px; border-radius: 10px; border: 1px dashed var(--line); color: var(--accent); font-size: 13.5px; transition: background .2s; }
-  .add-level:hover { background: rgba(10,132,255,.05); }
+  .add-level:hover { background: rgba(201,162,75,.05); }
 
   .detail-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; }
   @media (max-width: 640px) { .detail-summary { grid-template-columns: 1fr; } }
@@ -28,19 +29,19 @@
 <div class="page-head">
   <div>
     <div class="ph-title">测评任务</div>
-    <div class="ph-sub">面向计算机学院 6 个教学班 · 智能体情景测评与成绩评级</div>
+    <div class="ph-sub">面向文学院 6 个教学班 · 智能体情景测评与成绩评级</div>
   </div>
   <div class="ph-actions">
     <button class="btn btn-outline btn-sm" onclick="toast('测评任务清单已导出')">⤓ 导出清单</button>
-    <button class="btn btn-primary btn-sm" id="newTaskBtn">＋ 新建任务</button>
+    <button class="btn btn-primary btn-sm" id="newTaskBtn"><i class="ri-add-line"></i> 新建任务</button>
   </div>
 </div>
 
 <div class="kpi-row">
-  <div class="kpi"><div class="k-label">进行中任务</div><div class="k-value">3</div><div class="k-trend up">本周新增 2 个</div><div class="k-icon">🚀</div></div>
-  <div class="kpi"><div class="k-label">已参与学生</div><div class="k-value">186</div><div class="k-trend up">较上周 +24 人</div><div class="k-icon">👥</div></div>
-  <div class="kpi"><div class="k-label">平均成绩</div><div class="k-value">82.4</div><div class="k-trend up">较上周 +1.8 分</div><div class="k-icon">📈</div></div>
-  <div class="kpi"><div class="k-label">待评任务</div><div class="k-value">2</div><div class="k-trend">等待发布评分</div><div class="k-icon">📝</div></div>
+  <div class="kpi"><div class="k-label">进行中任务</div><div class="k-value">3</div><div class="k-trend up">本周新增 2 个</div><div class="k-icon"><i class="ri-rocket-2-line"></i></div></div>
+  <div class="kpi"><div class="k-label">已参与学生</div><div class="k-value">186</div><div class="k-trend up">较上周 +24 人</div><div class="k-icon"><i class="ri-group-line"></i></div></div>
+  <div class="kpi"><div class="k-label">平均成绩</div><div class="k-value">82.4</div><div class="k-trend up">较上周 +1.8 分</div><div class="k-icon"><i class="ri-line-chart-line"></i></div></div>
+  <div class="kpi"><div class="k-label">待评任务</div><div class="k-value">2</div><div class="k-trend">等待发布评分</div><div class="k-icon"><i class="ri-file-text-line"></i></div></div>
 </div>
 
 <div class="panel">
@@ -55,23 +56,23 @@
       </thead>
       <tbody id="taskBody">
         <tr data-id="t1">
-          <td class="cell-main">第 5 周随堂测评</td><td>数据结构答疑智能体</td><td>计算机应用技术 2301 班</td><td>09-14 08:00 — 09-21 23:59</td><td>92%</td><td><span class="badge green">进行中</span></td>
-          <td style="text-align:right"><button class="btn btn-text btn-xs" data-act="detail">查看详情</button><button class="btn btn-text btn-xs" onclick="toast('打开「第 5 周随堂测评」编辑')">编辑</button><button class="btn btn-text btn-xs" onclick="toast('已复制任务链接')">复制</button></td>
+          <td class="cell-main">第 5 周读书测评</td><td>现当代文学答疑智能体</td><td>汉语言文学 2301 班</td><td>09-14 08:00 — 09-21 23:59</td><td>92%</td><td><span class="badge green">进行中</span></td>
+          <td style="text-align:right"><button class="btn btn-text btn-xs" data-act="detail">查看详情</button><button class="btn btn-text btn-xs" onclick="toast('打开「第 5 周读书测评」编辑')">编辑</button><button class="btn btn-text btn-xs" onclick="toast('已复制任务链接')">复制</button></td>
         </tr>
         <tr data-id="t2">
-          <td class="cell-main">期中智能体综合测评</td><td>面试模拟智能体</td><td>计算机应用技术 2302 班</td><td>09-08 08:00 — 09-12 18:00</td><td>100%</td><td><span class="badge blue">已完成</span></td>
+          <td class="cell-main">期中智能体综合测评</td><td>读书分享会智能体</td><td>汉语言文学 2302 班</td><td>09-08 08:00 — 09-12 18:00</td><td>100%</td><td><span class="badge blue">已完成</span></td>
           <td style="text-align:right"><button class="btn btn-text btn-xs" data-act="detail">查看详情</button><button class="btn btn-text btn-xs" onclick="toast('打开「期中智能体综合测评」编辑')">编辑</button><button class="btn btn-text btn-xs" onclick="toast('已复制任务链接')">复制</button></td>
         </tr>
         <tr data-id="t3">
-          <td class="cell-main">面向对象单元测评</td><td>实验指导智能体</td><td>软件技术 2301 班</td><td>09-16 08:00 — 09-22 18:00</td><td>68%</td><td><span class="badge green">进行中</span></td>
-          <td style="text-align:right"><button class="btn btn-text btn-xs" data-act="detail">查看详情</button><button class="btn btn-text btn-xs" onclick="toast('打开「面向对象单元测评」编辑')">编辑</button><button class="btn btn-text btn-xs" onclick="toast('已复制任务链接')">复制</button></td>
+          <td class="cell-main">诗词鉴赏单元测评</td><td>诗词大会智能体</td><td>中国语言文学 2301 班</td><td>09-16 08:00 — 09-22 18:00</td><td>68%</td><td><span class="badge green">进行中</span></td>
+          <td style="text-align:right"><button class="btn btn-text btn-xs" data-act="detail">查看详情</button><button class="btn btn-text btn-xs" onclick="toast('打开「诗词鉴赏单元测评」编辑')">编辑</button><button class="btn btn-text btn-xs" onclick="toast('已复制任务链接')">复制</button></td>
         </tr>
         <tr data-id="t4">
-          <td class="cell-main">临床问诊技能测评</td><td>临床问诊室智能体</td><td>大数据技术 2301 班</td><td>09-01 08:00 — 09-05 18:00</td><td>96%</td><td><span class="badge blue">已完成</span></td>
-          <td style="text-align:right"><button class="btn btn-text btn-xs" data-act="detail">查看详情</button><button class="btn btn-text btn-xs" onclick="toast('打开「临床问诊技能测评」编辑')">编辑</button><button class="btn btn-text btn-xs" onclick="toast('已复制任务链接')">复制</button></td>
+          <td class="cell-main">名著阅读技能测评</td><td>名著导读智能体</td><td>汉语言文学 2303 班</td><td>09-01 08:00 — 09-05 18:00</td><td>96%</td><td><span class="badge blue">已完成</span></td>
+          <td style="text-align:right"><button class="btn btn-text btn-xs" data-act="detail">查看详情</button><button class="btn btn-text btn-xs" onclick="toast('打开「名著阅读技能测评」编辑')">编辑</button><button class="btn btn-text btn-xs" onclick="toast('已复制任务链接')">复制</button></td>
         </tr>
         <tr data-id="t5">
-          <td class="cell-main">期末课程综合测评</td><td>辩论赛场智能体</td><td>计算机应用技术 2303 班</td><td>09-25 08:00 — 10-02 18:00</td><td>0%</td><td><span class="badge gray">未开始</span></td>
+          <td class="cell-main">期末课程综合测评</td><td>创作工坊智能体</td><td>汉语言文学 2304 班</td><td>09-25 08:00 — 10-02 18:00</td><td>0%</td><td><span class="badge gray">未开始</span></td>
           <td style="text-align:right"><button class="btn btn-text btn-xs" data-act="detail">查看详情</button><button class="btn btn-text btn-xs" onclick="toast('打开「期末课程综合测评」编辑')">编辑</button><button class="btn btn-text btn-xs" onclick="toast('已复制任务链接')">复制</button></td>
         </tr>
       </tbody>
@@ -109,27 +110,27 @@
     <div class="modal-body">
       <div class="field">
         <label class="req">任务名称</label>
-        <input class="input" id="taskName" type="text" placeholder="例如：第 6 周随堂测评" />
+        <input class="input" id="taskName" type="text" placeholder="例如：第 6 周读书测评" />
       </div>
       <div class="form-row">
         <div class="field">
           <label>发布班级</label>
           <select class="select" id="taskClass">
-            <option>计算机应用技术 2301 班</option>
-            <option>计算机应用技术 2302 班</option>
-            <option>计算机应用技术 2303 班</option>
-            <option>软件技术 2301 班</option>
-            <option>大数据技术 2301 班</option>
+            <option>汉语言文学 2301 班</option>
+            <option>汉语言文学 2302 班</option>
+            <option>汉语言文学 2303 班</option>
+            <option>汉语言文学 2304 班</option>
+            <option>中国语言文学 2301 班</option>
           </select>
         </div>
         <div class="field">
           <label>关联智能体</label>
           <select class="select" id="taskAgent">
-            <option>数据结构答疑智能体</option>
-            <option>面试模拟智能体</option>
-            <option>实验指导智能体</option>
-            <option>临床问诊室智能体</option>
-            <option>辩论赛场智能体</option>
+            <option>现当代文学答疑智能体</option>
+            <option>诗词大会智能体</option>
+            <option>读书分享会智能体</option>
+            <option>名著导读智能体</option>
+            <option>创作工坊智能体</option>
           </select>
         </div>
       </div>

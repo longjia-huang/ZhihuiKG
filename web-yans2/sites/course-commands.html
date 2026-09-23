@@ -3,23 +3,24 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>课程指令 · 智能课程教学平台教学平台</title>
+<title>课程指令 · 智能课程教学平台</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" />
 <link rel="stylesheet" href="../assets/base.css" />
 <link rel="stylesheet" href="../assets/product.css" />
 <style>
   /* 页面专属样式 */
   .cmd-desc { font-size: 12px; color: var(--ink-4); margin-top: 3px; max-width: 360px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .op-link { color: var(--accent); font-size: 13px; padding: 2px 6px; border-radius: 6px; }
-  .op-link:hover { background: rgba(10,132,255,.08); }
+  .op-link:hover { background: rgba(201,162,75,.12); }
   .op-link.danger { color: var(--red); }
-  .op-link.danger:hover { background: rgba(255,69,58,.14); }
+  .op-link.danger:hover { background: rgba(210,106,90,.14); }
   .var-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
   .var-bar .vlabel { font-size: 12px; color: var(--ink-4); }
   .var-btn {
     font-size: 12px; padding: 5px 11px; border-radius: 8px; cursor: pointer;
     background: var(--grad-ai-soft); color: var(--accent);
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    border: 1px solid rgba(10,132,255,.2); transition: transform .12s;
+    border: 1px solid rgba(201,162,75,.28); transition: transform .12s;
   }
   .var-btn:hover { transform: translateY(-1px); }
   .toolbar .count-tip { font-size: 13px; color: var(--ink-4); }
@@ -30,10 +31,10 @@
 <div class="page-head">
   <div>
     <div class="ph-title">课程指令</div>
-    <div class="ph-sub">数据结构与算法 · 面向学生的提问指令 · 支持简单指令与变量化复杂指令</div>
+    <div class="ph-sub">中国现当代文学 · 面向学生的提问指令 · 支持简单指令与变量化复杂指令</div>
   </div>
   <div class="ph-actions">
-    <button class="btn btn-primary btn-sm" id="newBtn">＋ 新建指令</button>
+    <button class="btn btn-primary btn-sm" id="newBtn"><i class="ri-add-line"></i> 新建指令</button>
   </div>
 </div>
 
@@ -72,7 +73,7 @@
     </table>
   </div>
   <div class="empty" id="emptyState" style="display:none">
-    <div class="e-icon">🔍</div>
+    <div class="e-icon"><i class="ri-search-line"></i></div>
     <p>没有匹配的课程指令，调整筛选条件或新建一条指令。</p>
   </div>
 </div>
@@ -92,7 +93,7 @@
 
       <div class="field">
         <label><span class="req">指令名称</span></label>
-        <input class="input" id="fName" type="text" placeholder="例如：请用自己的话解释栈与队列的区别" />
+        <input class="input" id="fName" type="text" placeholder="例如：请用自己的话解释《边城》的抒情特色" />
       </div>
 
       <div class="field">
@@ -134,16 +135,16 @@
 (function () {
   'use strict';
 
-  var groups = ['第 1 章 绪论', '第 3 章 栈与队列', '第 5 章 树与二叉树', '第 7 章 查找', '第 8 章 排序', '面向对象程序设计'];
+  var groups = ['第 1 章 现代文学的发生', '第 2 章 现代小说', '第 3 章 现代诗歌', '第 5 章 京派与海派', '第 6 章 现代戏剧', '文学批评方法'];
 
   var commands = [
-    { id: 1, name: '请从三种角度分析「多态」', type: '复杂', group: '面向对象程序设计', desc: '请从「定义、实现方式、应用场景」三个角度，系统分析 {知识点} 这一概念，并结合 {章节} 中的例子加以说明。', open: true, refs: 128, created: '2026-09-12' },
-    { id: 2, name: '用自己的话解释栈与队列的区别', type: '简单', group: '第 3 章 栈与队列', desc: '请用你自己的话解释栈与队列在存取顺序上的本质区别，并各举一个生活中的例子。', open: true, refs: 96, created: '2026-09-10' },
-    { id: 3, name: '结合实例说明核心概念', type: '复杂', group: '第 1 章 绪论', desc: '请结合 {章节} 中的实例，说明 {知识点} 的定义与典型应用场景，{学生姓名} 同学请重点准备。', open: true, refs: 214, created: '2026-09-08' },
-    { id: 4, name: '二叉树遍历易错点梳理', type: '简单', group: '第 5 章 树与二叉树', desc: '请梳理前序、中序、后序三种遍历的步骤差异，并指出最常出现的两处易错点。', open: false, refs: 45, created: '2026-09-05' },
-    { id: 5, name: '用三步法推导时间复杂度', type: '复杂', group: '第 1 章 绪论', desc: '请用「识别基本操作、统计执行次数、确定数量级」三步法，推导 {知识点} 的时间复杂度。', open: true, refs: 87, created: '2026-09-01' },
-    { id: 6, name: '哈希表冲突解决方法对比', type: '简单', group: '第 7 章 查找', desc: '请对比开放定址法与链地址法在解决哈希冲突时的优缺点，并说明各自适用场景。', open: false, refs: 33, created: '2026-08-28' },
-    { id: 7, name: '选择排序的稳定性分析', type: '复杂', group: '第 8 章 排序', desc: '请结合一趟排序过程，说明 {知识点} 是否稳定，并用 {章节} 中的例子验证你的结论。', open: true, refs: 59, created: '2026-08-20' }
+    { id: 1, name: '请从三个角度分析「精神胜利法」', type: '复杂', group: '第 2 章 现代小说', desc: '请从「定义、形成原因、典型意义」三个角度，系统分析 {知识点} 这一文学概念，并结合 {章节} 中的作品加以说明。', open: true, refs: 128, created: '2026-09-12' },
+    { id: 2, name: '用自己的话解释《呐喊》与《彷徨》的区别', type: '简单', group: '第 2 章 现代小说', desc: '请用你自己的话解释《呐喊》与《彷徨》在思想格调上的本质区别，并各举一部代表作。', open: true, refs: 96, created: '2026-09-10' },
+    { id: 3, name: '结合实例说明文学思潮', type: '复杂', group: '第 1 章 现代文学的发生', desc: '请结合 {章节} 中的文学事件，说明 {知识点} 的定义与历史影响，{学生姓名} 同学请重点准备。', open: true, refs: 214, created: '2026-09-08' },
+    { id: 4, name: '现代诗歌流派梳理', type: '简单', group: '第 3 章 现代诗歌', desc: '请梳理郭沫若、新月派、现代派在诗歌主张上的差异，并指出最常出现的两处易混点。', open: false, refs: 45, created: '2026-09-05' },
+    { id: 5, name: '用三步法分析人物形象', type: '复杂', group: '文学批评方法', desc: '请用「概括性格、追溯成因、提炼意义」三步法，分析 {知识点} 中的典型人物形象。', open: true, refs: 87, created: '2026-09-01' },
+    { id: 6, name: '京派与海派风格对比', type: '简单', group: '第 5 章 京派与海派', desc: '请对比沈从文与张爱玲在题材选择与审美追求上的差异，并说明各自代表作。', open: false, refs: 33, created: '2026-08-28' },
+    { id: 7, name: '戏剧冲突的推进分析', type: '复杂', group: '第 6 章 现代戏剧', desc: '请结合《雷雨》的冲突展开，说明 {知识点} 是如何层层推进的，并用 {章节} 中的情节验证结论。', open: true, refs: 59, created: '2026-08-20' }
   ];
 
   var nextId = 8;

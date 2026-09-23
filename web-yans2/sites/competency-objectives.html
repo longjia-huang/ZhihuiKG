@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>能力目标 · 智能课程教学平台教学平台</title>
+<title>能力目标 · 智能课程教学平台</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" />
 <link rel="stylesheet" href="../assets/base.css" />
 <link rel="stylesheet" href="../assets/product.css" />
 <style>
@@ -17,7 +18,7 @@
     border: 1px solid transparent;
   }
   .obj-item:hover { background: var(--bg-soft); }
-  .obj-item.active { background: rgba(10,132,255,.08); border-color: rgba(10,132,255,.22); }
+  .obj-item.active { background: rgba(201,162,75,.10); border-color: rgba(201,162,75,.22); }
   .obj-item .o-top { display: flex; align-items: center; gap: 9px; }
   .obj-item .o-idx {
     flex: 0 0 auto; width: 24px; height: 24px; border-radius: 7px; background: var(--grad-ai);
@@ -26,7 +27,7 @@
   .obj-item .o-name { font-size: 14px; font-weight: 600; color: var(--ink); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .obj-item .o-meta { display: flex; gap: 10px; font-size: 12px; color: var(--ink-4); margin-top: 6px; padding-left: 33px; }
 
-  .detail-name { font-size: 19px; font-weight: 700; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .detail-name { font-size: 19px; font-weight: 700; letter-spacing: 0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .detail-desc { color: var(--ink-2); font-size: 14px; line-height: 1.7; margin-top: 10px; }
   .rel-block { margin-top: 18px; }
   .rel-block .rel-label { font-size: 12px; font-weight: 600; color: var(--ink-4); margin-bottom: 8px; letter-spacing: .03em; }
@@ -40,34 +41,34 @@
 <div class="page-head">
   <div>
     <div class="ph-title">能力目标</div>
-    <div class="ph-sub">数据结构与算法 · 32 学时 · 计算机学院</div>
+    <div class="ph-sub">中国现当代文学 · 48 学时 · 文学院</div>
   </div>
   <div class="ph-actions">
-    <button class="btn btn-primary btn-sm" onclick="openModal()">＋ 新建能力目标</button>
+    <button class="btn btn-primary btn-sm" onclick="openModal()"><i class="ri-add-line"></i> 新建能力目标</button>
   </div>
 </div>
 
 <div class="kpi-row">
   <div class="kpi">
-    <div class="k-icon">🎯</div>
+    <div class="k-icon"><i class="ri-crosshair-2-line"></i></div>
     <div class="k-label">能力目标数</div>
     <div class="k-value" id="kpiObj">8</div>
-    <div class="k-trend">覆盖 6 个章节模块</div>
+    <div class="k-trend">覆盖 6 个专题模块</div>
   </div>
   <div class="kpi">
-    <div class="k-icon">🔢</div>
+    <div class="k-icon"><i class="ri-stack-line"></i></div>
     <div class="k-label">子目标数</div>
     <div class="k-value" id="kpiSub">26</div>
     <div class="k-trend">平均每个目标 3.3 项</div>
   </div>
   <div class="kpi">
-    <div class="k-icon">🔗</div>
+    <div class="k-icon"><i class="ri-link"></i></div>
     <div class="k-label">已关联知识点</div>
     <div class="k-value" id="kpiKp">43</div>
     <div class="k-trend up">本周新增 6 个</div>
   </div>
   <div class="kpi">
-    <div class="k-icon">❓</div>
+    <div class="k-icon"><i class="ri-question-line"></i></div>
     <div class="k-label">已关联问题</div>
     <div class="k-value" id="kpiQ">18</div>
     <div class="k-trend up">本周新增 3 道</div>
@@ -100,7 +101,7 @@
     <div class="modal-body">
       <div class="field">
         <label class="req">目标名称</label>
-        <input class="input" id="fName" type="text" placeholder="例如：掌握排序算法并能分析其复杂度" />
+        <input class="input" id="fName" type="text" placeholder="例如：掌握鲁迅小说的思想主题与艺术成就" />
       </div>
       <div class="field">
         <label>目标描述</label>
@@ -121,93 +122,92 @@
 
   var objectives = [
     {
-      id: 'ob-01', name: '掌握数据结构基本概念与算法分析方法',
-      desc: '理解数据结构的逻辑结构、存储结构以及算法的时间复杂度与空间复杂度分析方法，为后续内容建立理论基础。',
-      kp: ['数据结构三要素', '逻辑结构', '存储结构', '时间复杂度', '空间复杂度', '大 O 记号'],
-      q: ['什么是时间复杂度？', '如何分析递归算法的时间复杂度？'],
+      id: 'ob-01', name: '掌握中国现代文学的发生与鲁迅小说',
+      desc: '理解五四文学革命与现代文学的发生背景，掌握鲁迅小说的思想主题与艺术成就，认识其国民性批判的价值。',
+      kp: ['五四文学革命', '《狂人日记》', '《呐喊》', '《彷徨》', '精神胜利法', '国民性批判'],
+      q: ['《狂人日记》为何被称为现代白话小说的开山之作？', '如何理解阿 Q 的精神胜利法？'],
       subs: [
-        { n: '能区分逻辑结构与存储结构', d: '用实例说明两者区别', s: 'done' },
-        { n: '能理解抽象数据类型的定义', d: '数据对象、关系与操作三要素', s: 'done' },
-        { n: '会用大 O 记号估算算法复杂度', d: '对常见代码段给出复杂度结论', s: 'done' },
-        { n: '能分析递归算法的复杂度', d: '借助递归树与主定理', s: 'doing' }
+        { n: '能梳理五四文学革命的发生背景', d: '文学革命主张与白话文运动', s: 'done' },
+        { n: '能概括《呐喊》的思想主题', d: '批判国民性与呼唤觉醒', s: 'done' },
+        { n: '能分析阿 Q 形象的典型意义', d: '精神胜利法与国民劣根性', s: 'done' },
+        { n: '能对比《呐喊》与《彷徨》的格调', d: '激越与沉郁的差异', s: 'doing' }
       ]
     },
     {
-      id: 'ob-02', name: '掌握线性表及其顺序与链式实现',
-      desc: '掌握顺序表与单链表、双链表、循环链表的存储结构与基本操作，并能对比其时间效率与适用场景。',
-      kp: ['顺序表', '单链表', '双链表', '循环链表', '静态链表', '头插法与尾插法'],
-      q: ['顺序表和链表各自的优缺点？', '如何在单链表中删除指定节点？'],
+      id: 'ob-02', name: '掌握现代诗歌的发展脉络',
+      desc: '掌握郭沫若、新月派、现代派等诗歌流派的风格主张与代表作品，理解现代诗歌形式与审美观念的演变。',
+      kp: ['《女神》', '新月派', '闻一多', '现代派', '戴望舒《雨巷》', '自由诗'],
+      q: ['《女神》如何体现五四时代精神？', '闻一多提出的「三美」主张是什么？'],
       subs: [
-        { n: '能实现顺序表的插入与删除', d: '处理边界与移动元素', s: 'done' },
-        { n: '能实现单链表的基本运算', d: '头插、尾插、查找、删除', s: 'done' },
-        { n: '能对比顺序表与链表的效率', d: '从随机访问与插入删除角度分析', s: 'doing' }
+        { n: '能概括《女神》的浪漫主义特征', d: '自我抒情与时代激情', s: 'done' },
+        { n: '能理解新月派的格律主张', d: '三美原则与形式追求', s: 'done' },
+        { n: '能赏析《雨巷》的意象与韵律', d: '朦胧意境与音乐性', s: 'doing' }
       ]
     },
     {
-      id: 'ob-03', name: '掌握栈和队列的特性与应用',
-      desc: '理解栈的后进先出与队列的先进先出特性，掌握顺序栈、链栈、循环队列的存储结构与典型应用场景。',
-      kp: ['栈', '队列', '循环队列', '链栈', '括号匹配', '表达式求值'],
-      q: ['如何用两个栈实现一个队列？', '循环队列如何判断队空与队满？'],
+      id: 'ob-03', name: '掌握现代散文的艺术成就',
+      desc: '理解现代散文「美文」观念的确立，掌握周作人、朱自清等作家的散文风格与代表作。',
+      kp: ['周作人', '朱自清《背影》', '《荷塘月色》', '美文', '杂文'],
+      q: ['朱自清散文的抒情特色是什么？', '如何理解周作人提出的「美文」概念？'],
       subs: [
-        { n: '能实现顺序栈与链栈', d: '入栈、出栈、判空', s: 'done' },
-        { n: '能实现循环队列并处理队满', d: '使用取模运算与牺牲单元法', s: 'done' },
-        { n: '能应用栈解决括号匹配问题', d: '给出完整算法过程', s: 'todo' }
+        { n: '能赏析《背影》的细节描写', d: '白描手法与父子深情', s: 'done' },
+        { n: '能分析《荷塘月色》的情景交融', d: '通感与月色意境', s: 'done' },
+        { n: '能概述现代散文的文体特征', d: '个性化与自由表达', s: 'todo' }
       ]
     },
     {
-      id: 'ob-04', name: '掌握二叉树、遍历与二叉排序树',
-      desc: '掌握二叉树的性质、三种遍历方式及其应用，理解二叉排序树、平衡二叉树与堆的基本概念。',
-      kp: ['二叉树', '先序遍历', '中序遍历', '后序遍历', '层序遍历', '二叉排序树', '堆'],
-      q: ['中序遍历为什么能得到有序序列？', '如何由前序和中序重建二叉树？'],
+      id: 'ob-04', name: '掌握现代长篇小说的代表',
+      desc: '掌握茅盾、巴金、老舍等作家的重要长篇小说，理解其现实主义成就与社会剖析价值。',
+      kp: ['茅盾《子夜》', '巴金《家》', '老舍《骆驼祥子》', '社会剖析', '现实主义'],
+      q: ['《子夜》如何展开社会剖析？', '《家》中觉新形象的悲剧意义是什么？'],
       subs: [
-        { n: '能写出三种遍历的递归实现', d: '先序、中序、后序', s: 'done' },
-        { n: '能写出层序遍历的非递归实现', d: '借助队列逐层访问', s: 'done' },
-        { n: '能构建并查找二叉排序树', d: '插入、删除与查找', s: 'doing' },
-        { n: '能利用堆实现优先队列', d: '堆的调整与插入', s: 'todo' }
+        { n: '能概述《子夜》的结构与主题', d: '民族工业与阶级矛盾', s: 'done' },
+        { n: '能分析《家》的反封建主题', d: '觉慧的出走与叛逆', s: 'done' },
+        { n: '能分析祥子悲剧的社会根源', d: '个人奋斗与黑暗现实', s: 'doing' }
       ]
     },
     {
-      id: 'ob-05', name: '掌握图的存储结构与遍历算法',
-      desc: '掌握图的邻接矩阵与邻接表存储，理解深度优先与广度优先遍历，了解最小生成树与最短路径。',
-      kp: ['邻接矩阵', '邻接表', '深度优先遍历', '广度优先遍历', '最小生成树'],
-      q: ['邻接矩阵和邻接表如何选择？', '广度优先遍历为何使用队列？', '深度优先遍历与广度优先遍历有何区别？'],
+      id: 'ob-05', name: '掌握京派与海派小说',
+      desc: '掌握沈从文、张爱玲等京派海派作家的风格差异，理解抒情小说与都市传奇的审美追求。',
+      kp: ['沈从文', '《边城》', '张爱玲', '《倾城之恋》', '抒情小说', '海派小说'],
+      q: ['《边城》为何被称为「田园牧歌」？', '张爱玲小说的都市书写有何特色？'],
       subs: [
-        { n: '能用邻接表存储图', d: '有向图与无向图', s: 'doing' },
-        { n: '能实现深度优先与广度优先遍历', d: '递归与队列两种方式', s: 'doing' },
-        { n: '能求最小生成树', d: 'Prim 与 Kruskal 算法', s: 'todo' }
+        { n: '能赏析《边城》的抒情叙事', d: '散文化结构与湘西世界', s: 'doing' },
+        { n: '能理解京派与海派的美学分野', d: '乡土抒情与都市传奇', s: 'doing' },
+        { n: '能分析《倾城之恋》的人物', d: '白流苏与范柳原', s: 'todo' }
       ]
     },
     {
-      id: 'ob-06', name: '掌握经典排序算法并能分析性能',
-      desc: '掌握冒泡、插入、选择、快速、归并等排序算法，能对比其时间与空间复杂度及稳定性。',
-      kp: ['冒泡排序', '插入排序', '快速排序', '归并排序', '稳定性'],
-      q: ['快速排序最坏情况何时出现？', '哪些排序算法是稳定的？', '归并排序的时间复杂度是多少？'],
+      id: 'ob-06', name: '掌握现代戏剧艺术',
+      desc: '掌握曹禺戏剧的艺术成就，理解《雷雨》《日出》的戏剧冲突、人物塑造与结构安排。',
+      kp: ['曹禺', '《雷雨》', '《日出》', '戏剧冲突', '人物塑造'],
+      q: ['《雷雨》的戏剧冲突如何层层推进？', '《日出》的结构方式有何特点？'],
       subs: [
-        { n: '能实现快速排序并分析复杂度', d: '划分过程与递归', s: 'done' },
-        { n: '能实现归并排序', d: '分治与合并', s: 'doing' },
-        { n: '能对比各排序算法的稳定性', d: '列表对比并给出结论', s: 'todo' }
+        { n: '能梳理《雷雨》的人物关系', d: '周鲁两家的恩怨纠葛', s: 'done' },
+        { n: '能分析繁漪形象的悲剧性', d: '压抑与反抗', s: 'doing' },
+        { n: '能理解《日出》的社会批判', d: '群像描写与陈白露', s: 'todo' }
       ]
     },
     {
-      id: 'ob-07', name: '掌握查找技术与散列表',
-      desc: '掌握顺序查找、折半查找与散列表的构造方法，理解散列冲突的解决方式及其性能影响因素。',
-      kp: ['顺序查找', '折半查找', '散列函数', '开放定址法', '链地址法'],
-      q: ['散列表的装填因子如何影响查找效率？', '折半查找的前提是什么？'],
+      id: 'ob-07', name: '掌握当代文学思潮',
+      desc: '掌握朦胧诗、寻根文学、先锋小说等当代文学思潮，理解莫言等作家的艺术探索。',
+      kp: ['朦胧诗', '舒婷', '寻根文学', '莫言', '魔幻现实主义', '先锋小说'],
+      q: ['朦胧诗的「朦胧」体现在哪里？', '莫言小说的魔幻现实主义有何特征？'],
       subs: [
-        { n: '能实现折半查找', d: '要求有序顺序存储', s: 'done' },
-        { n: '能构造散列表并处理冲突', d: '开放定址与链地址', s: 'doing' },
-        { n: '能计算平均查找长度', d: '成功与失败两种情况', s: 'todo' }
+        { n: '能赏析舒婷诗歌的人道主义', d: '《致橡树》的意象', s: 'done' },
+        { n: '能概述寻根文学的文化取向', d: '回归传统文化之根', s: 'doing' },
+        { n: '能分析莫言小说的叙事艺术', d: '魔幻现实主义与高密东北乡', s: 'todo' }
       ]
     },
     {
-      id: 'ob-08', name: '能综合运用数据结构解决实际问题',
-      desc: '能将所学数据结构知识迁移到实际工程问题中，完成从建模、选型到实现与复杂度评估的完整过程。',
-      kp: ['问题建模', '结构选型', '复杂度评估'],
-      q: ['如何为实际业务选择合适的数据结构？', '如何权衡时间与空间复杂度？'],
+      id: 'ob-08', name: '能综合运用文学批评方法',
+      desc: '能将文本细读、知人论世、比较阅读等方法迁移到作品分析中，完成从文本到阐释的完整过程。',
+      kp: ['文本细读', '知人论世', '比较阅读', '主题分析'],
+      q: ['如何用文本细读法分析一篇小说？', '知人论世对理解作品有何帮助？'],
       subs: [
-        { n: '能完成一次综合建模', d: '从问题到数据结构映射', s: 'doing' },
-        { n: '能给出方案并评估复杂度', d: '多方案对比与权衡', s: 'todo' },
-        { n: '能输出结构化的方案文档', d: '包含选型理由与复杂度说明', s: 'todo' }
+        { n: '能完成一次文本细读', d: '从语言细节到主题提炼', s: 'doing' },
+        { n: '能给出多角度作品阐释', d: '主题、人物、手法', s: 'todo' },
+        { n: '能输出结构化的赏析报告', d: '包含论点、论据与结论', s: 'todo' }
       ]
     }
   ];
@@ -241,7 +241,7 @@
     });
     document.getElementById('listCount').textContent = '共 ' + objectives.length + ' 个目标';
     if (!filtered.length) {
-      listEl.innerHTML = '<div class="empty"><div class="e-icon">🔍</div><p>未找到匹配的目标</p></div>';
+      listEl.innerHTML = '<div class="empty"><div class="e-icon"><i class="ri-search-line"></i></div><p>未找到匹配的目标</p></div>';
       return;
     }
     listEl.innerHTML = filtered.map(function (x) {
